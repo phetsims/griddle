@@ -15,7 +15,7 @@ define( function( require ) {
   var XYDataSeries = require( 'LIGHTBULB/XYDataSeries' );
 
   // Strings
-  var simTitle = 'Sun demo';
+  var simTitle = 'Lightbulb Demo';
 
   var simOptions = {
     credits: {

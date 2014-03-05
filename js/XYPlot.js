@@ -77,7 +77,9 @@ define( function( require ) {
       this.series.push( series );
       var xyPlot = this;
       series.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
-        xyPlot.content.addChild( new Line( xPrevious, yPrevious, x, y, {stroke: series.color} ) );
+        if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
+          xyPlot.content.addChild( new Line( xPrevious, yPrevious, x, y, {stroke: series.color} ) );
+        }
       } );
     }
   } );

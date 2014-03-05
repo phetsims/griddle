@@ -14,7 +14,6 @@ define( function( require ) {
   var Line = require( 'SCENERY/nodes/Line' );
   var Panel = require( 'SUN/Panel' );
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  var Range = require( 'DOT/Range' );
 
   function XYPlot( options ) {
     var content = new Node();
@@ -36,10 +35,12 @@ define( function( require ) {
       xMargin: 10,
       yMargin: 10};
 
+    var lineWidth;
+    var line;
     //vertical grid lines
     for ( var i = 0; i < this.options.numVerticalGridLines + 1; i++ ) {
-      var lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      var line = new Line( i * this.options.width / 10, 0, i * this.options.width / 10, -this.options.height, {stroke: 'gray', lineWidth: lineWidth} );
+      lineWidth = i % 2 === 0 ? 0.8 : 0.3;
+      line = new Line( i * this.options.width / 10, 0, i * this.options.width / 10, -this.options.height, {stroke: 'gray', lineWidth: lineWidth} );
       content.addChild( line );
       if ( i % 2 === 0 ) {
         content.addChild( new Text( i, {font: new PhetFont( 16 ), centerX: line.centerX, top: line.bottom + 6} ) );
@@ -48,8 +49,8 @@ define( function( require ) {
 
     //horizontal grid lines
     for ( i = 0; i < this.options.numHorizontalGridLines + 1; i++ ) {
-      var lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      var line = new Line( 0, -i * this.options.height / 10, this.options.width, -i * this.options.height / 10, {stroke: 'gray', lineWidth: lineWidth} );
+      lineWidth = i % 2 === 0 ? 0.8 : 0.3;
+      line = new Line( 0, -i * this.options.height / 10, this.options.width, -i * this.options.height / 10, {stroke: 'gray', lineWidth: lineWidth} );
       content.addChild( line );
       if ( i % 2 === 0 ) {
         content.addChild( new Text( i, {font: new PhetFont( 16 ), centerY: line.centerY, right: line.left - 6} ) );

@@ -8,13 +8,6 @@
 define( function( require ) {
   'use strict';
   var inherit = require( 'PHET_CORE/inherit' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var Line = require( 'SCENERY/nodes/Line' );
-  var Panel = require( 'SUN/Panel' );
-  var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  var Range = require( 'DOT/Range' );
 
   function XYDataSeries( options ) {
 
@@ -31,7 +24,7 @@ define( function( require ) {
     this.yPoints = [];
   }
 
-  return inherit( Panel, XYDataSeries, {
+  return inherit( Object, XYDataSeries, {
     addDataSeriesListener: function( listener ) {
       this.listeners.push( listener );
     },

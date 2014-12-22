@@ -6,7 +6,8 @@
 define( function( require ) {
   'use strict';
 
-  // Imports
+  // modules
+  var Bounds2 = require( 'DOT/Bounds2' );
   var Screen = require( 'JOIST/Screen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
@@ -14,7 +15,7 @@ define( function( require ) {
   var XYPlot = require( 'LIGHTBULB/XYPlot' );
   var XYDataSeries = require( 'LIGHTBULB/XYDataSeries' );
 
-  // Strings
+  // strings
   var simTitle = 'Lightbulb Demo';
 
   var simOptions = {
@@ -34,7 +35,7 @@ define( function( require ) {
             }};
         },
         function( model ) {
-          var screenView = new ScreenView();
+          var screenView = new ScreenView( { layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
           var time = 0;
           var plot = new XYPlot( {backgroundFill: '#efecd9'} );
           screenView.addChild( plot );

@@ -36,7 +36,7 @@ define( function( require ) {
       this.xPoints.push( x );
       this.yPoints.push( y );
       for ( var i = 0; i < this.listeners.length; i++ ) {
-        this.listeners[i]( x, y, this.xPoints[this.xPoints.length - 2], this.yPoints[this.yPoints.length - 2] );
+        this.listeners[ i ]( x, y, this.xPoints[ this.xPoints.length - 2 ], this.yPoints[ this.yPoints.length - 2 ] );
       }
     },
     clear: function() {
@@ -49,7 +49,7 @@ define( function( require ) {
       if ( index > this.xPoints.length - 1 ) {
         throw new Error( "No Data Point Exist at this index " + index );
       }
-      return this.xPoints[index];
+      return this.xPoints[ index ];
 
     },
 

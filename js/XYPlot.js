@@ -31,29 +31,34 @@ define( function( require ) {
     }, options );
 
     //tailX, tailY, tipX, tipY, options
-    var panelOptions = {fill: this.options.backgroundFill,
+    var panelOptions = {
+      fill: this.options.backgroundFill,
       xMargin: 10,
-      yMargin: 10};
+      yMargin: 10
+    };
 
     var lineWidth;
     var line;
     //vertical grid lines
     for ( var i = 0; i < this.options.numVerticalGridLines + 1; i++ ) {
       lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      line = new Line( i * this.options.width / 10, 0, i * this.options.width / 10, -this.options.height, {stroke: 'gray', lineWidth: lineWidth} );
+      line = new Line( i * this.options.width / 10, 0, i * this.options.width / 10, -this.options.height, { stroke: 'gray', lineWidth: lineWidth } );
       content.addChild( line );
       if ( i % 2 === 0 ) {
-        content.addChild( new Text( i, {font: new PhetFont( 16 ), centerX: line.centerX, top: line.bottom + 6} ) );
+        content.addChild( new Text( i, { font: new PhetFont( 16 ), centerX: line.centerX, top: line.bottom + 6 } ) );
       }
     }
 
     //horizontal grid lines
     for ( i = 0; i < this.options.numHorizontalGridLines + 1; i++ ) {
       lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      line = new Line( 0, -i * this.options.height / 10, this.options.width, -i * this.options.height / 10, {stroke: 'gray', lineWidth: lineWidth} );
+      line = new Line( 0, -i * this.options.height / 10, this.options.width, -i * this.options.height / 10, {
+        stroke: 'gray',
+        lineWidth: lineWidth
+      } );
       content.addChild( line );
       if ( i % 2 === 0 ) {
-        content.addChild( new Text( i, {font: new PhetFont( 16 ), centerY: line.centerY, right: line.left - 6} ) );
+        content.addChild( new Text( i, { font: new PhetFont( 16 ), centerY: line.centerY, right: line.left - 6 } ) );
       }
     }
 
@@ -78,7 +83,7 @@ define( function( require ) {
       var xyPlot = this;
       series.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
         if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-          xyPlot.content.addChild( new Line( xPrevious, yPrevious, x, y, {stroke: series.color} ) );
+          xyPlot.content.addChild( new Line( xPrevious, yPrevious, x, y, { stroke: series.color } ) );
         }
       } );
     }

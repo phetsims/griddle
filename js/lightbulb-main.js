@@ -32,14 +32,15 @@ define( function( require ) {
         function() {
           return {
             step: function() {
-            }};
+            }
+          };
         },
         function( model ) {
           var screenView = new ScreenView( { layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
           var time = 0;
-          var plot = new XYPlot( {backgroundFill: '#efecd9'} );
+          var plot = new XYPlot( { backgroundFill: '#efecd9' } );
           screenView.addChild( plot );
-          var series = new XYDataSeries( {color: 'blue'} );
+          var series = new XYDataSeries( { color: 'blue' } );
           plot.addSeries( series );
           var forward = true;
           var count = 0;

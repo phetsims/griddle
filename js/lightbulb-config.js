@@ -1,6 +1,6 @@
 // Copyright 2002-2014, University of Colorado Boulder
 
-// RequireJS configuration file for Sun (UI component lib) demo.
+// RequireJS configuration file for Lightbulb demo.
 require.config( {
   deps: [ 'lightbulb-main' ],
 

@@ -1,7 +1,7 @@
 // Copyright 2002-2014, University of Colorado Boulder
 
 /**
- * Main file for the Sun library demo.
+ * Main file for the Lightbulb library demo.
  */
 define( function( require ) {
   'use strict';
@@ -26,7 +26,6 @@ define( function( require ) {
 
   SimLauncher.launch( function() {
     // Create and start the sim
-    //Create and start the sim
     new Sim( simTitle, [
       new Screen( simTitle, null,
         function() {

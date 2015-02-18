@@ -1,7 +1,7 @@
 // Copyright 2002-2014, University of Colorado Boulder
 
 /**
- * Main file for the Lightbulb library demo.
+ * Main file for the Griddle library demo.
  */
 define( function( require ) {
   'use strict';
@@ -12,11 +12,11 @@ define( function( require ) {
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
   var ScreenView = require( 'JOIST/ScreenView' );
-  var XYPlot = require( 'LIGHTBULB/XYPlot' );
-  var XYDataSeries = require( 'LIGHTBULB/XYDataSeries' );
+  var XYPlot = require( 'GRIDDLE/XYPlot' );
+  var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
 
   // strings
-  var simTitle = 'Lightbulb Demo';
+  var simTitle = 'Griddle Demo';
 
   var simOptions = {
     credits: {

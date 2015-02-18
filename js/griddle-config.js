@@ -1,8 +1,8 @@
 // Copyright 2002-2014, University of Colorado Boulder
 
-// RequireJS configuration file for Lightbulb demo.
+// RequireJS configuration file for Griddle demo.
 require.config( {
-  deps: [ 'lightbulb-main' ],
+  deps: [ 'griddle-main' ],
 
   paths: {
 
@@ -26,7 +26,7 @@ require.config( {
     SHERPA: '../../sherpa',
     SUN: '../../sun/js',
     VEGAS: '../../vegas/js',
-    LIGHTBULB: '../../lightbulb/js'
+    GRIDDLE: '../../griddle/js'
   },
 
   // optional cache buster to make browser refresh load all included scripts, can be disabled with ?cacheBuster=false

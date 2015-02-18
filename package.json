@@ -1,5 +1,5 @@
 {
-  "name": "lightbulb",
+  "name": "griddle",
   "version": "1.0.0-dev.2",
   "license": "MIT",
   "phetLibs": "assert axon brand dot joist kite phet-core phetcommon scenery scenery-phet sun sherpa",

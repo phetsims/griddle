@@ -48,8 +48,8 @@ define( function( require ) {
         } );
 
       } );
-
-      return inherit( Node, XYDataSeriesNode );
     }
+
+    return inherit( Node, XYDataSeriesNode );
   }
 );

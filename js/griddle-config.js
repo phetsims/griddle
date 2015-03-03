@@ -25,7 +25,6 @@ require.config( {
     SCENERY_PHET: '../../scenery-phet/js',
     SHERPA: '../../sherpa',
     SUN: '../../sun/js',
-    VEGAS: '../../vegas/js',
     GRIDDLE: '../../griddle/js'
   },
 

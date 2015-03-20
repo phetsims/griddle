@@ -41,19 +41,20 @@ define( function( require ) {
           screenView.addChild( plot );
           var series = new XYDataSeries( { color: 'blue' } );
           plot.addSeries( series );
+          var forward = true;
           var count = 0;
-
           screenView.step = function() {
-              var new_series = new XYDataSeries( { color: 'blue' } );
-              plot.addSeries(new_series);
-              new_series.setPoints(
-                  new_series.range(0, plot.options.width),
-                  new_series.range(0, plot.options.height).map(
-                          function(i) {
-                              return -(plot.options.height / 2) + 5 * Math.sin((i / 20) - (time / 8));
-                          }));
-              plot.clear();
-              time = (time + 1) % 1000
+            series.addPoint( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) );
+            time = time + (forward ? 1 : -1);
+
+            if ( time > 400 ) {
+              forward = false;
+              count++;
+            }
+            if ( time < 0 ) {
+              forward = true;
+              count++;
+            }
           };
           return screenView;
         },

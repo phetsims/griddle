@@ -19,7 +19,7 @@ define( function( require ) {
     var content = new Node();
 
     this.options = _.extend( {
-      width: 400,
+      width: 402,
       height: 400,
       numVerticalGridLines: 10,
       numHorizontalGridLines: 10,
@@ -86,6 +86,10 @@ define( function( require ) {
           xyPlot.content.addChild( new Line( xPrevious, yPrevious, x, y, { stroke: series.color } ) );
         }
       } );
+    },
+    clear: function() {
+        this.series = []
+        this.content = new Node();
     }
   } );
 } );

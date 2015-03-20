@@ -89,9 +89,7 @@ define( function( require ) {
     },
     clear: function() {
         this.series = []
-    },
-    removeSeries: function(series) {
-        this.series.splice(this.series.indexOf(series), 1);
+        this.content = new Node();
     }
   } );
 } );

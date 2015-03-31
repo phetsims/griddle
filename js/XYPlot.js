@@ -7,6 +7,7 @@
  */
 define( function( require ) {
   'use strict';
+
   var inherit = require( 'PHET_CORE/inherit' );
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -14,6 +15,7 @@ define( function( require ) {
   var Line = require( 'SCENERY/nodes/Line' );
   var Panel = require( 'SUN/Panel' );
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  var XYDataSeriesNode = require( 'GRIDDLE/XYDataSeriesNode' );
 
   function XYPlot( options ) {
     var content = new Node();
@@ -42,7 +44,10 @@ define( function( require ) {
     //vertical grid lines
     for ( var i = 0; i < this.options.numVerticalGridLines + 1; i++ ) {
       lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      line = new Line( i * this.options.width / 10, 0, i * this.options.width / 10, -this.options.height, { stroke: 'gray', lineWidth: lineWidth } );
+      line = new Line( i * this.options.width / 10, 0, i * this.options.width / 10, -this.options.height, {
+        stroke: 'gray',
+        lineWidth: lineWidth
+      } );
       content.addChild( line );
       if ( i % 2 === 0 ) {
         content.addChild( new Text( i, { font: new PhetFont( 16 ), centerX: line.centerX, top: line.bottom + 6 } ) );
@@ -67,7 +72,12 @@ define( function( require ) {
 
     Panel.call( this, content, panelOptions );
 
-    this.series = [];
+    /**
+     * Map XYDataSeries -> XYDataSeriesNode
+     * @public
+     * @type {{}}
+     */
+    this.seriesViewMap = {};
     this.content = content;
   }
 
@@ -78,14 +88,25 @@ define( function( require ) {
     appendPoint: function( x, y, color, stroke ) {
 
     },
+
+    /**
+     *
+     * @param {XYDataSeries} series
+     */
     addSeries: function( series ) {
-      this.series.push( series );
-      var xyPlot = this;
-      series.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
-        if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-          xyPlot.content.addChild( new Line( xPrevious, yPrevious, x, y, { stroke: series.color } ) );
-        }
-      } );
+      this.seriesViewMap[ series ] = new XYDataSeriesNode( series );
+      this.content.addChild( this.seriesViewMap[ series ] );
+    },
+
+    /**
+     *
+     * @param {XYDataSeries} series
+     */
+    removeSeries: function( series ) {
+      var view = this.seriesViewMap[ series ];
+      this.content.removeChild( view );
+      view.dispose();
+      delete this.seriesViewMap[ series ];
     }
   } );
 } );

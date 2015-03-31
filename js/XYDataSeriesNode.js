@@ -25,29 +25,23 @@ define( function( require ) {
      *
      * @constructor
      */
-    function XYDataSeriesNode( xyDataSeries, chartModelViewTransform, options ) {
+    function XYDataSeriesNode( xyDataSeries, options ) {
       var xyDataSeriesNode = this;
       Node.call( this, options );
 
-      xyDataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
+      var listener = function( x, y, xPrevious, yPrevious ) {
         if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-          var line = new Line(
-            chartModelViewTransform.modelToViewX( xPrevious ),
-            chartModelViewTransform.modelToViewY( yPrevious ),
-            chartModelViewTransform.modelToViewX( x ),
-            chartModelViewTransform.modelToViewY( y ), {
-              stroke: xyDataSeries.color
-            }
-          );
-          line.computeShapeBounds = computeShapeBounds;
-          xyDataSeriesNode.addChild( line );
+          xyDataSeriesNode.addChild( new Line( xPrevious, yPrevious, x, y, { stroke: xyDataSeries.color } ) );
         }
+      };
+      xyDataSeries.addDataSeriesListener( listener );
 
-        xyDataSeries.on( 'cleared', function() {
-          xyDataSeriesNode.removeAllChildren();
-        } );
-
-      } );
+      /**
+       * @public
+       */
+      this.dispose = function() {
+        xyDataSeries.removeDataSeriesListener( listener );
+      };
     }
 
     return inherit( Node, XYDataSeriesNode );

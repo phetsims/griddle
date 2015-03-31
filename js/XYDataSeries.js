@@ -32,6 +32,12 @@ define( function( require ) {
     addDataSeriesListener: function( listener ) {
       this.listeners.push( listener );
     },
+    removeDataSeriesListener: function( listener ) {
+      var index = this.listeners.indexOf( listener );
+      if ( index !== -1 ) {
+        this.listeners.splice( index, 1 );
+      }
+    },
     addPoint: function( x, y ) {
       this.xPoints.push( x );
       this.yPoints.push( y );

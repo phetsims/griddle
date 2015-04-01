@@ -59,6 +59,42 @@ define( function( require ) {
 
     },
 
+    /**
+     *
+     * @param {array[array, array]} vectorArray
+     */
+    setPoints: function(vectorArray) {
+      this.clear();
+      var xarr = vectorArray[0];
+      var yarr = vectorArray[1];
+      for (var j=0; j < xarr.length; j++) {
+          this.addPoint(xarr[j], yarr[j]);
+      }
+    },
+
+    /**
+     *
+     * @param {int} start
+     * @param {int} stop
+     */
+    genRange: function(start, stop) {
+        /*
+         * Yield a range of integer values, [lower, upper)
+         */
+        return Array.apply(null, Array(stop - start)).map(function (_, i) {return start + i;})
+    },
+
+    /**
+     *
+     * @param {callable} func
+     * @param {array[int, int]} func
+     */
+    applyFunction: function(func, domain) {
+        domainValues = genRange(domain[0], domain[1]);
+        rangeValues = domainValues.map(func);
+        this.setPoints([domainValues, rangeValues]);
+    },
+
     get length() {
       return this.xPoints.length;
     }

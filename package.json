@@ -1,23 +1,11 @@
 {
   "name": "griddle",
-  "version": "1.0.0-dev.2",
+  "version": "0.0.0",
   "license": "MIT",
-  "phetLibs": [
-    "griddle",
-    "assert",
-    "axon",
-    "brand",
-    "chipper",
-    "dot",
-    "joist",
-    "kite",
-    "phet-core",
-    "phetcommon",
-    "scenery",
-    "scenery-phet",
-    "sherpa",
-    "sun"
-  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phetsims/griddle.git"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-requirejs": "~0.4.0",

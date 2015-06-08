@@ -17,7 +17,6 @@ require.config( {
     AXON: '../../axon/js',
     BRAND: '../../brand/js',
     DOT: '../../dot/js',
-    GRIDDLE: '../../griddle/js',
     JOIST: '../../joist/js',
     KITE: '../../kite/js',
     PHETCOMMON: '../../phetcommon/js',
@@ -26,7 +25,10 @@ require.config( {
     SCENERY: '../../scenery/js',
     SCENERY_PHET: '../../scenery-phet/js',
     SHERPA: '../../sherpa',
-    SUN: '../../sun/js'
+    SUN: '../../sun/js',
+
+    // this app
+    GRIDDLE: '../../griddle/js'
   },
 
   // optional cache buster to make browser refresh load all included scripts, can be disabled with ?cacheBuster=false

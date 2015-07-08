@@ -13,13 +13,6 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
     var Line = require( 'SCENERY/nodes/Line' );
-    var Bounds2 = require( 'DOT/Bounds2' );
-
-    var bounds2 = new Bounds2( 0, 0, 0, 0 );
-
-    function computeShapeBounds() {
-      return bounds2;
-    }
 
     /**
      *

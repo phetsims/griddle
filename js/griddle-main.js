@@ -16,7 +16,7 @@ define( function( require ) {
   var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
 
   // strings
-  var simTitle = 'Griddle Demo';
+  var simTitle = require( 'string!GRIDDLE/griddle.name' );
 
   var simOptions = {
     credits: {

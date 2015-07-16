@@ -2,6 +2,7 @@
   "name": "griddle",
   "version": "0.0.0",
   "license": "MIT",
+  "simTitleStringKey": "GRIDDLE/griddle.name",
   "phetLibs": [
     "griddle"
   ],

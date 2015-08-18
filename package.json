@@ -2,11 +2,6 @@
   "name": "griddle",
   "version": "0.0.0",
   "license": "MIT",
-  "requirejsNamespace": "GRIDDLE",
-  "simTitleStringKey": "GRIDDLE/griddle.name",
-  "phetLibs": [
-    "griddle"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/phetsims/griddle.git"
@@ -17,5 +12,12 @@
     "grunt-contrib-jshint": "~0.6.4",
     "uglify-js": "~2.4.0",
     "requirejs": "~2.1.8"
+  },
+  "phet": {
+    "requirejsNamespace": "GRIDDLE",
+    "simTitleStringKey": "GRIDDLE/griddle.name",
+    "phetLibs": [
+      "griddle"
+    ]
   }
 }

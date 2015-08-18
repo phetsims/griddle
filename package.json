@@ -15,9 +15,6 @@
   },
   "phet": {
     "requirejsNamespace": "GRIDDLE",
-    "simTitleStringKey": "GRIDDLE/griddle.name",
-    "phetLibs": [
-      "griddle"
-    ]
+    "simTitleStringKey": "GRIDDLE/griddle.name"
   }
 }

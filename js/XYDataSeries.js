@@ -53,7 +53,7 @@ define( function( require ) {
 
       // notify listeners - note that the previous data series values can be undefined in the notification
       for ( var i = 0; i < this.listeners.length; i++ ) {
-        this.listeners[ i ]( x, y, this.xPoints[ this.dataSeriesLength ], this.yPoints[ this.dataSeriesLength ] );
+        this.listeners[ i ]( x, y, this.xPoints[ this.dataSeriesLength - 1 ], this.yPoints[ this.dataSeriesLength - 1 ] );
       }
 
       // point to the next slot

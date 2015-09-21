@@ -73,6 +73,13 @@ define( function( require ) {
       return this.xPoints[ index ];
     },
 
+    getY: function( index ) {
+      if ( index > this.dataSeriesLength - 1 ) {
+        throw new Error( "No Data Point Exist at this index " + index );
+      }
+      return this.yPoints[ index ];
+    },
+
     /**
      * @public - getter for the length.  DON'T CHANGE THIS TO AN ES5 GETTER.  That's what is was originally, and it
      * caused poor performance on iPad, see https://github.com/phetsims/neuron/issues/55.

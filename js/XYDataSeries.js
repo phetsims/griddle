@@ -68,14 +68,14 @@ define( function( require ) {
 
     getX: function( index ) {
       if ( index > this.dataSeriesLength - 1 ) {
-        throw new Error( "No Data Point Exist at this index " + index );
+        throw new Error( 'No Data Point Exist at this index ' + index );
       }
       return this.xPoints[ index ];
     },
 
     getY: function( index ) {
       if ( index > this.dataSeriesLength - 1 ) {
-        throw new Error( "No Data Point Exist at this index " + index );
+        throw new Error( 'No Data Point Exist at this index ' + index );
       }
       return this.yPoints[ index ];
     },

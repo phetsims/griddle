@@ -20,7 +20,7 @@ define( function( require ) {
   function XYPlot( options ) {
     var content = new Node();
 
-    this.options = _.extend( {
+    options = _.extend( {
       width: 400,
       height: 400,
       numVerticalGridLines: 10,
@@ -34,7 +34,7 @@ define( function( require ) {
 
     //tailX, tailY, tipX, tipY, options
     var panelOptions = {
-      fill: this.options.backgroundFill,
+      fill: options.backgroundFill,
       xMargin: 10,
       yMargin: 10
     };
@@ -42,9 +42,9 @@ define( function( require ) {
     var lineWidth;
     var line;
     //vertical grid lines
-    for ( var i = 0; i < this.options.numVerticalGridLines + 1; i++ ) {
+    for ( var i = 0; i < options.numVerticalGridLines + 1; i++ ) {
       lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      line = new Line( i * this.options.width / 10, 0, i * this.options.width / 10, -this.options.height, {
+      line = new Line( i * options.width / 10, 0, i * options.width / 10, -options.height, {
         stroke: 'gray',
         lineWidth: lineWidth
       } );
@@ -55,9 +55,9 @@ define( function( require ) {
     }
 
     //horizontal grid lines
-    for ( i = 0; i < this.options.numHorizontalGridLines + 1; i++ ) {
+    for ( i = 0; i < options.numHorizontalGridLines + 1; i++ ) {
       lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      line = new Line( 0, -i * this.options.height / 10, this.options.width, -i * this.options.height / 10, {
+      line = new Line( 0, -i * options.height / 10, options.width, -i * options.height / 10, {
         stroke: 'gray',
         lineWidth: lineWidth
       } );
@@ -67,8 +67,8 @@ define( function( require ) {
       }
     }
 
-    content.addChild( new ArrowNode( 0, 0, 0, -this.options.height, {} ) );
-    content.addChild( new ArrowNode( 0, 0, this.options.width, 0, {} ) );
+    content.addChild( new ArrowNode( 0, 0, 0, -options.height, {} ) );
+    content.addChild( new ArrowNode( 0, 0, options.width, 0, {} ) );
 
     Panel.call( this, content, panelOptions );
 

@@ -16,7 +16,7 @@ define( function( require ) {
   var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
 
   // strings
-  var simTitle = require( 'string!GRIDDLE/griddle.title' );
+  var griddleTitleString = require( 'string!GRIDDLE/griddle.title' );
 
   var simOptions = {
     credits: {
@@ -26,8 +26,8 @@ define( function( require ) {
 
   SimLauncher.launch( function() {
     // Create and start the sim
-    new Sim( simTitle, [
-      new Screen( simTitle, null,
+    new Sim( griddleTitleString, [
+      new Screen( griddleTitleString, null,
         function() {
           return {
             step: function() {

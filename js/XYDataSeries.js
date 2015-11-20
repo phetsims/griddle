@@ -15,17 +15,16 @@ define( function( require ) {
 
     options = _.extend( {
       color: 'black',
-      maxPoints: 1000
+
+      // size of array to initially allocate for the series, use expected max for best performance
+      initialSize: 1000
     }, options );
 
     this.color = options.color; // @public
-    this.maxPoints = options.maxPoints; // @private
     this.listeners = []; // @private
 
-    //this.xPoints = [];
-    this.xPoints = new Array( options.maxPoints ); // @private
-    //this.yPoints = [];
-    this.yPoints = new Array( options.maxPoints ); // @private
+    this.xPoints = new Array( options.initialSize ); // @private
+    this.yPoints = new Array( options.initialSize ); // @private
 
     this.dataSeriesLength = 0; // @private, index to next available slot
 
@@ -58,7 +57,6 @@ define( function( require ) {
 
       // point to the next slot
       this.dataSeriesLength++;
-      assert && assert( this.dataSeriesLength < this.maxPoints, 'Capacity of data series exceeded' );
     },
 
     clear: function() {

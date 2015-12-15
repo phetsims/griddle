@@ -9,17 +9,18 @@ define( function( require ) {
   'use strict';
 
   var inherit = require( 'PHET_CORE/inherit' );
-  var Events = require( 'AXON/Events' );
+  var Emitter = require( 'AXON/Emitter' );
 
   function XYDataSeries( options ) {
 
     options = _.extend( {
       color: 'black',
 
-      // size of array to initially allocate for the series, use expected max for best performance
+      // size of array to initially allocate for the series, specify expected max in options for best performance
       initialSize: 1000
     }, options );
 
+    this.cleared = new Emitter(); // @public, event emitted when the series is cleared
     this.color = options.color; // @public
     this.listeners = []; // @private
 
@@ -27,11 +28,9 @@ define( function( require ) {
     this.yPoints = new Array( options.initialSize ); // @private
 
     this.dataSeriesLength = 0; // @private, index to next available slot
-
-    Events.call( this );
   }
 
-  return inherit( Events, XYDataSeries, {
+  return inherit( Object, XYDataSeries, {
 
     addDataSeriesListener: function( listener ) {
       this.listeners.push( listener );
@@ -61,7 +60,7 @@ define( function( require ) {
 
     clear: function() {
       this.dataSeriesLength = 0;
-      this.trigger( 'cleared' );
+      this.cleared.emit();
     },
 
     getX: function( index ) {

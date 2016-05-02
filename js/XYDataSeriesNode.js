@@ -13,6 +13,7 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
     var Line = require( 'SCENERY/nodes/Line' );
+    var griddle = require( 'GRIDDLE/griddle' );
 
     /**
      *
@@ -36,6 +37,8 @@ define( function( require ) {
         xyDataSeries.removeDataSeriesListener( listener );
       };
     }
+
+    griddle.register( 'XYDataSeriesNode', XYDataSeriesNode );
 
     return inherit( Node, XYDataSeriesNode );
   }

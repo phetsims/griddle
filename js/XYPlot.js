@@ -8,6 +8,7 @@
 define( function( require ) {
   'use strict';
 
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -16,6 +17,7 @@ define( function( require ) {
   var Panel = require( 'SUN/Panel' );
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   var XYDataSeriesNode = require( 'GRIDDLE/XYDataSeriesNode' );
+  var griddle = require( 'GRIDDLE/griddle' );
 
   function XYPlot( options ) {
     var content = new Node();
@@ -80,6 +82,8 @@ define( function( require ) {
     this.seriesViewMap = {};
     this.content = content;
   }
+
+  griddle.register( 'XYPlot', XYPlot );
 
   return inherit( Panel, XYPlot, {
     step: function( timeElapsed ) {

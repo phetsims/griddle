@@ -8,8 +8,10 @@
 define( function( require ) {
   'use strict';
 
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Emitter = require( 'AXON/Emitter' );
+  var griddle = require( 'GRIDDLE/griddle' );
 
   function XYDataSeries( options ) {
 
@@ -29,6 +31,8 @@ define( function( require ) {
 
     this.dataSeriesLength = 0; // @private, index to next available slot
   }
+
+  griddle.register( 'XYDataSeries', XYDataSeries );
 
   return inherit( Object, XYDataSeries, {
 

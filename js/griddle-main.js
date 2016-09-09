@@ -27,13 +27,17 @@ define( function( require ) {
   SimLauncher.launch( function() {
     // Create and start the sim
     new Sim( griddleTitleString, [
-      new Screen( griddleTitleString, null,
+      new Screen(
+
+        // createModel
         function() {
           return {
             step: function() {
             }
           };
         },
+
+        // createView
         function( model ) {
           var screenView = new ScreenView( { layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
           var time = 0;
@@ -58,7 +62,11 @@ define( function( require ) {
           };
           return screenView;
         },
-        { backgroundColor: '#fff' }
+
+        // options
+        {
+          backgroundColor: '#fff'
+        }
       )
     ], simOptions ).start();
   } );

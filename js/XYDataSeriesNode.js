@@ -19,12 +19,14 @@ define( function( require ) {
    * @constructor
    */
   function XYDataSeriesNode( xyDataSeries, options ) {
-    var xyDataSeriesNode = this;
+
+    var self = this;
+
     Node.call( this, options );
 
     var listener = function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        xyDataSeriesNode.addChild( new Line( xPrevious, yPrevious, x, y, { stroke: xyDataSeries.color } ) );
+        self.addChild( new Line( xPrevious, yPrevious, x, y, { stroke: xyDataSeries.color } ) );
       }
     };
     xyDataSeries.addDataSeriesListener( listener );

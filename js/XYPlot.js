@@ -4,6 +4,7 @@
  * XY Plot
  *
  * @author Sam Reid
+ * @author Aadish Gupta
  */
 define( function( require ) {
   'use strict';
@@ -25,16 +26,21 @@ define( function( require ) {
     options = _.extend( {
       width: 400,
       height: 400,
-      numVerticalGridLines: 10,
-      numHorizontalGridLines: 10,
       backgroundFill: 'white',
       minX: 0,
       maxX: 10,
       minY: 0,
-      maxY: 10
+      maxY: 10,
+      step: 2,
+      showVerticalIntermediateLines: true,
+      showHorizontalIntermediateLines: true,
+      showXAxisTickMarkLabels: true,
+      showYAxisTickMarkLabels: true,
+      tickLabelFont: new PhetFont( 16 ),
+      lineDash: null,
+      showAxis: true
     }, options );
 
-    //tailX, tailY, tipX, tipY, options
     var panelOptions = {
       fill: options.backgroundFill,
       xMargin: 10,
@@ -44,33 +50,63 @@ define( function( require ) {
     var lineWidth;
     var line;
     //vertical grid lines
-    for ( var i = 0; i < options.numVerticalGridLines + 1; i++ ) {
-      lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      line = new Line( i * options.width / 10, 0, i * options.width / 10, -options.height, {
-        stroke: 'gray',
-        lineWidth: lineWidth
-      } );
-      content.addChild( line );
-      if ( i % 2 === 0 ) {
-        content.addChild( new Text( i, { font: new PhetFont( 16 ), centerX: line.centerX, top: line.bottom + 6 } ) );
+    // if minX and maxX is not a multiple of step function convert them to multiples
+    var minX = options.minX;
+    if ( minX % options.step !== 0){
+      minX = Math.floor( minX / options.step ) * options.step
+    }
+    var maxX = options.maxX;
+    if ( maxX % options.step !== 0){
+      maxX = Math.ceil( maxX / options.step ) * options.step
+    }
+    var numVerticalGridLines = maxX - minX;
+    for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
+      lineWidth = i % options.step === 0 ? 0.8 : 0.3;
+      if ( i % options.step === 0 || options.showVerticalIntermediateLines ) {
+        line = new Line( i * options.width / numVerticalGridLines, 0, i * options.width / numVerticalGridLines, -options.height, {
+          stroke: 'gray',
+          lineWidth: lineWidth,
+          lineDash: i !== numVerticalGridLines && i !== 0 ? options.lineDash : null
+        } );
+        content.addChild( line );
+      }
+
+      if ( i % options.step === 0 && options.showXAxisTickMarkLabels ) {
+        content.addChild( new Text( i + minX , { font: options.tickLabelFont, centerX: line.centerX, top: line.bottom + 6 } ) );
       }
     }
 
     //horizontal grid lines
-    for ( i = 0; i < options.numHorizontalGridLines + 1; i++ ) {
-      lineWidth = i % 2 === 0 ? 0.8 : 0.3;
-      line = new Line( 0, -i * options.height / 10, options.width, -i * options.height / 10, {
-        stroke: 'gray',
-        lineWidth: lineWidth
-      } );
-      content.addChild( line );
-      if ( i % 2 === 0 ) {
-        content.addChild( new Text( i, { font: new PhetFont( 16 ), centerY: line.centerY, right: line.left - 6 } ) );
+    // if minY and maxY is not a multiple of step function convert them to multiples
+    var minY = options.minY;
+    if ( minY % options.step !== 0){
+      minY = Math.floor( minY / options.step ) * options.step
+    }
+    var maxY = options.maxY;
+    if ( maxY % options.step !== 0){
+      maxY = Math.ceil( maxY / options.step ) * options.step
+    }
+    var numHorizontalGridLines = maxY - minY;
+    for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
+      lineWidth = i % options.step === 0 ? 0.8 : 0.3;
+
+      if ( i % options.step === 0 || options.showHorizontalIntermediateLines ) {
+        line = new Line( 0, -i * options.height / numHorizontalGridLines, options.width, -i * options.height / numHorizontalGridLines, {
+          stroke: 'gray',
+          lineWidth: lineWidth,
+          lineDash: i !== numHorizontalGridLines && i !== 0 ? options.lineDash : null
+        } );
+        content.addChild( line );
+      }
+      if ( i % options.step === 0 && options.showYAxisTickMarkLabels ) {
+        content.addChild( new Text( i + minY, { font: new PhetFont( 16 ), centerY: line.centerY, right: line.left - 6 } ) );
       }
     }
 
-    content.addChild( new ArrowNode( 0, 0, 0, -options.height, {} ) );
-    content.addChild( new ArrowNode( 0, 0, options.width, 0, {} ) );
+    if ( options.showAxis ) {
+      content.addChild( new ArrowNode( 0, 0, 0, -options.height, {} ) );
+      content.addChild( new ArrowNode( 0, 0, options.width, 0, {} ) );
+    }
 
     Panel.call( this, content, panelOptions );
 

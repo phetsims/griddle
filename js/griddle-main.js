@@ -8,6 +8,7 @@ define( function( require ) {
 
   // modules
   var Bounds2 = require( 'DOT/Bounds2' );
+  var Panel = require( 'SUN/Panel' );
   var Screen = require( 'JOIST/Screen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
@@ -42,7 +43,12 @@ define( function( require ) {
           var screenView = new ScreenView( { layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
           var time = 0;
           var plot = new XYPlot( { backgroundFill: '#efecd9' } );
-          screenView.addChild( plot );
+          var plotPanel = new Panel ( plot, {
+            fill: '#efecd9',
+            xMargin: 10,
+            yMargin: 10
+          } );
+          screenView.addChild( plotPanel );
           var series = new XYDataSeries( { color: 'blue' } );
           plot.addSeries( series );
           var forward = true;

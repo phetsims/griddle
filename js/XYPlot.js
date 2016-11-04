@@ -19,6 +19,7 @@ define( function( require ) {
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   var XYDataSeriesNode = require( 'GRIDDLE/XYDataSeriesNode' );
   var griddle = require( 'GRIDDLE/griddle' );
+  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
 
   function XYPlot( options ) {
     var content = new Node();
@@ -41,12 +42,14 @@ define( function( require ) {
       showAxis: true
     }, options );
 
-    var panelOptions = {
-      fill: options.backgroundFill,
-      xMargin: 10,
-      yMargin: 10
-    };
+    Node.call( this );
+    var content = new Node();
 
+    var rectangle = new Rectangle( 0, -options.height, options.width, options.height, {
+      fill: options.backgroundFill
+    } );
+    //rectangle.center = content.center;
+    content.addChild( rectangle );
     var lineWidth;
     var line;
     //vertical grid lines
@@ -108,7 +111,8 @@ define( function( require ) {
       content.addChild( new ArrowNode( 0, 0, options.width, 0, {} ) );
     }
 
-    Panel.call( this, content, panelOptions );
+
+    this.addChild( content );
 
     /**
      * Map XYDataSeries -> XYDataSeriesNode
@@ -121,7 +125,7 @@ define( function( require ) {
 
   griddle.register( 'XYPlot', XYPlot );
 
-  return inherit( Panel, XYPlot, {
+  return inherit( Node, XYPlot, {
     step: function( timeElapsed ) {
       // Does nothing for now.
     },

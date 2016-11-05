@@ -15,7 +15,6 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Line = require( 'SCENERY/nodes/Line' );
-  var Panel = require( 'SUN/Panel' );
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   var XYDataSeriesNode = require( 'GRIDDLE/XYDataSeriesNode' );
   var griddle = require( 'GRIDDLE/griddle' );
@@ -43,7 +42,6 @@ define( function( require ) {
     }, options );
 
     Node.call( this );
-    var content = new Node();
 
     var rectangle = new Rectangle( 0, -options.height, options.width, options.height, {
       fill: options.backgroundFill
@@ -55,12 +53,12 @@ define( function( require ) {
     //vertical grid lines
     // if minX and maxX is not a multiple of step function convert them to multiples
     var minX = options.minX;
-    if ( minX % options.step !== 0){
-      minX = Math.floor( minX / options.step ) * options.step
+    if ( minX % options.step !== 0 ) {
+      minX = Math.floor( minX / options.step ) * options.step;
     }
     var maxX = options.maxX;
-    if ( maxX % options.step !== 0){
-      maxX = Math.ceil( maxX / options.step ) * options.step
+    if ( maxX % options.step !== 0 ) {
+      maxX = Math.ceil( maxX / options.step ) * options.step;
     }
     var numVerticalGridLines = maxX - minX;
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
@@ -75,19 +73,23 @@ define( function( require ) {
       }
 
       if ( i % options.step === 0 && options.showXAxisTickMarkLabels ) {
-        content.addChild( new Text( i + minX , { font: options.tickLabelFont, centerX: line.centerX, top: line.bottom + 6 } ) );
+        content.addChild( new Text( i + minX, {
+          font: options.tickLabelFont,
+          centerX: line.centerX,
+          top: line.bottom + 6
+        } ) );
       }
     }
 
     //horizontal grid lines
     // if minY and maxY is not a multiple of step function convert them to multiples
     var minY = options.minY;
-    if ( minY % options.step !== 0){
-      minY = Math.floor( minY / options.step ) * options.step
+    if ( minY % options.step !== 0 ) {
+      minY = Math.floor( minY / options.step ) * options.step;
     }
     var maxY = options.maxY;
-    if ( maxY % options.step !== 0){
-      maxY = Math.ceil( maxY / options.step ) * options.step
+    if ( maxY % options.step !== 0 ) {
+      maxY = Math.ceil( maxY / options.step ) * options.step;
     }
     var numHorizontalGridLines = maxY - minY;
     for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
@@ -102,7 +104,11 @@ define( function( require ) {
         content.addChild( line );
       }
       if ( i % options.step === 0 && options.showYAxisTickMarkLabels ) {
-        content.addChild( new Text( i + minY, { font: new PhetFont( 16 ), centerY: line.centerY, right: line.left - 6 } ) );
+        content.addChild( new Text( i + minY, {
+          font: new PhetFont( 16 ),
+          centerY: line.centerY,
+          right: line.left - 6
+        } ) );
       }
     }
 

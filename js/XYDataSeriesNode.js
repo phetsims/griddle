@@ -42,7 +42,7 @@ define( function( require ) {
     };
 
     var clearListener = function() {
-      self.removeAllChildren()
+      self.removeAllChildren();
     };
     xyDataSeries.addDataSeriesListener( listener );
     xyDataSeries.cleared.addListener( clearListener );

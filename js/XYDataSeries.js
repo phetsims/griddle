@@ -17,13 +17,14 @@ define( function( require ) {
 
     options = _.extend( {
       color: 'black',
-
+      lineWidth: 1,
       // size of array to initially allocate for the series, specify expected max in options for best performance
       initialSize: 1000
     }, options );
 
     this.cleared = new Emitter(); // @public, event emitted when the series is cleared
     this.color = options.color; // @public
+    this.lineWidth = options.lineWidth; // @public
     this.listeners = []; // @private
 
     this.xPoints = new Array( options.initialSize ); // @private

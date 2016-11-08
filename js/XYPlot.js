@@ -31,7 +31,8 @@ define( function( require ) {
       maxX: 10,
       minY: 0,
       maxY: 10,
-      step: 2,
+      stepX: 2,
+      stepY: 2,
       showVerticalIntermediateLines: true,
       showHorizontalIntermediateLines: true,
       showXAxisTickMarkLabels: true,
@@ -53,17 +54,18 @@ define( function( require ) {
     //vertical grid lines
     // if minX and maxX is not a multiple of step function convert them to multiples
     var minX = options.minX;
-    if ( minX % options.step !== 0 ) {
-      minX = Math.floor( minX / options.step ) * options.step;
+    if ( minX % options.stepX !== 0 ) {
+      minX = Math.floor( minX / options.stepX ) * options.stepX;
     }
     var maxX = options.maxX;
-    if ( maxX % options.step !== 0 ) {
-      maxX = Math.ceil( maxX / options.step ) * options.step;
+    if ( maxX % options.stepX !== 0 ) {
+      maxX = Math.ceil( maxX / options.stepX ) * options.stepX;
     }
     var numVerticalGridLines = maxX - minX;
+    this.xScaleFactor = options.width / numVerticalGridLines;
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
-      lineWidth = i % options.step === 0 ? 0.8 : 0.3;
-      if ( i % options.step === 0 || options.showVerticalIntermediateLines ) {
+      lineWidth = i % options.stepX === 0 ? 0.8 : 0.3;
+      if ( i % options.stepX === 0 || options.showVerticalIntermediateLines ) {
         line = new Line( i * options.width / numVerticalGridLines, 0, i * options.width / numVerticalGridLines, -options.height, {
           stroke: 'gray',
           lineWidth: lineWidth,
@@ -72,7 +74,7 @@ define( function( require ) {
         content.addChild( line );
       }
 
-      if ( i % options.step === 0 && options.showXAxisTickMarkLabels ) {
+      if ( i % options.stepX === 0 && options.showXAxisTickMarkLabels ) {
         content.addChild( new Text( i + minX, {
           font: options.tickLabelFont,
           centerX: line.centerX,
@@ -84,18 +86,19 @@ define( function( require ) {
     //horizontal grid lines
     // if minY and maxY is not a multiple of step function convert them to multiples
     var minY = options.minY;
-    if ( minY % options.step !== 0 ) {
-      minY = Math.floor( minY / options.step ) * options.step;
+    if ( minY % options.stepY !== 0 ) {
+      minY = Math.floor( minY / options.stepY ) * options.stepY;
     }
     var maxY = options.maxY;
-    if ( maxY % options.step !== 0 ) {
-      maxY = Math.ceil( maxY / options.step ) * options.step;
+    if ( maxY % options.stepY !== 0 ) {
+      maxY = Math.ceil( maxY / options.stepY ) * options.stepY;
     }
     var numHorizontalGridLines = maxY - minY;
+    this.yScaleFactor = options.height / numHorizontalGridLines;
     for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
-      lineWidth = i % options.step === 0 ? 0.8 : 0.3;
+      lineWidth = i % options.stepY === 0 ? 0.8 : 0.3;
 
-      if ( i % options.step === 0 || options.showHorizontalIntermediateLines ) {
+      if ( i % options.stepY === 0 || options.showHorizontalIntermediateLines ) {
         line = new Line( 0, -i * options.height / numHorizontalGridLines, options.width, -i * options.height / numHorizontalGridLines, {
           stroke: 'gray',
           lineWidth: lineWidth,
@@ -103,7 +106,7 @@ define( function( require ) {
         } );
         content.addChild( line );
       }
-      if ( i % options.step === 0 && options.showYAxisTickMarkLabels ) {
+      if ( i % options.stepY === 0 && options.showYAxisTickMarkLabels ) {
         content.addChild( new Text( i + minY, {
           font: new PhetFont( 16 ),
           centerY: line.centerY,
@@ -142,9 +145,13 @@ define( function( require ) {
     /**
      *
      * @param {XYDataSeries} series
+     * @param {boolean} scaleFactor
      */
-    addSeries: function( series ) {
-      this.seriesViewMap[ series ] = new XYDataSeriesNode( series );
+    addSeries: function( series, scaleFactor ) {
+      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, {
+        xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
+        yScaleFactor: scaleFactor ? -this.yScaleFactor : 1
+      } );
       this.content.addChild( this.seriesViewMap[ series ] );
     },
 

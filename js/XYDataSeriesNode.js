@@ -21,21 +21,38 @@ define( function( require ) {
   function XYDataSeriesNode( xyDataSeries, options ) {
 
     var self = this;
+    options = _.extend( {
+      xScaleFactor: 1,
+      yScaleFactor: 1
+    }, options );
 
     Node.call( this, options );
 
     var listener = function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        self.addChild( new Line( xPrevious, yPrevious, x, y, { stroke: xyDataSeries.color } ) );
+        self.addChild( new Line( xPrevious * options.xScaleFactor,
+          yPrevious * options.yScaleFactor,
+          x * options.xScaleFactor,
+          y * options.yScaleFactor,
+          { stroke: xyDataSeries.color,
+            lineWidth: xyDataSeries.lineWidth
+          }
+        ) );
       }
     };
+
+    var clearListener = function() {
+      self.removeAllChildren()
+    };
     xyDataSeries.addDataSeriesListener( listener );
+    xyDataSeries.cleared.addListener( clearListener );
 
     /**
      * @public
      */
     this.dispose = function() {
       xyDataSeries.removeDataSeriesListener( listener );
+      xyDataSeries.cleared.removeListener( clearListener );
     };
   }
 

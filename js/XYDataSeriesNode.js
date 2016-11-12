@@ -50,7 +50,7 @@ define( function( require ) {
     /**
      * @public
      */
-    this.dispose = function() {
+    this.disposeXYDataSeriesNode = function() {
       xyDataSeries.removeDataSeriesListener( listener );
       xyDataSeries.cleared.removeListener( clearListener );
     };
@@ -58,5 +58,13 @@ define( function( require ) {
 
   griddle.register( 'XYDataSeriesNode', XYDataSeriesNode );
 
-  return inherit( Node, XYDataSeriesNode );
+  return inherit( Node, XYDataSeriesNode, {
+
+    /**
+     * Make eligible for garbage collection.
+     */
+    dispose: function() {
+      this.disposeXYDataSeriesNode();
+    }
+  } );
 } );

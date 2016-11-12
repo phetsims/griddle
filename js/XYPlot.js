@@ -38,7 +38,7 @@ define( function( require ) {
       showXAxisTickMarkLabels: true,
       showYAxisTickMarkLabels: true,
       tickLabelFont: new PhetFont( 16 ),
-      lineDash: null,
+      lineDash: [],
       showAxis: true
     }, options );
 
@@ -69,7 +69,7 @@ define( function( require ) {
         line = new Line( i * options.width / numVerticalGridLines, 0, i * options.width / numVerticalGridLines, -options.height, {
           stroke: 'gray',
           lineWidth: lineWidth,
-          lineDash: i !== numVerticalGridLines && i !== 0 ? options.lineDash : null
+          lineDash: i !== numVerticalGridLines && i !== 0 ? options.lineDash : []
         } );
         content.addChild( line );
       }
@@ -102,7 +102,7 @@ define( function( require ) {
         line = new Line( 0, -i * options.height / numHorizontalGridLines, options.width, -i * options.height / numHorizontalGridLines, {
           stroke: 'gray',
           lineWidth: lineWidth,
-          lineDash: i !== numHorizontalGridLines && i !== 0 ? options.lineDash : null
+          lineDash: i !== numHorizontalGridLines && i !== 0 ? options.lineDash : []
         } );
         content.addChild( line );
       }

@@ -15,6 +15,8 @@ define( function( require ) {
   var ScreenView = require( 'JOIST/ScreenView' );
   var XYPlot = require( 'GRIDDLE/XYPlot' );
   var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
+  var Property = require( 'AXON/Property' );
+  var Color = require( 'SCENERY/util/Color' );
 
   // strings
   var griddleTitleString = require( 'string!GRIDDLE/griddle.title' );
@@ -71,7 +73,7 @@ define( function( require ) {
 
         // options
         {
-          backgroundColor: '#fff'
+          backgroundColorProperty: new Property( Color.toColor( '#fff' ) )
         }
       )
     ], simOptions ).start();

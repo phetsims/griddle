@@ -9,14 +9,13 @@ define( function( require ) {
   // modules
   var Bounds2 = require( 'DOT/Bounds2' );
   var Panel = require( 'SUN/Panel' );
+  var Property = require( 'AXON/Property' );
   var Screen = require( 'JOIST/Screen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
   var ScreenView = require( 'JOIST/ScreenView' );
   var XYPlot = require( 'GRIDDLE/XYPlot' );
   var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
-  var Property = require( 'AXON/Property' );
-  var Color = require( 'SCENERY/util/Color' );
 
   // strings
   var griddleTitleString = require( 'string!GRIDDLE/griddle.title' );
@@ -73,7 +72,7 @@ define( function( require ) {
 
         // options
         {
-          backgroundColorProperty: new Property( Color.toColor( '#fff' ) )
+          backgroundColorProperty: new Property( '#fff' )
         }
       )
     ], simOptions ).start();

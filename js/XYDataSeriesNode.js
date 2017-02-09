@@ -65,6 +65,7 @@ define( function( require ) {
      */
     dispose: function() {
       this.disposeXYDataSeriesNode();
+      Node.prototype.dispose.call( this );
     }
   } );
 } );

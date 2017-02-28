@@ -29,12 +29,13 @@ define( function( require ) {
     Node.call( this, options );
 
     var listener = function( x, y, xPrevious, yPrevious ) {
-      if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
+      if ( !isNaN( xPrevious ) && !isNaN( yPrevious ) && (xPrevious !== 0 || yPrevious !== 0 ) ) {
         self.addChild( new Line( xPrevious * options.xScaleFactor,
           yPrevious * options.yScaleFactor,
           x * options.xScaleFactor,
           y * options.yScaleFactor,
-          { stroke: xyDataSeries.color,
+          {
+            stroke: xyDataSeries.color,
             lineWidth: xyDataSeries.lineWidth
           }
         ) );

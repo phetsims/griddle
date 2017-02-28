@@ -4,6 +4,7 @@
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
+ * @author Aadish Gupta
  */
 define( function( require ) {
   'use strict';
@@ -16,9 +17,15 @@ define( function( require ) {
 
   /**
    *
+   * @param {XYDataSeries} xyDataSeries
+   * @param {Number} minX
+   * @param {Number} minY
+   * @param {Number} maxX
+   * @param {Number} maxY
+   * @param {Object} [options]
    * @constructor
    */
-  function XYDataSeriesNode( xyDataSeries, options ) {
+  function XYDataSeriesNode( xyDataSeries, minX, minY, maxX, maxY, options ) {
 
     var self = this;
     options = _.extend( {
@@ -30,15 +37,18 @@ define( function( require ) {
 
     var listener = function( x, y, xPrevious, yPrevious ) {
       if ( !isNaN( xPrevious ) && !isNaN( yPrevious ) && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        self.addChild( new Line( xPrevious * options.xScaleFactor,
-          yPrevious * options.yScaleFactor,
-          x * options.xScaleFactor,
-          y * options.yScaleFactor,
-          {
-            stroke: xyDataSeries.color,
-            lineWidth: xyDataSeries.lineWidth
-          }
-        ) );
+        // make sure current x and y are in the range before plotting them
+        if ( x >= minX && x <= maxX && y >= minY && y <= maxY ) {
+          self.addChild( new Line( xPrevious * options.xScaleFactor,
+            yPrevious * options.yScaleFactor,
+            x * options.xScaleFactor,
+            y * options.yScaleFactor,
+            {
+              stroke: xyDataSeries.color,
+              lineWidth: xyDataSeries.lineWidth
+            }
+          ) );
+        }
       }
     };
 

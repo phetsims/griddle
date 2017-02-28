@@ -53,15 +53,15 @@ define( function( require ) {
     var line;
     //vertical grid lines
     // if minX and maxX is not a multiple of step function convert them to multiples
-    var minX = options.minX;
-    if ( minX % options.stepX !== 0 ) {
-      minX = Math.floor( minX / options.stepX ) * options.stepX;
+    this.minX = options.minX;
+    if ( this.minX % options.stepX !== 0 ) {
+      this.minX = Math.floor( this.minX / options.stepX ) * options.stepX;
     }
-    var maxX = options.maxX;
-    if ( maxX % options.stepX !== 0 ) {
-      maxX = Math.ceil( maxX / options.stepX ) * options.stepX;
+    this.maxX = options.maxX;
+    if ( this.maxX % options.stepX !== 0 ) {
+      this.maxX = Math.ceil( this.maxX / options.stepX ) * options.stepX;
     }
-    var numVerticalGridLines = maxX - minX;
+    var numVerticalGridLines = this.maxX - this.minX;
     this.xScaleFactor = options.width / numVerticalGridLines;
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
       lineWidth = i % options.stepX === 0 ? 0.8 : 0.3;
@@ -75,7 +75,7 @@ define( function( require ) {
       }
 
       if ( i % options.stepX === 0 && options.showXAxisTickMarkLabels ) {
-        content.addChild( new Text( i + minX, {
+        content.addChild( new Text( i + this.minX, {
           font: options.tickLabelFont,
           centerX: line.centerX,
           top: line.bottom + 6
@@ -85,15 +85,15 @@ define( function( require ) {
 
     //horizontal grid lines
     // if minY and maxY is not a multiple of step function convert them to multiples
-    var minY = options.minY;
-    if ( minY % options.stepY !== 0 ) {
-      minY = Math.floor( minY / options.stepY ) * options.stepY;
+    this.minY = options.minY;
+    if ( this.minY % options.stepY !== 0 ) {
+      this.minY = Math.floor( this.minY / options.stepY ) * options.stepY;
     }
-    var maxY = options.maxY;
-    if ( maxY % options.stepY !== 0 ) {
-      maxY = Math.ceil( maxY / options.stepY ) * options.stepY;
+    this.maxY = options.maxY;
+    if ( this.maxY % options.stepY !== 0 ) {
+      this.maxY = Math.ceil( this.maxY / options.stepY ) * options.stepY;
     }
-    var numHorizontalGridLines = maxY - minY;
+    var numHorizontalGridLines = this.maxY - this.minY;
     this.yScaleFactor = options.height / numHorizontalGridLines;
     for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
       lineWidth = i % options.stepY === 0 ? 0.8 : 0.3;
@@ -107,7 +107,7 @@ define( function( require ) {
         content.addChild( line );
       }
       if ( i % options.stepY === 0 && options.showYAxisTickMarkLabels ) {
-        content.addChild( new Text( i + minY, {
+        content.addChild( new Text( i + this.minY, {
           font: new PhetFont( 16 ),
           centerY: line.centerY,
           right: line.left - 6
@@ -138,9 +138,6 @@ define( function( require ) {
     step: function( timeElapsed ) {
       // Does nothing for now.
     },
-    appendPoint: function( x, y, color, stroke ) {
-
-    },
 
     /**
      *
@@ -148,7 +145,7 @@ define( function( require ) {
      * @param {boolean} scaleFactor
      */
     addSeries: function( series, scaleFactor ) {
-      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, {
+      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, this.minX, this.minY, this.maxX, this.maxY, {
         xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
         yScaleFactor: scaleFactor ? -this.yScaleFactor : 1
       } );

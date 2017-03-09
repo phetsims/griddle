@@ -4,6 +4,7 @@
  * XY Data Series
  *
  * @author Sam Reid
+ * @author Aadish Gupta
  */
 define( function( require ) {
   'use strict';
@@ -50,17 +51,20 @@ define( function( require ) {
 
     addPoint: function( x, y ) {
 
-      // store the data
-      this.xPoints[ this.dataSeriesLength ] = x;
-      this.yPoints[ this.dataSeriesLength ] = y;
-
-      // notify listeners - note that the previous data series values can be undefined in the notification
-      for ( var i = 0; i < this.listeners.length; i++ ) {
-        this.listeners[ i ]( x, y, this.xPoints[ this.dataSeriesLength - 1 ], this.yPoints[ this.dataSeriesLength - 1 ] );
-      }
+      var index = this.dataSeriesLength;
 
       // point to the next slot
       this.dataSeriesLength++;
+
+      // store the data
+      this.xPoints[ index ] = x;
+      this.yPoints[ index ] = y;
+
+      // notify listeners - note that the previous data series values can be undefined in the notification
+      for ( var i = 0; i < this.listeners.length; i++ ) {
+        this.listeners[ i ]( x, y, this.xPoints[ index - 1 ], this.yPoints[ index - 1 ] );
+      }
+
     },
 
     clear: function() {
@@ -88,6 +92,21 @@ define( function( require ) {
      */
     getLength: function() {
       return this.dataSeriesLength;
+    },
+
+    /**
+     * @public - getter for all the x points
+     */
+    getXPoints: function() {
+      return this.xPoints;
+    },
+
+    /**
+     * @public - getter for all the x points
+     */
+    getYPoints: function() {
+      return this.yPoints;
     }
+
   } );
 } );

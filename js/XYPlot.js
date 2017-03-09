@@ -10,15 +10,16 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var Line = require( 'SCENERY/nodes/Line' );
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  var XYDataSeriesNode = require( 'GRIDDLE/XYDataSeriesNode' );
   var griddle = require( 'GRIDDLE/griddle' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var Line = require( 'SCENERY/nodes/Line' );
+  var Node = require( 'SCENERY/nodes/Node' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var Range = require( 'DOT/Range' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var XYDataSeriesNode = require( 'GRIDDLE/XYDataSeriesNode' );
 
   function XYPlot( options ) {
     var content = new Node();
@@ -145,7 +146,9 @@ define( function( require ) {
      * @param {boolean} scaleFactor
      */
     addSeries: function( series, scaleFactor ) {
-      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, this.minX, this.minY, this.maxX, this.maxY, {
+      var xRange = new Range( this.minX, this.maxX );
+      var yRange = new Range( this.minY, this.maxY );
+      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, xRange, yRange, this.bounds, {
         xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
         yScaleFactor: scaleFactor ? -this.yScaleFactor : 1
       } );

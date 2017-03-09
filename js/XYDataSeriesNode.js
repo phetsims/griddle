@@ -10,22 +10,20 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var Line = require( 'SCENERY/nodes/Line' );
+  var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var griddle = require( 'GRIDDLE/griddle' );
+  var inherit = require( 'PHET_CORE/inherit' );
 
   /**
    *
    * @param {XYDataSeries} xyDataSeries
-   * @param {Number} minX
-   * @param {Number} minY
-   * @param {Number} maxX
-   * @param {Number} maxY
+   * @param {Range} xRange
+   * @param {Range} yRange
+   * @param {Bounds2} plotBounds
    * @param {Object} [options]
    * @constructor
    */
-  function XYDataSeriesNode( xyDataSeries, minX, minY, maxX, maxY, options ) {
+  function XYDataSeriesNode( xyDataSeries, xRange, yRange, plotBounds, options ) {
 
     var self = this;
     options = _.extend( {
@@ -33,27 +31,21 @@ define( function( require ) {
       yScaleFactor: 1
     }, options );
 
-    Node.call( this, options );
+    this.xyDataSeries = xyDataSeries;
+    this.xRange = xRange;
+    this.yRange = yRange;
+    this.xScaleFactor = options.xScaleFactor;
+    this.yScaleFactor = options.yScaleFactor;
+    CanvasNode.call( this, options );
 
-    var listener = function( x, y, xPrevious, yPrevious ) {
-      if ( !isNaN( xPrevious ) && !isNaN( yPrevious ) && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        // make sure current x and y are in the range before plotting them
-        if ( x >= minX && x <= maxX && y >= minY && y <= maxY ) {
-          self.addChild( new Line( xPrevious * options.xScaleFactor,
-            yPrevious * options.yScaleFactor,
-            x * options.xScaleFactor,
-            y * options.yScaleFactor,
-            {
-              stroke: xyDataSeries.color,
-              lineWidth: xyDataSeries.lineWidth
-            }
-          ) );
-        }
-      }
+    self.setCanvasBounds( plotBounds );
+
+    var listener = function() {
+      self.invalidatePaint();
     };
 
     var clearListener = function() {
-      self.removeAllChildren();
+      self.invalidatePaint();
     };
     xyDataSeries.addDataSeriesListener( listener );
     xyDataSeries.cleared.addListener( clearListener );
@@ -69,14 +61,38 @@ define( function( require ) {
 
   griddle.register( 'XYDataSeriesNode', XYDataSeriesNode );
 
-  return inherit( Node, XYDataSeriesNode, {
+  return inherit( CanvasNode, XYDataSeriesNode, {
 
     /**
      * Make eligible for garbage collection.
      */
     dispose: function() {
       this.disposeXYDataSeriesNode();
-      Node.prototype.dispose.call( this );
+      CanvasNode.prototype.dispose.call( this );
+    },
+
+    paintCanvas: function( context ) {
+
+      var xPoints = this.xyDataSeries.getXPoints();
+      var yPoints = this.xyDataSeries.getYPoints();
+      var dataPointsLength = this.xyDataSeries.getLength();
+      if ( dataPointsLength > 0 ) {
+        context.beginPath();
+        for ( var i = 1; i < dataPointsLength; i++ ) {
+          // make sure current x and y are in the range before plotting them
+          if ( this.xRange.contains( xPoints[ i ] ) && this.yRange.contains( yPoints[ i ] ) &&
+               this.xRange.contains( xPoints[ i - 1 ] ) && this.yRange.contains( yPoints[ i - 1 ] ) ) {
+            context.moveTo( xPoints[ i - 1 ] * this.xScaleFactor, yPoints[ i - 1 ] * this.yScaleFactor );
+            context.lineTo( xPoints[ i ] * this.xScaleFactor, yPoints[ i ] * this.yScaleFactor );
+          }
+        }
+
+        context.strokeStyle = this.xyDataSeries.color.computeCSS();
+        context.lineWidth = this.xyDataSeries.lineWidth;
+        context.stroke();
+      }
+
     }
+
   } );
 } );

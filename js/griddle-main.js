@@ -8,6 +8,7 @@ define( function( require ) {
 
   // modules
   var Bounds2 = require( 'DOT/Bounds2' );
+  var Color = require( 'SCENERY/util/Color' );
   var Panel = require( 'SUN/Panel' );
   var Property = require( 'AXON/Property' );
   var Screen = require( 'JOIST/Screen' );
@@ -50,8 +51,8 @@ define( function( require ) {
             yMargin: 10
           } );
           screenView.addChild( plotPanel );
-          var series = new XYDataSeries( { color: 'blue' } );
-          plot.addSeries( series );
+          var series = new XYDataSeries( { color: Color.BLUE } );
+          plot.addSeries( series, false );
           var forward = true;
           var count = 0;
           screenView.step = function() {

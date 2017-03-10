@@ -17,13 +17,11 @@ define( function( require ) {
   /**
    *
    * @param {XYDataSeries} xyDataSeries
-   * @param {Range} xRange
-   * @param {Range} yRange
    * @param {Bounds2} plotBounds
    * @param {Object} [options]
    * @constructor
    */
-  function XYDataSeriesNode( xyDataSeries, xRange, yRange, plotBounds, options ) {
+  function XYDataSeriesNode( xyDataSeries, plotBounds, options ) {
 
     var self = this;
     options = _.extend( {
@@ -32,8 +30,7 @@ define( function( require ) {
     }, options );
 
     this.xyDataSeries = xyDataSeries;
-    this.xRange = xRange;
-    this.yRange = yRange;
+    this.bound = plotBounds;
     this.xScaleFactor = options.xScaleFactor;
     this.yScaleFactor = options.yScaleFactor;
     CanvasNode.call( this, options );
@@ -80,8 +77,8 @@ define( function( require ) {
         context.beginPath();
         for ( var i = 1; i < dataPointsLength; i++ ) {
           // make sure current x and y are in the range before plotting them
-          if ( this.xRange.contains( xPoints[ i ] ) && this.yRange.contains( yPoints[ i ] ) &&
-               this.xRange.contains( xPoints[ i - 1 ] ) && this.yRange.contains( yPoints[ i - 1 ] ) ) {
+          if ( this.bound.containsCoordinates( xPoints[ i ] * this.xScaleFactor, yPoints[ i ] * this.yScaleFactor ) &&
+               this.bound.containsCoordinates( xPoints[ i - 1 ] * this.xScaleFactor, yPoints[ i - 1 ] * this.yScaleFactor ) ) {
             context.moveTo( xPoints[ i - 1 ] * this.xScaleFactor, yPoints[ i - 1 ] * this.yScaleFactor );
             context.lineTo( xPoints[ i ] * this.xScaleFactor, yPoints[ i ] * this.yScaleFactor );
           }

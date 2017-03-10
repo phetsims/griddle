@@ -13,13 +13,20 @@ define( function( require ) {
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var Line = require( 'SCENERY/nodes/Line' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var Path = require( 'SCENERY/nodes/Path' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Range = require( 'DOT/Range' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var Shape = require( 'KITE/Shape' );
   var Text = require( 'SCENERY/nodes/Text' );
   var XYDataSeriesNode = require( 'GRIDDLE/XYDataSeriesNode' );
+
+  // constants
+  // currently for performance reasons whole plot is drawn as a single path node and therefore all lines
+  // whether intermediate or not have same width, but this can be changed in future
+  var LINE_WIDTH = 0.8; // Empirically determined
+  var STROKE_COLOR = 'gray';
+  var LABEL_OFFSET = 6;
 
   function XYPlot( options ) {
     var content = new Node();
@@ -45,13 +52,15 @@ define( function( require ) {
 
     Node.call( this );
 
-    var rectangle = new Rectangle( 0, -options.height, options.width, options.height, {
-      fill: options.backgroundFill
+    this.rectangle = new Rectangle( 0, -options.height, options.width, options.height, {
+      fill: options.backgroundFill,
+      stroke: STROKE_COLOR,
+      lineWidth: LINE_WIDTH
     } );
-    //rectangle.center = content.center;
-    content.addChild( rectangle );
-    var lineWidth;
-    var line;
+    content.addChild( this.rectangle );
+
+    var plotShape = new Shape();
+
     //vertical grid lines
     // if minX and maxX is not a multiple of step function convert them to multiples
     this.minX = options.minX;
@@ -64,27 +73,38 @@ define( function( require ) {
     }
     var numVerticalGridLines = this.maxX - this.minX;
     this.xScaleFactor = options.width / numVerticalGridLines;
-    for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
-      lineWidth = i % options.stepX === 0 ? 0.8 : 0.3;
+    for ( var i = 1; i < numVerticalGridLines; i++ ) {
+      var xPosition = i * options.width / numVerticalGridLines;
       if ( i % options.stepX === 0 || options.showVerticalIntermediateLines ) {
-        line = new Line( i * options.width / numVerticalGridLines, 0, i * options.width / numVerticalGridLines, -options.height, {
-          stroke: 'gray',
-          lineWidth: lineWidth,
-          lineDash: i !== numVerticalGridLines && i !== 0 ? options.lineDash : []
-        } );
-        content.addChild( line );
+        plotShape.moveTo( xPosition, 0 );
+        plotShape.lineTo( xPosition, -options.height );
       }
 
       if ( i % options.stepX === 0 && options.showXAxisTickMarkLabels ) {
         content.addChild( new Text( i + this.minX, {
           font: options.tickLabelFont,
-          centerX: line.centerX,
-          top: line.bottom + 6
+          centerX: xPosition - LINE_WIDTH / 2,
+          top: LABEL_OFFSET
         } ) );
       }
     }
 
-    //horizontal grid lines
+    // labels for the edges
+    if ( options.showXAxisTickMarkLabels ) {
+      content.addChild( new Text( 0 + this.minX, {
+        font: options.tickLabelFont,
+        centerX: -LINE_WIDTH / 2,
+        top: LABEL_OFFSET
+      } ) );
+
+      content.addChild( new Text( i + this.minX, {
+        font: options.tickLabelFont,
+        centerX: i * options.width / numVerticalGridLines - LINE_WIDTH / 2,
+        top: LABEL_OFFSET
+      } ) );
+    }
+
+    // horizontal grid lines
     // if minY and maxY is not a multiple of step function convert them to multiples
     this.minY = options.minY;
     if ( this.minY % options.stepY !== 0 ) {
@@ -96,24 +116,34 @@ define( function( require ) {
     }
     var numHorizontalGridLines = this.maxY - this.minY;
     this.yScaleFactor = options.height / numHorizontalGridLines;
-    for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
-      lineWidth = i % options.stepY === 0 ? 0.8 : 0.3;
-
+    for ( i = 1; i < numHorizontalGridLines; i++ ) {
+      var yPosition = -i * options.height / numHorizontalGridLines;
       if ( i % options.stepY === 0 || options.showHorizontalIntermediateLines ) {
-        line = new Line( 0, -i * options.height / numHorizontalGridLines, options.width, -i * options.height / numHorizontalGridLines, {
-          stroke: 'gray',
-          lineWidth: lineWidth,
-          lineDash: i !== numHorizontalGridLines && i !== 0 ? options.lineDash : []
-        } );
-        content.addChild( line );
+        plotShape.moveTo( 0, yPosition );
+        plotShape.lineTo( options.width, -i * options.height / numHorizontalGridLines );
       }
       if ( i % options.stepY === 0 && options.showYAxisTickMarkLabels ) {
         content.addChild( new Text( i + this.minY, {
           font: new PhetFont( 16 ),
-          centerY: line.centerY,
-          right: line.left - 6
+          centerY: yPosition + LINE_WIDTH / 2,
+          right: -LABEL_OFFSET
         } ) );
       }
+    }
+
+    // labels for the edges
+    if ( options.showYAxisTickMarkLabels ) {
+      content.addChild( new Text( 0 + this.minY, {
+        font: new PhetFont( 16 ),
+        centerY: LINE_WIDTH / 2,
+        right: -LABEL_OFFSET
+      } ) );
+
+      content.addChild( new Text( i + this.minY, {
+        font: new PhetFont( 16 ),
+        centerY: -i * options.height / numHorizontalGridLines + LINE_WIDTH / 2,
+        right: -LABEL_OFFSET
+      } ) );
     }
 
     if ( options.showAxis ) {
@@ -121,6 +151,11 @@ define( function( require ) {
       content.addChild( new ArrowNode( 0, 0, options.width, 0, {} ) );
     }
 
+    content.addChild( new Path( plotShape, {
+      stroke: STROKE_COLOR,
+      lineWidth: LINE_WIDTH,
+      lineDash: options.lineDash
+    } ) );
 
     this.addChild( content );
 
@@ -146,9 +181,7 @@ define( function( require ) {
      * @param {boolean} scaleFactor
      */
     addSeries: function( series, scaleFactor ) {
-      var xRange = new Range( this.minX, this.maxX );
-      var yRange = new Range( this.minY, this.maxY );
-      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, xRange, yRange, this.bounds, {
+      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, this.rectangle.bounds, {
         xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
         yScaleFactor: scaleFactor ? -this.yScaleFactor : 1
       } );

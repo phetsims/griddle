@@ -16,11 +16,22 @@ define( function( require ) {
   /**
    * @constructor
    */
-  function BarChart() {
+  function VerticalBarChart( barNodes ) {
+    var self = this;
     Node.call( this );
+
+    // TODO: draw vertical arrow
+
+    // TODO: draw bars
+
+    // TODO: draw horizontal line (x axis)
+
+    barNodes.forEach( function( barNode ) {
+      self.addChild( barNode );
+    } );
   }
 
-  griddle.register( 'BarChart', BarChart );
+  griddle.register( 'VerticalBarChart', VerticalBarChart );
 
-  return inherit( Node, BarChart );
+  return inherit( Node, VerticalBarChart );
 } );

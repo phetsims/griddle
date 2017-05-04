@@ -10,6 +10,7 @@ define( function( require ) {
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
   var XYPlotScreen = require( 'GRIDDLE/demo/XYPlotScreen' );
+  var BarChartScreen = require( 'GRIDDLE/demo/BarChartScreen' );
 
   // strings
   var griddleTitleString = require( 'string!GRIDDLE/griddle.title' );
@@ -23,7 +24,8 @@ define( function( require ) {
   SimLauncher.launch( function() {
     // Create and start the sim
     new Sim( griddleTitleString, [
-      new XYPlotScreen()
+      new XYPlotScreen(),
+      new BarChartScreen()
     ], simOptions ).start();
   } );
 } );

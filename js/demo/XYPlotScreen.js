@@ -69,6 +69,7 @@ define( function( require ) {
 
       // options
       {
+        name: 'XY Plot',
         backgroundColorProperty: new Property( '#fff' )
       }
     );

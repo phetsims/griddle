@@ -12,14 +12,14 @@ define( function( require ) {
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Node = require( 'SCENERY/nodes/Node' );
 
   // strings
   var LINE_WIDTH = 0.8; // Empirically determined
   var STROKE_COLOR = 'gray';
-  var LABEL_OFFSET = 6;
+  // var LABEL_OFFSET = 6;
 
   /**
    * @constructor

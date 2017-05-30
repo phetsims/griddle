@@ -27,7 +27,6 @@ define( function( require ) {
    * @constructor
    */
   function VerticalBarChart( barNodes, options ) {
-    var self = this;
 
     var content = new Node();
 

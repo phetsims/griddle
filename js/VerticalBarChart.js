@@ -10,6 +10,7 @@ define( function( require ) {
 
   // modules
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  var Line = require( 'SCENERY/nodes/Line' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
   // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -30,14 +31,20 @@ define( function( require ) {
     var content = new Node();
 
     options = _.extend( {
-      width: 400,
+      width: 250,
       height: 400,
       backgroundFill: 'white'
     }, options );
     Node.call( this );
 
-    // TODO: draw vertical arrow
-    this.yAxis = new ArrowNode( 0, 0, 10, 10 );
+    // TODO: needs to be within bounds of arrow
+    this.yAxis = new ArrowNode( 20, 550, 20, 250 );
+    this.xAxis = new Line( 20, 550, 230, 550, {
+      lineWidth: 1,
+      stroke: 'gray',
+      pickable: false
+    } );
+
 
     // TODO: draw bars
     this.rectangle = new Rectangle( 0, 200, options.width, options.height, {
@@ -45,7 +52,7 @@ define( function( require ) {
       stroke: STROKE_COLOR,
       cornerRadius: 8,
       lineWidth: LINE_WIDTH,
-      children: [ this.yAxis ]
+      children: [ this.yAxis, this.xAxis ]
     } );
     content.addChild( this.rectangle );
 
@@ -53,7 +60,7 @@ define( function( require ) {
       self.addChild( barNode );
 
       // TODO: draw horizontal line (x axis)
-      
+
     } );
     this.addChild( content );
   }

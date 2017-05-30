@@ -16,6 +16,7 @@ define( function( require ) {
   // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // strings
   var LINE_WIDTH = 0.8; // Empirically determined
@@ -54,15 +55,19 @@ define( function( require ) {
       lineWidth: LINE_WIDTH,
       children: [ this.yAxis, this.xAxis ]
     } );
-    content.addChild( this.rectangle );
 
     barNodes.forEach( function( barNode ) {
-      self.addChild( barNode );
+      barNode.setLeftBottom( new Vector2( 20, 200 ) );
+      content.addChild( barNode );
+      barNode.moveToFront();
+
 
       // TODO: draw horizontal line (x axis)
 
     } );
+    content.addChild( this.rectangle );
     this.addChild( content );
+
   }
 
   griddle.register( 'VerticalBarChart', VerticalBarChart );

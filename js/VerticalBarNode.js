@@ -28,7 +28,7 @@ define( function( require ) {
 
     Node.call( this );
 
-    var rectangleNode = new Rectangle( 0, 0, 100, 100, {
+    var rectangleNode = new Rectangle( 0, 0, 30, 100, {
       fill: options.fill,
       stroke: options.stroke,
       lineWidth: options.lineWidth

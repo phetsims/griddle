@@ -13,60 +13,59 @@ define( function( require ) {
   var Line = require( 'SCENERY/nodes/Line' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
-  // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Node = require( 'SCENERY/nodes/Node' );
-  var Vector2 = require( 'DOT/Vector2' );
 
   // strings
   var LINE_WIDTH = 0.8; // Empirically determined
   var STROKE_COLOR = 'gray';
-  // var LABEL_OFFSET = 6;
+  var CHART_WIDTH = 210;
 
   /**
    * @constructor
    */
   function VerticalBarChart( barNodes, options ) {
-
-    var content = new Node();
-
+    // TODO: we may want to create the barNodes in the chart because the chart is aware of how much space we are working with.
     options = _.extend( {
       width: 250,
       height: 400,
       backgroundFill: 'white'
     }, options );
-    Node.call( this );
 
-    // TODO: needs to be within bounds of arrow
-    this.yAxis = new ArrowNode( 20, 550, 20, 250 );
-    this.xAxis = new Line( 20, 550, 230, 550, {
-      lineWidth: 1,
-      stroke: 'gray',
-      pickable: false
-    } );
-
-
-    // TODO: draw bars
+    // Background for bar graph
     this.rectangle = new Rectangle( 0, 200, options.width, options.height, {
       fill: options.backgroundFill,
       stroke: STROKE_COLOR,
       cornerRadius: 8,
-      lineWidth: LINE_WIDTH,
-      children: [ this.yAxis, this.xAxis ]
+      lineWidth: LINE_WIDTH
     } );
 
-    barNodes.forEach( function( barNode ) {
-      barNode.setLeftBottom( new Vector2( 20, 200 ) );
-      content.addChild( barNode );
-      barNode.moveToFront();
+    // Layer for all bars added/removed from chart
+    var barLayer = new Node();
 
-
-      // TODO: draw horizontal line (x axis)
-
+    // Layer that refers to the chart starting with an origin at 0,0
+    var chartNode = new Node( {
+      children: [
+        barLayer,
+        new Line( 0, 0, CHART_WIDTH, 0, {
+          stroke: 'gray'
+        } ),
+        new ArrowNode( 0, 0, 0, -300 )
+      ],
+      center: this.rectangle.center
     } );
-    content.addChild( this.rectangle );
-    this.addChild( content );
 
+    // Adding barNodes to the chart with proper centering
+    barNodes.forEach( function( barNode, index ) {
+      barNode.centerX = (index + 1) / (barNodes.length + 1) * CHART_WIDTH;
+      barLayer.addChild( barNode );
+    } );
+
+    Node.call( this, {
+      children: [
+        this.rectangle, chartNode
+      ]
+    } );
   }
 
   griddle.register( 'VerticalBarChart', VerticalBarChart );

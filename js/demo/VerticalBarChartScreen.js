@@ -42,6 +42,13 @@ define( function( require ) {
           children: [ new VerticalBarChart( [ new VerticalBarNode( model.kineticEnergyProperty, {
             fill: 'red',
             lineWidth: 1
+          } ),
+            new VerticalBarNode( model.kineticEnergyProperty, {
+              fill: 'red',
+              lineWidth: 1
+            } ), new VerticalBarNode( model.kineticEnergyProperty, {
+              fill: 'red',
+              lineWidth: 1
           } ) ] ) ]
         } );
       },

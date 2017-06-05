@@ -27,8 +27,8 @@ define( function( require ) {
   function VerticalBarChart( barNodes, options ) {
     // TODO: we may want to create the barNodes in the chart because the chart is aware of how much space we are working with.
     options = _.extend( {
-      width: 250,
-      height: 400,
+      width: 100,
+      height: 300,
       backgroundFill: 'white'
     }, options );
 
@@ -47,10 +47,10 @@ define( function( require ) {
     var chartNode = new Node( {
       children: [
         barLayer,
-        new Line( 0, 0, CHART_WIDTH, 0, {
+        new Line( 0, 0, options.width - 20, 0, {
           stroke: 'gray'
         } ),
-        new ArrowNode( 0, 0, 0, -300 )
+        new ArrowNode( 0, 0, 0, -options.height + 20 )
       ],
       center: this.rectangle.center
     } );

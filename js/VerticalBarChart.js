@@ -57,7 +57,7 @@ define( function( require ) {
 
     // Adding barNodes to the chart with proper centering
     barNodes.forEach( function( barNode, index ) {
-      barNode.centerX = (index + 1) / (barNodes.length + 1) * CHART_WIDTH;
+      barNode.centerX = (index + 1) / (barNodes.length + 1) * options.width - 20;
       barLayer.addChild( barNode );
     } );
 

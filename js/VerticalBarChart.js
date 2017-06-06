@@ -19,7 +19,6 @@ define( function( require ) {
   // strings
   var LINE_WIDTH = 0.8; // Empirically determined
   var STROKE_COLOR = 'gray';
-  var CHART_WIDTH = 210;
 
   /**
    * @constructor

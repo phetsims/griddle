@@ -43,6 +43,7 @@ define( function( require ) {
     var barLayer = new Node();
 
     // Layer that refers to the chart starting with an origin at 0,0
+    // TODO: add x-axis labels that correspond to the placement of the bar nodes
     var chartNode = new Node( {
       children: [
         barLayer,

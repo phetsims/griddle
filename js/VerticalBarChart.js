@@ -42,23 +42,37 @@ define( function( require ) {
     // Layer for all bars added/removed from chart
     var barLayer = new Node();
 
-    // Layer that refers to the chart starting with an origin at 0,0
+    // Creation of yAxis
+    var yAxis = new ArrowNode( 0, 0, 0, -options.height + 20, {
+      headHeight: 10,
+      headWidth: 10,
+      tailWidth: 1,
+      fill: 'black',
+      stroke: null
+    } );
+
+    // Creation of xAxis
+    var xAxis = new Line( 0, 0, options.width - 20, 0, {
+      stroke: 'gray'
+    } );
+
     // TODO: add x-axis labels that correspond to the placement of the bar nodes
+    // Layer that refers to the chart starting with an origin at 0,0
     var chartNode = new Node( {
       children: [
         barLayer,
-        new Line( 0, 0, options.width - 20, 0, {
-          stroke: 'gray'
-        } ),
-        new ArrowNode( 0, 0, 0, -options.height + 20, { tailWidth: 2, headWidth: 7 } )
+        xAxis,
+        yAxis
       ],
       center: this.rectangle.center
     } );
 
     // Adding barNodes to the chart with proper centering
     barNodes.forEach( function( barNode, index ) {
+      barNode.rotate( Math.PI );
       barNode.centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
       barLayer.addChild( barNode );
+      barNode.setMaxHeight( options.height );
     } );
 
     Node.call( this, {

@@ -25,19 +25,22 @@ define( function( require ) {
       label: null, // Optional label which
       width: 30
     }, options );
+
+    var self = this;
     this.property = property;
 
     Node.call( this );
 
-    var rectangleNode = new Rectangle( 0, 0, options.width, 100, {
+    this.rectangleNode = new Rectangle( 0, 0, options.width, 100, {
       fill: options.fill,
       stroke: options.stroke,
       lineWidth: options.lineWidth
     } );
-    this.addChild( rectangleNode );
+
+    this.addChild( this.rectangleNode );
     property.link( function( value ) {
-      rectangleNode.rectHeight = value;
-      rectangleNode.rectY = -value;
+      self.rectangleNode.rectHeight = value;
+      self.rectangleNode.rectY = -value;
     } );
   }
 

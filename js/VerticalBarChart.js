@@ -49,14 +49,14 @@ define( function( require ) {
         new Line( 0, 0, options.width - 20, 0, {
           stroke: 'gray'
         } ),
-        new ArrowNode( 0, 0, 0, -options.height + 20 )
+        new ArrowNode( 0, 0, 0, -options.height + 20, { tailWidth: 2, headWidth: 7 } )
       ],
       center: this.rectangle.center
     } );
 
     // Adding barNodes to the chart with proper centering
     barNodes.forEach( function( barNode, index ) {
-      barNode.centerX = (index + 1) / (barNodes.length + 1) * options.width - 20;
+      barNode.centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
       barLayer.addChild( barNode );
     } );
 

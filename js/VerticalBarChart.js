@@ -69,10 +69,9 @@ define( function( require ) {
 
     // Adding barNodes to the chart with proper centering
     barNodes.forEach( function( barNode, index ) {
-      barNode.rotate( Math.PI );
       barNode.centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
       barLayer.addChild( barNode );
-      barNode.setMaxHeight( options.height );
+      // barNode.setMaxHeight( Math.max(1, options.height) );
     } );
 
     Node.call( this, {

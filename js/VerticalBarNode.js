@@ -2,8 +2,10 @@
 
 /**
  *
- *
+ * @author Denzell Barnett (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
+ * @author Johnathan Olson (PhET Interactive Simulations)
+ * 
  */
 define( function( require ) {
   'use strict';
@@ -36,15 +38,14 @@ define( function( require ) {
       stroke: options.stroke,
       lineWidth: options.lineWidth
     } );
-    
+
     this.addChild( this.rectangleNode );
     property.link( function( value ) {
-      self.rectangleNode.rectHeight = value;
-      self.rectangleNode.rectY = -value;
-
       self.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
       var height = Math.max( 1, value ); // bar must have non-zero size
-      self.rectangleNode.setRect( 0, -height, options.width, height ); // bar grows up
+      self.rectangleNode.setRectHeight( height );
+      // self.rectangleNode.setRect( 0, -height, options.width, height ); // bar grows up
+      self.rectangleNode.bottom = 0;
     } );
     this.mutate( options );
   }

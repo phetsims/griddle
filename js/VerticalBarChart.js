@@ -43,13 +43,15 @@ define( function( require ) {
     var barLayer = new Node();
 
     // Creation of yAxis
-    var yAxis = new ArrowNode( 0, 0, 0, -options.height + 20, {
+    this.yAxis = new ArrowNode( 0, 0, 0, -options.height + 20, {
       headHeight: 10,
       headWidth: 10,
       tailWidth: 1,
       fill: 'black',
       stroke: null
     } );
+
+    this.maximumHeight = this.yAxis.getHeight();
 
     // Creation of xAxis
     var xAxis = new Line( 0, 0, options.width - 20, 0, {
@@ -62,7 +64,7 @@ define( function( require ) {
       children: [
         barLayer,
         xAxis,
-        yAxis
+        this.yAxis
       ],
       center: this.rectangle.center
     } );

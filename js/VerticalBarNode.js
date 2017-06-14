@@ -25,7 +25,8 @@ define( function( require ) {
       stroke: 'black',
       lineWidth: 0,
       label: null, // Optional label which
-      width: 30
+      width: 30,
+      maxHeight: 400
     }, options );
 
     var self = this;
@@ -43,8 +44,7 @@ define( function( require ) {
     property.link( function( value ) {
       self.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
       var height = Math.max( 1, value ); // bar must have non-zero size
-      self.rectangleNode.setRectHeight( height );
-      // self.rectangleNode.setRect( 0, -height, options.width, height ); // bar grows up
+      self.rectangleNode.setRectHeight( Math.min( options.maxHeight, height ) );
       self.rectangleNode.bottom = 0;
     } );
     this.mutate( options );

@@ -15,6 +15,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Node = require( 'SCENERY/nodes/Node' );
+  // var Shape = require( 'KITE/Shape' );
 
   // strings
   var LINE_WIDTH = 0.8; // Empirically determined
@@ -27,11 +28,12 @@ define( function( require ) {
     // TODO: we may want to create the barNodes in the chart because the chart is aware of how much space we are working with.
     options = _.extend( {
       width: 100,
-      height: 300,
+      height: 375,
       backgroundFill: 'white'
     }, options );
 
     // Background for bar graph
+    // TODO: Rename to background
     this.rectangle = new Rectangle( 0, 200, options.width, options.height, {
       fill: options.backgroundFill,
       stroke: STROKE_COLOR,
@@ -40,7 +42,10 @@ define( function( require ) {
     } );
 
     // Layer for all bars added/removed from chart
-    var barLayer = new Node();
+    // TODO: Use clipArea, ask JO
+    var barLayer = new Node( {
+      // clipArea: Shape.rect( 0, -220, 140, 400 )
+    } );
 
     // Creation of yAxis
     this.yAxis = new ArrowNode( 0, 0, 0, -options.height + 20, {
@@ -73,9 +78,9 @@ define( function( require ) {
     barNodes.forEach( function( barNode, index ) {
       barNode.centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
       barLayer.addChild( barNode );
-      // barNode.setMaxHeight( Math.max(1, options.height) );
     } );
 
+    // TODO: Max Height of bar should adjust to height of chart area.
     Node.call( this, {
       children: [
         this.rectangle, chartNode

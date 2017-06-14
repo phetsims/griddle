@@ -33,8 +33,8 @@ define( function( require ) {
     }, options );
 
     // Background for bar graph
-    // TODO: Rename to background
-    this.rectangle = new Rectangle( 0, 200, options.width, options.height, {
+    
+    this.background = new Rectangle( 0, 200, options.width, options.height, {
       fill: options.backgroundFill,
       stroke: STROKE_COLOR,
       cornerRadius: 8,
@@ -71,7 +71,7 @@ define( function( require ) {
         xAxis,
         this.yAxis
       ],
-      center: this.rectangle.center
+      center: this.background.center
     } );
 
     // Adding barNodes to the chart with proper centering
@@ -83,7 +83,7 @@ define( function( require ) {
     // TODO: Max Height of bar should adjust to height of chart area.
     Node.call( this, {
       children: [
-        this.rectangle, chartNode
+        this.background, chartNode
       ]
     } );
   }

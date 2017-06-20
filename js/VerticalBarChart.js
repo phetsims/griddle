@@ -15,9 +15,9 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Node = require( 'SCENERY/nodes/Node' );
-  // var Shape = require( 'KITE/Shape' );
+  var Text = require( 'SCENERY/nodes/Text' );
 
-  // strings
+  // constants
   var LINE_WIDTH = 0.8; // Empirically determined
   var STROKE_COLOR = 'gray';
 
@@ -29,7 +29,8 @@ define( function( require ) {
     options = _.extend( {
       width: 100,
       height: 375,
-      backgroundFill: 'white'
+      backgroundFill: 'white',
+      title: null
     }, options );
 
     // Background for bar graph
@@ -86,6 +87,15 @@ define( function( require ) {
         this.background, chartNode
       ]
     } );
+
+    if ( options.title !== null ) {
+      var title = new Text( options.title, {
+        centerX: this.background.centerX,
+        top: this.background.top + 4,
+        fill: '#b37e46'
+      } );
+      this.addChild( title );
+    }
   }
 
   griddle.register( 'VerticalBarChart', VerticalBarChart );

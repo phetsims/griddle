@@ -44,10 +44,10 @@ define( function( require ) {
     } );
 
     // @public arrow node used to indicate when the value has gone beyond the scale of this meter
-    this.arrowNode = new ArrowNode( 0, 0, 10 + 2, 0, {
+    this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxHeight - 8, this.rectangleNode.centerX, -options.maxHeight - 25, {
       fill: options.fill,
       headWidth: options.width,
-      tailWidth: 12,
+      tailWidth: 10,
       stroke: 'black'
     } );
     this.addChild( this.arrowNode );

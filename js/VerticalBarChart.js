@@ -4,6 +4,8 @@
  *
  *
  * @author Sam Reid (PhET Interactive Simulations)
+ * @author Denzell Barnett (PhET Interactive Simulations)
+ *
  */
 define( function( require ) {
   'use strict';
@@ -30,11 +32,11 @@ define( function( require ) {
       width: 100,
       height: 375,
       backgroundFill: 'white',
-      title: null
+      title: null,
+      titleFill: 'black'
     }, options );
 
     // Background for bar graph
-    
     this.background = new Rectangle( 0, 200, options.width, options.height, {
       fill: options.backgroundFill,
       stroke: STROKE_COLOR,
@@ -91,7 +93,7 @@ define( function( require ) {
     if ( options.title !== null ) {
       options.title.centerX = this.background.centerX;
       options.title.top = this.background.top + 4;
-      options.title.fill = '#b37e46';
+      options.title.fill = options.titleFill;
       this.addChild( options.title );
     }
   }

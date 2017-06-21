@@ -89,12 +89,10 @@ define( function( require ) {
     } );
 
     if ( options.title !== null ) {
-      var title = new Text( options.title, {
-        centerX: this.background.centerX,
-        top: this.background.top + 4,
-        fill: '#b37e46'
-      } );
-      this.addChild( title );
+      options.title.centerX = this.background.centerX;
+      options.title.top = this.background.top + 4;
+      options.title.fill = '#b37e46';
+      this.addChild( options.title );
     }
   }
 

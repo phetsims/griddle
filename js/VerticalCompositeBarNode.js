@@ -42,7 +42,7 @@ define( function( require ) {
     } );
 
     // @public arrow node used to indicate when the value has gone beyond the scale of this meter
-    this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxHeight - 8, this.rectangleNode.centerX, -options.maxHeight - 25, {
+    this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxHeight - 8, 0, 0, {
       fill: options.fill,
       headWidth: options.width,
       tailWidth: 10,
@@ -58,9 +58,7 @@ define( function( require ) {
     //   self.rectangleNode.setRectHeight( Math.min( options.maxHeight, height ) );
     //   self.rectangleNode.bottom = 0;
     //
-    //   // set the continuous arrow to visible if needed
-    //   var currentHeight = self.rectangleNode.getRectHeight();
-    //   showContinuousArrow.set( currentHeight === options.maxHeight );
+    //
     // } );
 
     showContinuousArrow.link( function( shown ) {
@@ -68,35 +66,44 @@ define( function( require ) {
     } );
 
     var cachedBarNodes = [];
+    var barTuples = [];
     barNodes.forEach( function( bar ) {
-      cachedBarNodes.push( new Rectangle( 0, 0, options.width, bar.rectangleNode.getHeight(), {
-        fill: 'pink',
-        stroke: 'black',
-        centerX: 0
-      } ) );
-      console.log( 'hello' );
+      barTuples.push( [ bar.property, bar.rectangleNode.fill ] );
     } );
 
-    // for ( var i = 0; i < cachedBarNodes.length; i++ ){
-    //   console.log(cachedBarNodes[i].getHeight());
-    //   if(i+1<cachedBarNodes.length) {
-    //     cachedBarNodes[ i ].top = cachedBarNodes[ i + 1 ].  ;
-    //     debugger;
-    //   }
-    //   else
-    //     cachedBarNodes[i].bottom = cachedBarNodes[i-1].top;
-    // this.addChild(cachedBarNodes[i]);
-    // }
+    barTuples.forEach( function( barInfo ) {
+      var cachedRect = new Rectangle( 0, 0, options.width, barInfo[ 0 ].value, {
+        fill: barInfo[ 1 ],
+        stroke: barInfo[ 1 ],
+        centerX: 0
+      } );
+      cachedBarNodes.push( cachedRect );
+      console.log( 'hello' );
+      barInfo[ 0 ].link( function( value ) {
+        cachedRect.visible = ( value > 0 ); // because we can't create a zero height rectangle
+        var height = Math.max( 0.001, value ); // bar must have non-zero size
+        cachedRect.setRectHeight( Math.min( options.maxHeight, height ) );
+        cachedRect.bottom = 0;
+
+        // set the continuous arrow to visible if needed
+        var currentHeight = cachedRect.top;
+        showContinuousArrow.set( currentHeight === options.maxHeight );
+
+        for ( var i = 0; i < cachedBarNodes.length; i++ ) {
+          console.log( cachedBarNodes[ i ].getHeight() );
+          if ( i !== 0 ) {
+            cachedBarNodes[ i ].bottom = cachedBarNodes[ i - 1 ].top;
+          }
+          else {
+            cachedBarNodes[ i ].bottom = 0;
+          }
+        }
+      } );
+    } );
     for ( var i = 0; i < cachedBarNodes.length; i++ ) {
-      console.log( cachedBarNodes[ i ].getHeight() );
-      if ( i !== 0 ) {
-        cachedBarNodes[ i ].bottom = cachedBarNodes[ i - 1 ].top;
-      }
-      else {
-        cachedBarNodes[ i ].bottom = 0;
-      }
       this.addChild( cachedBarNodes[ i ] );
     }
+
 
     this.mutate( options );
   }

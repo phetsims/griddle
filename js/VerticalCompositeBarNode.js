@@ -78,7 +78,6 @@ define( function( require ) {
         centerX: 0
       } );
       cachedBarNodes.push( cachedRect );
-      console.log( 'hello' );
       barInfo[ 0 ].link( function( value ) {
         cachedRect.visible = ( value > 0 ); // because we can't create a zero height rectangle
         var height = Math.max( 0.001, value ); // bar must have non-zero size
@@ -90,7 +89,6 @@ define( function( require ) {
         showContinuousArrow.set( currentHeight === options.maxHeight );
 
         for ( var i = 0; i < cachedBarNodes.length; i++ ) {
-          console.log( cachedBarNodes[ i ].getHeight() );
           if ( i !== 0 ) {
             cachedBarNodes[ i ].bottom = cachedBarNodes[ i - 1 ].top;
           }

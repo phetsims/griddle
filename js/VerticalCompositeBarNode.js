@@ -30,7 +30,6 @@ define( function( require ) {
     }, options );
 
     var self = this;
-    this.compositeProperty = new Property();
     this.barNodes = barNodes;
 
     Node.call( this );
@@ -42,7 +41,7 @@ define( function( require ) {
     } );
 
     // @public arrow node used to indicate when the value has gone beyond the scale of this meter
-    this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxHeight - 8, 0, 0, {
+    this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxHeight - 8, this.rectangleNode.centerX, -options.maxHeight - 25, {
       fill: options.fill,
       headWidth: options.width,
       tailWidth: 10,
@@ -61,8 +60,8 @@ define( function( require ) {
     //
     // } );
 
-    showContinuousArrow.link( function( shown ) {
-      self.arrowNode.visible = shown && options.displayContinuousArrow;
+    showContinuousArrow.link( function( showContinuousArrow ) {
+      self.arrowNode.visible = showContinuousArrow;
     } );
 
     var cachedBarNodes = [];

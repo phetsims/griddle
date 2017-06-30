@@ -66,8 +66,8 @@ define( function( require ) {
       showContinuousArrow.set( currentHeight === options.maxHeight );
     } );
 
-    showContinuousArrow.link( function( shown ) {
-      self.arrowNode.visible = shown && options.displayContinuousArrow;
+    showContinuousArrow.link( function( showContinuousArrow ) {
+      self.arrowNode.visible = showContinuousArrow;
     } );
     this.mutate( options );
   }

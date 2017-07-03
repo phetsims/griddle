@@ -51,15 +51,6 @@ define( function( require ) {
 
     var showContinuousArrow = new Property( options.displayContinuousArrow );
 
-    // barNodes.link( function( value ) {
-    //   self.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
-    //   var height = Math.max( 1, value ); // bar must have non-zero size
-    //   self.rectangleNode.setRectHeight( Math.min( options.maxHeight, height ) );
-    //   self.rectangleNode.bottom = 0;
-    //
-    //
-    // } );
-
     showContinuousArrow.link( function( showContinuousArrow ) {
       self.arrowNode.visible = showContinuousArrow;
     } );

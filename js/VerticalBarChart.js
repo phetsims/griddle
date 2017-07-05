@@ -17,6 +17,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var Text = require( 'SCENERY/nodes/Text' );
 
   // constants
   var LINE_WIDTH = 0.8; // Empirically determined
@@ -32,7 +33,8 @@ define( function( require ) {
       height: 375,
       backgroundFill: 'white',
       title: null,
-      titleFill: 'black'
+      titleFill: 'black',
+      xAxisLabels: null
     }, options );
 
     // Background for bar graph
@@ -43,14 +45,13 @@ define( function( require ) {
       lineWidth: LINE_WIDTH
     } );
 
-    // Layer for all bars added/removed from chart
-    // TODO: Use clipArea, ask JO
-    var barLayer = new Node( {
-      // clipArea: Shape.rect( 0, -220, 140, 400 )
+    // Creation of xAxis
+    var xAxis = new Line( 0, 0, options.width - 20, 0, {
+      stroke: 'gray'
     } );
 
     // Creation of yAxis
-    this.yAxis = new ArrowNode( 0, 0, 0, -options.height + 20, {
+    var yAxis = new ArrowNode( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20, {
       headHeight: 10,
       headWidth: 10,
       tailWidth: 1,
@@ -58,11 +59,10 @@ define( function( require ) {
       stroke: null
     } );
 
-    this.maximumHeight = this.yAxis.getHeight();
-
-    // Creation of xAxis
-    var xAxis = new Line( 0, 0, options.width - 20, 0, {
-      stroke: 'gray'
+    // Layer for all bars added/removed from chart
+    // TODO: Use clipArea, ask JO
+    var barLayer = new Node( {
+      // clipArea: Shape.rect( 0, -220, 140, 400 )
     } );
 
     // TODO: add x-axis labels that correspond to the placement of the bar nodes
@@ -71,15 +71,26 @@ define( function( require ) {
       children: [
         barLayer,
         xAxis,
-        this.yAxis
+        yAxis
       ],
       center: this.background.center
     } );
 
     // Adding barNodes to the chart with proper centering
     barNodes.forEach( function( barNode, index ) {
-      barNode.centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
+      var centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
+      barNode.centerX = centerX;
+      barNode.bottom = xAxis.getY1();
       barLayer.addChild( barNode );
+      if ( options.xAxisLabels !== null && (barNodes.length === options.xAxisLabels.length) ) {
+        var labelSpacing = -options.height * (.2);
+        yAxis.setTailAndTip( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20 );
+        xAxis.setY1( labelSpacing );
+        xAxis.setY2( labelSpacing );
+        options.xAxisLabels[ index ].centerX = centerX;
+        options.xAxisLabels[ index ].centerY = xAxis.centerY + 20;
+        barLayer.addChild( options.xAxisLabels[ index ] );
+      }
     } );
 
     // TODO: Max Height of bar should adjust to height of chart area.

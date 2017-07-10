@@ -49,7 +49,7 @@ define( function( require ) {
       stroke: 'gray'
     } );
 
-    // Creation of yAxis
+    // Creation of yAxis in respect to the xAxis
     var yAxis = new ArrowNode( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20, {
       headHeight: 10,
       headWidth: 10,
@@ -77,12 +77,20 @@ define( function( require ) {
 
     // Adding barNodes to the chart with proper centering
     barNodes.forEach( function( barNode, index ) {
+
+      // Center of the bar determined based on the amount of bars present in the graph and the width of the graph
       var centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
       barNode.centerX = centerX;
       barNode.bottom = xAxis.getY1();
       barLayer.addChild( barNode );
+
+      // Determine the placement for the labels if they exist
       if ( options.xAxisLabels !== null && (barNodes.length === options.xAxisLabels.length) ) {
+
+        // Empirically determined spacing for the labels. 20% of the chart vertical space
         var labelSpacing = -options.height * (.2);
+
+        //Realign the axises
         yAxis.setTailAndTip( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20 );
         xAxis.setY1( labelSpacing );
         xAxis.setY2( labelSpacing );
@@ -99,6 +107,7 @@ define( function( require ) {
       ]
     } );
 
+    // Title added to the top of the chart area
     if ( options.title !== null ) {
       options.title.centerX = this.background.centerX;
       options.title.top = this.background.top + 4;

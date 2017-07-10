@@ -26,7 +26,7 @@ define( function( require ) {
       fill: 'blue',
       stroke: 'black',
       lineWidth: 0,
-      label: null, // Optional label which
+      label: null,
       width: 30,
       maxHeight: 400,
       displayContinuousArrow: false
@@ -69,7 +69,7 @@ define( function( require ) {
       displayContinuousArrow.set( currentHeight === options.maxHeight );
     } );
 
-    // Change the visiblity of the arrowNode
+    // Change the visibility of the arrowNode
     displayContinuousArrow.link( function( showContinuousArrow ) {
       self.arrowNode.visible = showContinuousArrow;
     } );

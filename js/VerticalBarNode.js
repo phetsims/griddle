@@ -37,13 +37,15 @@ define( function( require ) {
 
     Node.call( this );
 
+    // @public Creates the body of the bar.
     this.rectangleNode = new Rectangle( 0, 0, options.width, 100, {
       fill: options.fill,
       stroke: options.stroke,
       lineWidth: options.lineWidth
     } );
+    this.addChild( this.rectangleNode );
 
-    // @public arrow node used to indicate when the value has gone beyond the scale of this meter
+    // @public Arrow node used to indicate when the value has gone beyond the scale of this meter
     this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxHeight - 8, this.rectangleNode.centerX, -options.maxHeight - 25, {
       fill: options.fill,
       headWidth: options.width,
@@ -52,21 +54,23 @@ define( function( require ) {
     } );
     this.addChild( this.arrowNode );
 
-    var showContinuousArrow = new Property( options.displayContinuousArrow );
+    // Determines whether the arrow should be shown
+    var displayContinuousArrow = new Property( options.displayContinuousArrow );
 
-    this.addChild( this.rectangleNode );
+    // Link that changes the height of the bar based on the property associated with the bar.
     property.link( function( value ) {
       self.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
       var height = Math.max( 1, value ); // bar must have non-zero size
-      self.rectangleNode.setRectHeight( Math.min( options.maxHeight, height ) );
+      self.rectangleNode.setRectHeight( Math.min( options.maxHeight, height ) ); // caps the height of the bar
       self.rectangleNode.bottom = 0;
 
-      // set the continuous arrow to visible if needed
+      // set the continuous arrow to visible bar equals or exceeds maxHeight
       var currentHeight = self.rectangleNode.getRectHeight();
-      showContinuousArrow.set( currentHeight === options.maxHeight );
+      displayContinuousArrow.set( currentHeight === options.maxHeight );
     } );
 
-    showContinuousArrow.link( function( showContinuousArrow ) {
+    // Change the visiblity of the arrowNode
+    displayContinuousArrow.link( function( showContinuousArrow ) {
       self.arrowNode.visible = showContinuousArrow;
     } );
     this.mutate( options );

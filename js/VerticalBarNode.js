@@ -28,7 +28,7 @@ define( function( require ) {
       lineWidth: 0,
       label: null,
       width: 30,
-      maxHeight: 400,
+      maxHeight: 300,
       displayContinuousArrow: false
     }, options );
 

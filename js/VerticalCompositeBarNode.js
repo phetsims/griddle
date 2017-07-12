@@ -77,14 +77,11 @@ define( function( require ) {
 
       // Link created for each barNodes property
       barInfo[ 0 ].link( function( value ) {
+        var cachedBarTotalHeight = new Property( 0 );
         cachedRect.visible = ( value > 0 ); // because we can't create a zero height rectangle
         var height = Math.max( 0.001, value ); // bar must have non-zero size
         cachedRect.setRectHeight( Math.min( options.maxHeight, height ) ); // caps the height of the bar
         cachedRect.bottom = 0;
-
-        // set the continuous arrow to visible if needed
-        var currentHeight = cachedRect.top;
-        showContinuousArrow.set( currentHeight === options.maxHeight );
 
         // The top of every barNode is set to the bottom of the barNode above it
         for ( var i = 0; i < cachedBarNodes.length; i++ ) {
@@ -94,7 +91,16 @@ define( function( require ) {
           else {
             cachedBarNodes[ i ].bottom = 0; // At this point, we are setting the bottom of the bottommost barNode to 0
           }
+          cachedBarTotalHeight.set( cachedBarTotalHeight.get() + cachedBarNodes[ i ].top )
         }
+      } );
+    } );
+
+    // set the continuous arrow to visible if needed
+    barTuples.forEach( function( barInfo ) {
+      barInfo[ 0 ].link( function() {
+        var currentHeight = cachedBarNodes[ cachedBarNodes.length - 1 ].getTop();
+        showContinuousArrow.set( Math.abs( currentHeight ) >= options.maxHeight );
       } );
     } );
 

@@ -37,12 +37,13 @@ define( function( require ) {
     }, options );
 
     // Background for bar graph
-    this.background = new Rectangle( 0, 200, options.width, options.height, {
+    this.background = new Rectangle( 0, 200, options.width, 0, {
       fill: options.backgroundFill,
       stroke: STROKE_COLOR,
-      cornerRadius: 8,
-      lineWidth: LINE_WIDTH
+      lineWidth: LINE_WIDTH,
+      cornerRadius: 5
     } );
+    this.background.setRectHeight( options.height );
 
     // Creation of xAxis
     var xAxis = new Line( 0, 0, options.width - 20, 0, {
@@ -77,27 +78,28 @@ define( function( require ) {
 
     // Adding barNodes to the chart with proper centering
     barNodes.forEach( function( barNode, index ) {
-
-      // Center of the bar determined based on the amount of bars present in the graph and the width of the graph
       var centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
-      barNode.centerX = centerX;
-      barNode.bottom = xAxis.getY1();
-      barLayer.addChild( barNode );
 
-      // Determine the placement for the labels if they exist
+      // Determine the placement for the labels if they exist. There must be the same amount of labels as barNodes.
       if ( options.xAxisLabels !== null && (barNodes.length === options.xAxisLabels.length) ) {
+        barLayer.addChild( options.xAxisLabels[ index ] );
 
-        // Empirically determined spacing for the labels. 20% of the chart vertical space
-        var labelSpacing = -options.height * (.2);
+        // Empirically determined spacing for the labels. 10% of the chart vertical space.
+        var labelSpacing = options.height * 0.10;
 
         //Realign the axises
         yAxis.setTailAndTip( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20 );
-        xAxis.setY1( labelSpacing );
-        xAxis.setY2( labelSpacing );
+        xAxis.setY1( -labelSpacing );
+        xAxis.setY2( -labelSpacing );
         options.xAxisLabels[ index ].centerX = centerX;
         options.xAxisLabels[ index ].centerY = xAxis.centerY + 20;
-        barLayer.addChild( options.xAxisLabels[ index ] );
       }
+
+      // Center of the bar determined based on the amount of bars present in the graph and the width of the graph
+      barNode.centerX = centerX;
+      barNode.bottom = xAxis.getY1();
+      barNode.bottom = xAxis.getY1();
+      barLayer.addChild( barNode );
     } );
 
     // TODO: Max Height of bar should adjust to height of chart area.

@@ -91,7 +91,7 @@ define( function( require ) {
           else {
             cachedBarNodes[ i ].bottom = 0; // At this point, we are setting the bottom of the bottommost barNode to 0
           }
-          cachedBarTotalHeight.set( cachedBarTotalHeight.get() + cachedBarNodes[ i ].top )
+          cachedBarTotalHeight.set( cachedBarTotalHeight.get() + cachedBarNodes[ i ].top );
         }
       } );
     } );

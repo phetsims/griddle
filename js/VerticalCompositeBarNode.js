@@ -99,8 +99,8 @@ define( function( require ) {
     // set the continuous arrow to visible if needed
     barTuples.forEach( function( barInfo ) {
       barInfo[ 0 ].link( function() {
-        var currentHeight = cachedBarNodes[ cachedBarNodes.length - 1 ].getTop();
-        showContinuousArrow.set( Math.abs( currentHeight ) >= options.maxHeight );
+        var currentHeight = Math.abs( cachedBarNodes[ cachedBarNodes.length - 1 ].getTop() );
+        showContinuousArrow.set( currentHeight >= options.maxHeight );
       } );
     } );
 

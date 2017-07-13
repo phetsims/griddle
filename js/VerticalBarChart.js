@@ -33,7 +33,8 @@ define( function( require ) {
       backgroundFill: 'white',
       title: null,
       titleFill: 'black',
-      xAxisLabels: null
+      xAxisLabels: null,
+      visible: true
     }, options );
 
     // Background for bar graph
@@ -62,6 +63,7 @@ define( function( require ) {
     // Layer for all bars added/removed from chart
     // TODO: Use clipArea, ask JO
     var barLayer = new Node( {
+      visible: options.visible
       // clipArea: Shape.rect( 0, -220, 140, 400 )
     } );
 
@@ -99,6 +101,7 @@ define( function( require ) {
       barNode.centerX = centerX;
       barNode.bottom = xAxis.getY1();
       barNode.bottom = xAxis.getY1();
+      barNode.visible = options.visible;
       barLayer.addChild( barNode );
     } );
 
@@ -114,6 +117,7 @@ define( function( require ) {
       options.title.centerX = this.background.centerX;
       options.title.top = this.background.top + 4;
       options.title.fill = options.titleFill;
+      options.title.visible = options.visible;
       this.addChild( options.title );
     }
   }

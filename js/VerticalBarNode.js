@@ -29,7 +29,8 @@ define( function( require ) {
       label: null,
       width: 30,
       maxHeight: 300,
-      displayContinuousArrow: false
+      displayContinuousArrow: false,
+      visible: true
     }, options );
 
     var self = this;
@@ -41,7 +42,8 @@ define( function( require ) {
     this.rectangleNode = new Rectangle( 0, 0, options.width, 100, {
       fill: options.fill,
       stroke: options.stroke,
-      lineWidth: options.lineWidth
+      lineWidth: options.lineWidth,
+      visible: options.visible
     } );
     this.addChild( this.rectangleNode );
 
@@ -50,7 +52,8 @@ define( function( require ) {
       fill: options.fill,
       headWidth: options.width,
       tailWidth: 10,
-      stroke: 'black'
+      stroke: 'black',
+      visible: options.visible
     } );
     this.addChild( this.arrowNode );
 

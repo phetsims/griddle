@@ -37,6 +37,8 @@ define( function( require ) {
       visible: true
     }, options );
 
+    var self = this;
+
     // Background for bar graph
     this.background = new Rectangle( 0, 200, options.width, 0, {
       fill: options.backgroundFill,
@@ -62,29 +64,37 @@ define( function( require ) {
 
     // Layer for all bars added/removed from chart
     // TODO: Use clipArea, ask JO
-    var barLayer = new Node( {
+    this.barLayer = new Node( {
       visible: options.visible
       // clipArea: Shape.rect( 0, -220, 140, 400 )
+    } );
+    this.labelLayer = new Node( {
+      visible: options.visible
     } );
 
     // TODO: add x-axis labels that correspond to the placement of the bar nodes
     // Layer that refers to the chart starting with an origin at 0,0
     var chartNode = new Node( {
       children: [
-        barLayer,
+        this.barLayer,
+        this.labelLayer,
         xAxis,
         yAxis
       ],
       center: this.background.center
     } );
 
-    // Adding barNodes to the chart with proper centering
-    barNodes.forEach( function( barNode, index ) {
+    this.barNodes = barNodes;
+
+    // TODO: Make sure to unlink and remove listeners for memory leaks.
+
+    this.positionBar = function( barNode, index ) {
       var centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
 
       // Determine the placement for the labels if they exist. There must be the same amount of labels as barNodes.
+      // TODO: Add assert so that labels.length === barNodes.length;
       if ( options.xAxisLabels !== null && (barNodes.length === options.xAxisLabels.length) ) {
-        barLayer.addChild( options.xAxisLabels[ index ] );
+        self.labelLayer.addChild( options.xAxisLabels[ index ] );
 
         // Empirically determined spacing for the labels. 10% of the chart vertical space.
         var labelSpacing = options.height * 0.10;
@@ -102,7 +112,12 @@ define( function( require ) {
       barNode.bottom = xAxis.getY1();
       barNode.bottom = xAxis.getY1();
       barNode.visible = options.visible;
-      barLayer.addChild( barNode );
+      self.barLayer.addChild( barNode );
+    };
+
+    // Adding barNodes to the chart with proper centering
+    this.barNodes.forEach( function( barNode, index ) {
+      self.positionBar( barNode, index );
     } );
 
     // TODO: Max Height of bar should adjust to height of chart area.
@@ -124,5 +139,21 @@ define( function( require ) {
 
   griddle.register( 'VerticalBarChart', VerticalBarChart );
 
-  return inherit( Node, VerticalBarChart );
+  return inherit( Node, VerticalBarChart, {
+
+    // TODO: Methods to be added  ( removeBars, addOneBars, addBarGroup,)
+
+    // nullBarNodes: function(barNodes){
+    //   barNodes.forEach(function(bar){
+    //     bar.property= new Property(0);
+    //   });
+    // },
+    removeAllBars: function() {
+      this.barLayer.removeAllChildren();
+    },
+
+    setBarNode: function( newBarNode, index ) {
+      this.positionBar( newBarNode, index );
+    }
+  } );
 } );

@@ -28,13 +28,12 @@ define( function( require ) {
       lineWidth: 0,
       label: null,
       width: 30,
-      maxHeight: 300,
+      maxBarHeight: 300,
       displayContinuousArrow: false,
       visible: true
     }, options );
 
-    var self = this;
-    this.property = property;
+    this.maxBarHeight = options.maxBarHeight;
 
     Node.call( this );
 
@@ -48,7 +47,7 @@ define( function( require ) {
     this.addChild( this.rectangleNode );
 
     // @public Arrow node used to indicate when the value has gone beyond the scale of this meter
-    this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxHeight - 8, this.rectangleNode.centerX, -options.maxHeight - 25, {
+    this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxBarHeight - 8, this.rectangleNode.centerX, -options.maxBarHeight - 25, {
       fill: options.fill,
       headWidth: options.width,
       tailWidth: 10,
@@ -58,28 +57,43 @@ define( function( require ) {
     this.addChild( this.arrowNode );
 
     // Determines whether the arrow should be shown
-    var displayContinuousArrow = new Property( options.displayContinuousArrow );
+    this.displayContinuousArrow = new Property( options.displayContinuousArrow );
 
     // Link that changes the height of the bar based on the property associated with the bar.
-    property.link( function( value ) {
-      self.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
-      var height = Math.max( 1, value ); // bar must have non-zero size
-      self.rectangleNode.setRectHeight( Math.min( options.maxHeight, height ) ); // caps the height of the bar
-      self.rectangleNode.bottom = 0;
+    this.handleBarHeightChanged = this.updateBarHeight.bind( this );
+    this.setMonitoredProperty( property );
 
-      // set the continuous arrow to visible bar equals or exceeds maxHeight
-      var currentHeight = self.rectangleNode.getRectHeight();
-      displayContinuousArrow.set( currentHeight === options.maxHeight );
-    } );
-
-    // Change the visibility of the arrowNode
-    displayContinuousArrow.link( function( showContinuousArrow ) {
-      self.arrowNode.visible = showContinuousArrow;
-    } );
     this.mutate( options );
   }
 
   griddle.register( 'VerticalBarNode', VerticalBarNode );
 
-  return inherit( Node, VerticalBarNode );
+  return inherit( Node, VerticalBarNode, {
+
+    /**
+     * Replace the Property for the barNode with the new Property passed in.
+     * @param {Property.<number>} property
+     *
+     * @public
+     */
+    setMonitoredProperty: function( property ) {
+
+      // We can skip the unlink the first time this is called. The next time this is called property will be defined.
+      this.property && this.property.unlink( this.handleBarHeightChanged );
+      this.property = property;
+      this.property.link( this.handleBarHeightChanged );
+    },
+
+    // TODO: add docs
+    updateBarHeight: function( value ) {
+      this.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
+      var height = Math.max( 0.0000001, value ); // bar must have non-zero size
+      this.rectangleNode.setRectHeight( Math.min( this.maxBarHeight, height ) ); // caps the height of the bar
+      this.rectangleNode.bottom = 0;
+
+      // Change the visibility of the arrowNode
+      this.arrowNode.visible = ( this.rectangleNode.getRectHeight() === this.maxBarHeight);
+
+    }
+  } );
 } );

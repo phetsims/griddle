@@ -5,114 +5,118 @@
  *
  */
 define( function( require ) {
-  'use strict';
+    'use strict';
 
-  // modules
-  var griddle = require( 'GRIDDLE/griddle' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  var Property = require( 'AXON/Property' );
+    // modules
+    var griddle = require( 'GRIDDLE/griddle' );
+    var inherit = require( 'PHET_CORE/inherit' );
+    var Node = require( 'SCENERY/nodes/Node' );
+    var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
 
   /**
    * @constructor
    */
-  function VerticalCompositeBarNode( barNodes, options ) {
+  function VerticalCompositeBarNode( properties, colors, options ) {
     options = _.extend( {
-      fill: 'blue',
+      arrowFill: 'blue',
       stroke: 'black',
       lineWidth: 0,
       label: null,
       width: 30,
-      maxHeight: 400,
+      maxBarHeight: 400,
       displayContinuousArrow: false
     }, options );
 
     var self = this;
-    this.barNodes = barNodes;
+    this.barNodes = [];
 
     Node.call( this );
 
-    // @public Creates the body of the bar.
-    this.rectangleNode = new Rectangle( 0, 0, options.width, 100, {
-      fill: options.fill,
-      stroke: options.stroke,
-      lineWidth: options.lineWidth
+    assert && assert( properties.length === colors.length, 'There are not the same amount of properties and colors.' );
+
+    properties.forEach( function( property ) {
+      self.barNodes.push( new VerticalBarNode( property, options ) );
     } );
 
-    // @public arrow node used to indicate when the value has gone beyond the scale of this meter
-    this.arrowNode = new ArrowNode( this.rectangleNode.rectX, -options.maxHeight - 8, this.rectangleNode.rectX, -options.maxHeight - 25, {
-      fill: options.fill,
-      headWidth: options.width,
-      tailWidth: 10,
-      stroke: 'black'
-    } );
-    this.addChild( this.arrowNode );
+    this.barNodes.forEach( function( barNode, index ) {
+      barNode.fill = colors[ index ].fill;
+      self.addChild( barNode );
 
-    // Determines whether the arrow should be shown
-    var showContinuousArrow = new Property( options.displayContinuousArrow );
-    showContinuousArrow.link( function( showContinuousArrow ) {
-      self.arrowNode.visible = showContinuousArrow;
-    } );
-
-    var cachedBarNodes = []; // Represents the stacked bars
-    var barTuples = []; // Contains all the necessary information to create a bar [{ barProperty, barColor }]
-    barNodes.forEach( function( bar ) {
-
-      // Collect the respective properties and colors from each bar that needs to be stacked
-      barTuples.push( [ bar.property, bar.rectangleNode.fill ] );
-    } );
-
-    // Create a series of bars based on the information collected above.
-    barTuples.forEach( function( barInfo ) {
-
-      // Rectangle used to visually represent the barNode
-      var cachedRect = new Rectangle( 0, 0, options.width, barInfo[ 0 ].value, {
-        fill: barInfo[ 1 ],
-        stroke: barInfo[ 1 ],
-        centerX: 0
+      barNode.property.link( function( value ) {
+        self.barNodes[ index ].updateBarHeight( value );
+        // for ( var i = 0; i < self.barNodes.length; i++ ) {
+        //   if ( i !== 0 ) {
+        //
+        //     self.barNodes[ i ].bottom = (self.barNodes[ i - 1 ].top);
+        //   }
+        //   else {
+        //     self.barNodes[ i ].bottom = 0; // At this point, we are setting the bottom of the bottommost barNode to 0
+        //   }
+        // }
       } );
-      cachedBarNodes.push( cachedRect );
-
-      // Link created for each barNodes property
-      barInfo[ 0 ].link( function( value ) {
-        var cachedBarTotalHeight = new Property( 0 );
-        cachedRect.visible = ( value > 0 ); // because we can't create a zero height rectangle
-        var height = Math.max( 0.001, value ); // bar must have non-zero size
-        cachedRect.setRectHeight( Math.min( options.maxHeight, height ) ); // caps the height of the bar
-        cachedRect.bottom = 0;
-
-        // The top of every barNode is set to the bottom of the barNode above it
-        for ( var i = 0; i < cachedBarNodes.length; i++ ) {
-          if ( i !== 0 ) {
-            cachedBarNodes[ i ].bottom = cachedBarNodes[ i - 1 ].top;
-          }
-          else {
-            cachedBarNodes[ i ].bottom = 0; // At this point, we are setting the bottom of the bottommost barNode to 0
-          }
-          cachedBarTotalHeight.set( cachedBarTotalHeight.get() + cachedBarNodes[ i ].top );
-        }
       } );
-    } );
 
-    // set the continuous arrow to visible if needed
-    barTuples.forEach( function( barInfo ) {
-      barInfo[ 0 ].link( function() {
-        var currentHeight = Math.abs( cachedBarNodes[ cachedBarNodes.length - 1 ].getTop() );
-        showContinuousArrow.set( currentHeight >= options.maxHeight );
-      } );
-    } );
 
-    // Add all of the newly created stacked barNodes
-    for ( var i = 0; i < cachedBarNodes.length; i++ ) {
-      this.addChild( cachedBarNodes[ i ] );
-    }
+    // var cachedBarNodes = []; // Represents the stacked bars
+    // var barTuples = []; // Contains all the necessary information to create a bar [{ barProperty, barColor }]
+    // barNodes.forEach( function( bar ) {
+    //
+    //   // Collect the respective properties and colors from each bar that needs to be stacked
+    //   barTuples.push( [ bar.property, bar.rectangleNode.fill ] );
+    // } );
+    //
+    // // Create a series of bars based on the information collected above.
+    // barTuples.forEach( function( barInfo ) {
+    //
+    //   // Rectangle used to visually represent the barNode
+    //   var cachedRect = new Rectangle( 0, 0, options.width, barInfo[ 0 ].value, {
+    //     fill: barInfo[ 1 ],
+    //     stroke: barInfo[ 1 ],
+    //     centerX: 0
+    //   } );
+    //   cachedBarNodes.push( cachedRect );
+    //
+    //   // Link created for each barNodes property
+    //   // TODO: @Denzell. Take JB's suggestion of passing in [property],[color] and apply it here. Check blue book.
+    //   // We should be following the same patter in in VerticalBarNode.setMonitorProperty()
+    //   barInfo[ 0 ].link( function( value ) {
+    //     var cachedBarTotalHeight = new Property( 0 );
+    //     cachedRect.visible = ( value > 0 ); // because we can't create a zero height rectangle
+    //     var height = Math.max( 0.001, value ); // bar must have non-zero size
+    //     cachedRect.setRectHeight( Math.min( options.maxBarHeight, height ) ); // caps the height of the bar
+    //     cachedRect.bottom = 0;
+    //
+    //     // The top of every barNode is set to the bottom of the barNode above it
+    //     for ( var i = 0; i < cachedBarNodes.length; i++ ) {
+    //       if ( i !== 0 ) {
+    //         cachedBarNodes[ i ].bottom = cachedBarNodes[ i - 1 ].top;
+    //       }
+    //       else {
+    //         cachedBarNodes[ i ].bottom = 0; // At this point, we are setting the bottom of the bottommost barNode to 0
+    //       }
+    //       cachedBarTotalHeight.set( cachedBarTotalHeight.get() + cachedBarNodes[ i ].top );
+    //     }
+    //   } );
+    // } );
+    //
+    // // set the continuous arrow to visible if needed
+    // barTuples.forEach( function( barInfo ) {
+    //   barInfo[ 0 ].link( function() {
+    //     var currentHeight = Math.abs( cachedBarNodes[ cachedBarNodes.length - 1 ].getTop() );
+    //     showContinuousArrow.set( currentHeight >= options.maxBarHeight );
+    //   } );
+    // } );
+    //
+    // // Add all of the newly created stacked barNodes
+    // for ( var i = 0; i < cachedBarNodes.length; i++ ) {
+    //   this.addChild( cachedBarNodes[ i ] );
+    // }
 
     this.mutate( options );
   }
 
-  griddle.register( 'VerticalCompositeBarNode', VerticalCompositeBarNode );
+    griddle.register( 'VerticalCompositeBarNode', VerticalCompositeBarNode );
 
-  return inherit( Node, VerticalCompositeBarNode );
-} );
+    return inherit( Node, VerticalCompositeBarNode );
+  }
+);

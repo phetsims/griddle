@@ -77,6 +77,7 @@ define( function( require ) {
      * @public
      */
     setMonitoredProperty: function( property ) {
+      assert && assert( typeof property.get() === 'number' );
 
       // We can skip the unlink the first time this is called. The next time this is called property will be defined.
       this.property && this.property.unlink( this.handleBarHeightChanged );
@@ -84,8 +85,15 @@ define( function( require ) {
       this.property.link( this.handleBarHeightChanged );
     },
 
-    // TODO: add docs
+    /**
+     * Changes the height of the bar based on the value supplied.
+     * @param {number} value - numerical value the bar will represent
+     *
+     * @private
+     */
     updateBarHeight: function( value ) {
+      assert && assert( typeof value === 'number' );
+
       this.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
       var height = Math.max( 0.0000001, value ); // bar must have non-zero size
       this.rectangleNode.setRectHeight( Math.min( this.maxBarHeight, height ) ); // caps the height of the bar
@@ -93,7 +101,6 @@ define( function( require ) {
 
       // Change the visibility of the arrowNode
       this.arrowNode.visible = ( this.rectangleNode.getRectHeight() === this.maxBarHeight);
-
     }
   } );
 } );

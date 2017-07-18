@@ -12,6 +12,7 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
     var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
+  var Property = require( 'AXON/Property' );
 
   /**
    * @constructor
@@ -39,20 +40,25 @@ define( function( require ) {
     } );
 
     this.barNodes.forEach( function( barNode, index ) {
-      barNode.fill = colors[ index ].fill;
+      barNode.rectangleNode.fill = colors[ index ];
       self.addChild( barNode );
 
       barNode.property.link( function( value ) {
         self.barNodes[ index ].updateBarHeight( value );
-        // for ( var i = 0; i < self.barNodes.length; i++ ) {
-        //   if ( i !== 0 ) {
-        //
-        //     self.barNodes[ i ].bottom = (self.barNodes[ i - 1 ].top);
-        //   }
-        //   else {
-        //     self.barNodes[ i ].bottom = 0; // At this point, we are setting the bottom of the bottommost barNode to 0
-        //   }
-        // }
+        var currentHeight = 0;
+
+        for ( var i = 0; i < self.barNodes.length; i++ ) {
+          // currentHeight+=self.barNodes[index].currentHeight;
+          if ( i === 0 ) {
+            barNode.Y = 0;
+          }
+          else {
+            barNode.Y = self.barNodes[ i - 1 ].rectangleNode.getRectHeight();
+          }
+        }
+
+        // self.barNodes[0].rectangleNode.rectY = 0;
+        // self.barNodes[1].rectangleNode.rectY = self.barNodes[0].rectangleNode.getRectHeight();
       } );
       } );
 

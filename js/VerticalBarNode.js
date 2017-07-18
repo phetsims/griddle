@@ -101,6 +101,7 @@ define( function( require ) {
 
       // Change the visibility of the arrowNode
       this.arrowNode.visible = ( this.rectangleNode.getRectHeight() === this.maxBarHeight);
+      this.currentHeight = value;
     }
   } );
 } );

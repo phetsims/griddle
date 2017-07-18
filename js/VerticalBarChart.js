@@ -142,12 +142,6 @@ define( function( require ) {
   return inherit( Node, VerticalBarChart, {
 
     // TODO: Methods to be added  ( removeBars, addOneBars, addBarGroup,)
-
-    // nullBarNodes: function(barNodes){
-    //   barNodes.forEach(function(bar){
-    //     bar.property= new Property(0);
-    //   });
-    // },
     removeAllBars: function() {
       this.barLayer.removeAllChildren();
     },

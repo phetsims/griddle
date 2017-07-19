@@ -12,7 +12,6 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
     var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
-  var Property = require( 'AXON/Property' );
 
   /**
    * @constructor
@@ -45,8 +44,7 @@ define( function( require ) {
 
       barNode.property.link( function( value ) {
         self.barNodes[ index ].updateBarHeight( value );
-        var currentHeight = 0;
-
+       
         for ( var i = 0; i < self.barNodes.length; i++ ) {
           // currentHeight+=self.barNodes[index].currentHeight;
           if ( i === 0 ) {

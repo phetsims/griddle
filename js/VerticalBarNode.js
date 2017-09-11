@@ -32,7 +32,7 @@ define( function( require ) {
       fill: 'blue',
       stroke: 'black',
       lineWidth: 0,
-      label: null,  // x-axis label associated with this bar node.
+      label: null,  // x-axis label associated with this bar node
       width: 30,
       maxBarHeight: 300, // maximum threshold that the bar height can reach before being represented as continuous
       displayContinuousArrow: false, // sets visibility of an arrow that represents a continuous bar

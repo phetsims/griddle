@@ -30,7 +30,8 @@ define( function( require ) {
       width: 30,
       maxBarHeight: 300,
       displayContinuousArrow: false,
-      visible: true
+      visible: true,
+      scaledProperty: null
     }, options );
 
     this.maxBarHeight = options.maxBarHeight;

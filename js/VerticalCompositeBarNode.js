@@ -44,7 +44,7 @@ define( function( require ) {
 
       barNode.property.link( function( value ) {
         self.barNodes[ index ].updateBarHeight( value );
-       
+
         for ( var i = 0; i < self.barNodes.length; i++ ) {
           // currentHeight+=self.barNodes[index].currentHeight;
           if ( i === 0 ) {
@@ -121,6 +121,12 @@ define( function( require ) {
 
     griddle.register( 'VerticalCompositeBarNode', VerticalCompositeBarNode );
 
-    return inherit( Node, VerticalCompositeBarNode );
+  return inherit( Node, VerticalCompositeBarNode, {
+    setMonitoredProperties: function( properties ) {
+      this.barNodes.forEach( function( barNode, index ) {
+        barNode.setMonitoredProperty( properties[ index ] );
+      } )
+    }
+  } );
   }
 );

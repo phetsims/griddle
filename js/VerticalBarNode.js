@@ -34,6 +34,7 @@ define( function( require ) {
       scaledProperty: null
     }, options );
 
+    this.property = property;
     this.maxBarHeight = options.maxBarHeight;
 
     Node.call( this );
@@ -62,7 +63,7 @@ define( function( require ) {
 
     // Link that changes the height of the bar based on the property associated with the bar.
     this.handleBarHeightChanged = this.updateBarHeight.bind( this );
-    this.setMonitoredProperty( property );
+    this.setMonitoredProperty( this.property );
 
     this.mutate( options );
   }

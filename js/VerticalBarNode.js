@@ -1,6 +1,7 @@
 // Copyright 2017, University of Colorado Boulder
 
 /**
+ * The height of a bar node represents the qualitative value of the property it is representing.
  *
  * @author Denzell Barnett (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -19,25 +20,28 @@ define( function( require ) {
   var Property = require( 'AXON/Property' );
 
   /**
+   *
+   * @param {Property} property
+   * @param {Object} options
    * @constructor
    */
   function VerticalBarNode( property, options ) {
+    Node.call( this );
+
     options = _.extend( {
       fill: 'blue',
       stroke: 'black',
       lineWidth: 0,
-      label: null,
+      label: null,  // x-axis label associated with this bar node.
       width: 30,
-      maxBarHeight: 300,
-      displayContinuousArrow: false,
+      maxBarHeight: 300, // maximum threshold that the bar height can reach before being represented as continuous
+      displayContinuousArrow: false, // sets visibility of an arrow that represents a continuous bar
       visible: true,
-      scaledProperty: null
+      scaledProperty: null // property that is scaled for zoom in/out functionality
     }, options );
 
     this.property = property;
     this.maxBarHeight = options.maxBarHeight;
-
-    Node.call( this );
 
     // @public Creates the body of the bar.
     this.rectangleNode = new Rectangle( 0, 0, options.width, 100, {
@@ -48,7 +52,7 @@ define( function( require ) {
     } );
     this.addChild( this.rectangleNode );
 
-    // @public Arrow node used to indicate when the value has gone beyond the scale of this meter
+    // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
     this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxBarHeight - 8, this.rectangleNode.centerX, -options.maxBarHeight - 25, {
       fill: options.fill,
       headWidth: options.width,

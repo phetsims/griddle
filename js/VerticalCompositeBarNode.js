@@ -138,7 +138,7 @@ define( function( require ) {
     setMonitoredProperties: function( properties ) {
       this.barNodes.forEach( function( barNode, index ) {
         barNode.setMonitoredProperty( properties[ index ] );
-      } )
+      } );
     }
   } );
   }

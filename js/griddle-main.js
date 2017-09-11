@@ -9,8 +9,8 @@ define( function( require ) {
   // modules
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
-  var XYPlotScreen = require( 'GRIDDLE/demo/XYPlotScreen' );
   var VerticalBarChartScreen = require( 'GRIDDLE/demo/VerticalBarChartScreen' );
+  var XYPlotScreen = require( 'GRIDDLE/demo/XYPlotScreen' );
 
   // strings
   var griddleTitleString = require( 'string!GRIDDLE/griddle.title' );

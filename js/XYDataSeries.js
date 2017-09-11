@@ -10,9 +10,9 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var Emitter = require( 'AXON/Emitter' );
   var griddle = require( 'GRIDDLE/griddle' );
+  var inherit = require( 'PHET_CORE/inherit' );
 
   function XYDataSeries( options ) {
 

@@ -9,16 +9,16 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var griddle = require( 'GRIDDLE/griddle' );
-  var inherit = require( 'PHET_CORE/inherit' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var Color = require( 'SCENERY/util/Color' );
+  var griddle = require( 'GRIDDLE/griddle' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var Panel = require( 'SUN/Panel' );
   var Property = require( 'AXON/Property' );
   var Screen = require( 'JOIST/Screen' );
   var ScreenView = require( 'JOIST/ScreenView' );
-  var XYPlot = require( 'GRIDDLE/XYPlot' );
   var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
+  var XYPlot = require( 'GRIDDLE/XYPlot' );
 
   /**
    * @constructor

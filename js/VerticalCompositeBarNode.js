@@ -1,6 +1,8 @@
 // Copyright 2017, University of Colorado Boulder
 
 /**
+ * The composite bar node is created by vertically stacking a series of vertical barNodes
+ *
  * @author Denzell Barnett (PhET Interactive Simulations)
  *
  */
@@ -14,24 +16,27 @@ define( function( require ) {
     var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
 
   /**
+   * @param {Array.<Property.<number>>} properties - the properties provided will be used to create new bar nodes
+   * @param {Array.<String>} colors - the colors provided will be used to for the fill values of the new bar nodes
+   * @param {Object} options
+   *
    * @constructor
    */
   function VerticalCompositeBarNode( properties, colors, options ) {
+    Node.call( this );
+
     options = _.extend( {
       arrowFill: 'blue',
       stroke: 'black',
       lineWidth: 0,
-      label: null,
+      label: null, // x-axis label associated with this bar node
       width: 30,
-      maxBarHeight: 400,
+      maxBarHeight: 400, // maximum threshold that the bar height can reach before being represented as continuous
       displayContinuousArrow: false
     }, options );
 
     var self = this;
     this.barNodes = [];
-
-    Node.call( this );
-
     assert && assert( properties.length === colors.length, 'There are not the same amount of properties and colors.' );
 
     properties.forEach( function( property ) {
@@ -122,6 +127,14 @@ define( function( require ) {
     griddle.register( 'VerticalCompositeBarNode', VerticalCompositeBarNode );
 
   return inherit( Node, VerticalCompositeBarNode, {
+
+    /**
+     * Sets the properties that are to be represented by each bar node.
+     *
+     * @param {Array.<Property.<number>>} properties - Will be attributed to each bar node in the order they are given
+     *
+     * @public
+     */
     setMonitoredProperties: function( properties ) {
       this.barNodes.forEach( function( barNode, index ) {
         barNode.setMonitoredProperty( properties[ index ] );

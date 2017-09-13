@@ -52,10 +52,8 @@ define( function( require ) {
     // Responsible for positioning the barNodes
     Property.multilink( properties, function() {
       self.barNodes[ 0 ].bottom = 0;
-      console.log( 'link fired' );
       for ( var i = 0; i < properties.length - 1; i++ ) {
         self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
-        console.log( 'self.barNodes[ i + 1 ].bottom = ' + self.barNodes[ i + 1 ].bottom );
       }
       } );
 

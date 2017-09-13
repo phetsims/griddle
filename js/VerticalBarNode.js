@@ -44,6 +44,7 @@ define( function( require ) {
     this.maxBarHeight = options.maxBarHeight;
 
     // @public Creates the body of the bar.
+    // TODO: Remove exposure make private.
     this.rectangleNode = new Rectangle( 0, 0, options.width, 100, {
       fill: options.fill,
       stroke: options.stroke,
@@ -53,14 +54,16 @@ define( function( require ) {
     this.addChild( this.rectangleNode );
 
     // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
-    this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxBarHeight - 8, this.rectangleNode.centerX, -options.maxBarHeight - 25, {
-      fill: options.fill,
-      headWidth: options.width,
-      tailWidth: 10,
-      stroke: 'black',
-      visible: options.visible
-    } );
-    this.addChild( this.arrowNode );
+    if ( options.displayContinuousArrow ) {
+      this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxBarHeight - 8, this.rectangleNode.centerX, -options.maxBarHeight - 25, {
+        fill: options.fill,
+        headWidth: options.width,
+        tailWidth: 10,
+        stroke: 'black',
+        visible: options.visible
+      } );
+      this.addChild( this.arrowNode );
+    }
 
     // Determines whether the arrow should be shown
     this.displayContinuousArrow = new Property( options.displayContinuousArrow );
@@ -106,7 +109,9 @@ define( function( require ) {
       this.rectangleNode.bottom = 0;
 
       // Change the visibility of the arrowNode
-      this.arrowNode.visible = ( this.rectangleNode.getRectHeight() === this.maxBarHeight);
+      if ( this.arrowNode ) {
+        this.arrowNode.visible = ( this.rectangleNode.getRectHeight() === this.maxBarHeight);
+      }
       this.currentHeight = value;
     }
   } );

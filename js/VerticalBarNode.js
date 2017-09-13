@@ -46,17 +46,17 @@ define( function( require ) {
 
     // @public Creates the body of the bar.
     // TODO: Remove exposure make private.
-    this.rectangleNode = new Rectangle( 0, 0, options.width, 100, {
+    var rectangleNode = new Rectangle( 0, 0, options.width, 100, {
       fill: options.fill,
       stroke: options.stroke,
       lineWidth: options.lineWidth,
       visible: options.visible
     } );
-    this.addChild( this.rectangleNode );
+    this.addChild( rectangleNode );
 
     // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
     if ( options.displayContinuousArrow ) {
-      this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxBarHeight - 8, this.rectangleNode.centerX, -options.maxBarHeight - 25, {
+      this.arrowNode = new ArrowNode( rectangleNode.centerX, -options.maxBarHeight - 8, rectangleNode.centerX, -options.maxBarHeight - 25, {
         fill: options.fill,
         headWidth: options.width,
         tailWidth: 10,
@@ -72,14 +72,14 @@ define( function( require ) {
     property.link( function( value ) {
       assert && assert( typeof value === 'number' );
 
-      self.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
+      rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
       var height = Math.max( 0.0000001, value ); // bar must have non-zero size
-      self.rectangleNode.setRectHeight( Math.min( self.maxBarHeight, height ) ); // caps the height of the bar
-      self.rectangleNode.bottom = 0;
+      rectangleNode.setRectHeight( Math.min( self.maxBarHeight, height ) ); // caps the height of the bar
+      rectangleNode.bottom = 0;
 
       // Change the visibility of the arrowNode
       if ( self.arrowNode ) {
-        self.arrowNode.visible = ( self.rectangleNode.getRectHeight() === self.maxBarHeight);
+        self.arrowNode.visible = ( rectangleNode.getRectHeight() === self.maxBarHeight);
       }
       self.currentHeight = value;
     } );

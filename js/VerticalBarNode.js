@@ -27,6 +27,7 @@ define( function( require ) {
    */
   function VerticalBarNode( property, options ) {
     Node.call( this );
+    var self = this;
 
     options = _.extend( {
       fill: 'blue',
@@ -68,51 +69,25 @@ define( function( require ) {
     // Determines whether the arrow should be shown
     this.displayContinuousArrow = new Property( options.displayContinuousArrow );
 
-    // Link that changes the height of the bar based on the property associated with the bar.
-    this.handleBarHeightChanged = this.updateBarHeight.bind( this );
-    this.setMonitoredProperty( this.property );
+    property.link( function( value ) {
+      assert && assert( typeof value === 'number' );
+
+      self.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
+      var height = Math.max( 0.0000001, value ); // bar must have non-zero size
+      self.rectangleNode.setRectHeight( Math.min( self.maxBarHeight, height ) ); // caps the height of the bar
+      self.rectangleNode.bottom = 0;
+
+      // Change the visibility of the arrowNode
+      if ( self.arrowNode ) {
+        self.arrowNode.visible = ( self.rectangleNode.getRectHeight() === self.maxBarHeight);
+      }
+      self.currentHeight = value;
+    } );
 
     this.mutate( options );
   }
 
   griddle.register( 'VerticalBarNode', VerticalBarNode );
 
-  return inherit( Node, VerticalBarNode, {
-
-    /**
-     * Replace the Property for the barNode with the new Property passed in.
-     * @param {Property.<number>} property
-     *
-     * @public
-     */
-    setMonitoredProperty: function( property ) {
-      assert && assert( typeof property.get() === 'number' );
-
-      // We can skip the unlink the first time this is called. The next time this is called property will be defined.
-      this.property && this.property.unlink( this.handleBarHeightChanged );
-      this.property = property;
-      this.property.link( this.handleBarHeightChanged );
-    },
-
-    /**
-     * Changes the height of the bar based on the value supplied.
-     * @param {number} value - numerical value the bar will represent
-     *
-     * @private
-     */
-    updateBarHeight: function( value ) {
-      assert && assert( typeof value === 'number' );
-
-      this.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
-      var height = Math.max( 0.0000001, value ); // bar must have non-zero size
-      this.rectangleNode.setRectHeight( Math.min( this.maxBarHeight, height ) ); // caps the height of the bar
-      this.rectangleNode.bottom = 0;
-
-      // Change the visibility of the arrowNode
-      if ( this.arrowNode ) {
-        this.arrowNode.visible = ( this.rectangleNode.getRectHeight() === this.maxBarHeight);
-      }
-      this.currentHeight = value;
-    }
-  } );
+  return inherit( Node, VerticalBarNode );
 } );

@@ -49,10 +49,6 @@ define( function( require ) {
       return verticalBarNode;
     } );
 
-    properties[ 0 ].link( function() {
-      console.log( 'First element link fired' );
-    } );
-
     // Responsible for positioning the barNodes
     Property.multilink( properties, function() {
       self.barNodes[ 0 ].bottom = 0;
@@ -68,20 +64,6 @@ define( function( require ) {
 
     griddle.register( 'VerticalCompositeBarNode', VerticalCompositeBarNode );
 
-  return inherit( Node, VerticalCompositeBarNode, {
-
-    /**
-     * Sets the properties that are to be represented by each bar node.
-     *
-     * @param {Array.<Property.<number>>} properties - Will be attributed to each bar node in the order they are given
-     *
-     * @public
-     */
-    setMonitoredProperties: function( properties ) {
-      this.barNodes.forEach( function( barNode, index ) {
-        barNode.setMonitoredProperty( properties[ index ] );
-      } );
-    }
-  } );
+  return inherit( Node, VerticalCompositeBarNode );
   }
 );

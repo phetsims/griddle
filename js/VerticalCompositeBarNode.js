@@ -43,7 +43,8 @@ define( function( require ) {
     this.barNodes = properties.map( function( property, index ) {
       var verticalBarNode = new VerticalBarNode( property, {
         fill: colors[ index ],
-        displayContinuousArrow: false
+        displayContinuousArrow: false,
+        width: 15 // TODO: Why should we have to redefine this? And Why half the default width of the verticalBarNode?
       } );
       self.addChild( verticalBarNode );
       return verticalBarNode;

@@ -105,6 +105,9 @@ define( function( require ) {
         xAxis.setY2( -labelSpacing );
         options.xAxisLabels[ index ].centerX = centerX;
         options.xAxisLabels[ index ].centerY = xAxis.centerY + 20;
+        options.xAxisLabels.forEach( function( label ) {
+          label.maxWidth = labelSpacing;
+        } );
       }
 
       // Center of the bar determined based on the amount of bars present in the graph and the width of the graph

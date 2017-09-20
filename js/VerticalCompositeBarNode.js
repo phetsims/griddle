@@ -32,7 +32,7 @@ define( function( require ) {
       lineWidth: 0,
       label: null, // x-axis label associated with this bar node
       width: 30,
-      maxBarHeight: 400, // maximum threshold that the bar height can reach before being represented as continuous
+      maxBarHeight: 200, // maximum threshold that the bar height can reach before being represented as continuous
       displayContinuousArrow: false
     }, options );
 
@@ -55,6 +55,7 @@ define( function( require ) {
       self.barNodes[ 0 ].bottom = 0;
       for ( var i = 0; i < properties.length - 1; i++ ) {
         self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
+        self.barNodes[ i ].rect
       }
       } );
 

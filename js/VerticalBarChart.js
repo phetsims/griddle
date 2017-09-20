@@ -12,6 +12,7 @@ define( function( require ) {
 
   // modules
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  var ClearThermalButton = require( 'SCENERY_PHET/ClearThermalButton' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Line = require( 'SCENERY/nodes/Line' );
@@ -34,6 +35,7 @@ define( function( require ) {
       title: null,
       titleFill: 'black',
       xAxisLabels: null,
+      thermalEnergyProperty: null, // Used for thermal energy button if needed.
       visible: true
     }, options );
 
@@ -68,6 +70,8 @@ define( function( require ) {
       visible: options.visible
       // clipArea: Shape.rect( 0, -220, 140, 400 )
     } );
+
+    // Layer for the x-axis labels
     this.labelLayer = new Node( {
       visible: options.visible
     } );
@@ -122,6 +126,20 @@ define( function( require ) {
     this.barNodes.forEach( function( barNode, index ) {
       self.positionBar( barNode, index );
     } );
+
+    if ( options.thermalEnergyProperty ) {
+      var clearThermalButton = new ClearThermalButton( {
+        listener: options.thermalEnergyProperty.onSelfChange.bind( options.thermalEnergyProperty, 0 ),
+        centerX: self.labelLayer.centerX,
+        top: self.labelLayer.bottom,
+        scale: 0.72
+      } );
+      options.thermalEnergyProperty.link( function( value ) {
+        console.log( 'value = ' + value );
+        clearThermalButton.enabled = value !== 0;
+      } );
+      chartNode.addChild( clearThermalButton );
+    }
 
     // TODO: Max Height of bar should adjust to height of chart area.
     Node.call( this, {

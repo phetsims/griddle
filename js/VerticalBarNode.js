@@ -52,7 +52,7 @@ define( function( require ) {
       lineWidth: options.lineWidth,
       visible: options.visible
     } );
-    this.addChild( rectangleNode );
+    this.addChild( this.rectangleNode );
 
     // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
     if ( options.displayContinuousArrow ) {

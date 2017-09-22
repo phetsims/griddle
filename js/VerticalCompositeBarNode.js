@@ -55,7 +55,7 @@ define( function( require ) {
       self.barNodes[ 0 ].bottom = 0;
       for ( var i = 0; i < properties.length - 1; i++ ) {
         self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
-        self.barNodes[ i ].rect
+        self.barNodes[ i ].rect;
       }
       } );
 

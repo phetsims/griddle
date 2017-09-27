@@ -36,7 +36,7 @@ define( function( require ) {
       titleFill: 'black',
       xAxisLabels: null,
       thermalEnergyProperty: null,
-      thermalEnergyListner: null,
+      thermalEnergyListener: null,
       visible: true
     }, options );
 

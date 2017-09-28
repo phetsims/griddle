@@ -13,8 +13,8 @@ define( function( require ) {
     var griddle = require( 'GRIDDLE/griddle' );
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
-  var Property = require( 'AXON/Property' );
     var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
+  var Property = require( 'AXON/Property' );
 
   /**
    * @param {Array.<Property.<number>>} properties - the properties provided will be used to create new bar nodes
@@ -55,7 +55,7 @@ define( function( require ) {
       self.barNodes[ 0 ].bottom = 0;
       for ( var i = 0; i < properties.length - 1; i++ ) {
         self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
-        self.barNodes[ i ].rect;
+        self.barNodes[ i ].rect;  // TODO: This line does nothing
       }
       } );
 

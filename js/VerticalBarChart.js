@@ -133,7 +133,7 @@ define( function( require ) {
         listener: options.thermalEnergyListener,
         centerX: self.labelLayer.centerX,
         top: self.labelLayer.bottom,
-        scale: 0.72
+        scale: 0.5
       } );
       options.thermalEnergyProperty.link( function( value ) {
         clearThermalButton.enabled = value !== 0;

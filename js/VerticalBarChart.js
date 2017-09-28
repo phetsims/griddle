@@ -35,7 +35,8 @@ define( function( require ) {
       title: null,
       titleFill: 'black',
       xAxisLabels: null,
-      thermalEnergyProperty: null, // Used for thermal energy button if needed.
+      thermalEnergyProperty: null,
+      thermalEnergyListener: null,
       visible: true
     }, options );
 
@@ -129,13 +130,12 @@ define( function( require ) {
 
     if ( options.thermalEnergyProperty ) {
       var clearThermalButton = new ClearThermalButton( {
-        listener: options.thermalEnergyProperty.onSelfChange.bind( options.thermalEnergyProperty, 0 ),
+        listener: options.thermalEnergyListener,
         centerX: self.labelLayer.centerX,
         top: self.labelLayer.bottom,
         scale: 0.72
       } );
       options.thermalEnergyProperty.link( function( value ) {
-        console.log( 'value = ' + value );
         clearThermalButton.enabled = value !== 0;
       } );
       chartNode.addChild( clearThermalButton );

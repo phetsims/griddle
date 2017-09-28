@@ -13,8 +13,8 @@ define( function( require ) {
     var griddle = require( 'GRIDDLE/griddle' );
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
-    var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
   var Property = require( 'AXON/Property' );
+    var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
 
   /**
    * @param {Array.<Property.<number>>} properties - the properties provided will be used to create new bar nodes
@@ -39,6 +39,7 @@ define( function( require ) {
     var self = this;
     assert && assert( properties.length === colors.length, 'There are not the same amount of properties and colors.' );
 
+    this.barStack = new Node();
     // Creates an array of verticalBarNodes with the array of properties passed in above.
     this.barNodes = properties.map( function( property, index ) {
       var verticalBarNode = new VerticalBarNode( property, {
@@ -46,19 +47,20 @@ define( function( require ) {
         displayContinuousArrow: false,
         width: 15 // TODO: Why should we have to redefine this? And Why half the default width of the verticalBarNode?
       } );
-      self.addChild( verticalBarNode );
+      self.barStack.addChild( verticalBarNode );
       return verticalBarNode;
     } );
+    self.barStack.setMaxHeight( options.maxBarHeight );
 
     // Responsible for positioning the barNodes
     Property.multilink( properties, function() {
       self.barNodes[ 0 ].bottom = 0;
       for ( var i = 0; i < properties.length - 1; i++ ) {
         self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
-        self.barNodes[ i ].rect;  // TODO: This line does nothing
       }
       } );
 
+    this.addChild( this.barStack );
     this.mutate( options );
   }
 

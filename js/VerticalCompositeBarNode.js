@@ -58,7 +58,7 @@ define( function( require ) {
           self.barNodes[ 0 ].bottom = 0;
           for ( var i = 0; i < properties.length - 1; i++ ) {
             self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
-            properties[ i ].value < 0 ? options.grayOutProperty.set( true ) : options.grayOutProperty.set( false )
+            properties[ i ].value < 0 ? options.grayOutProperty.set( true ) : options.grayOutProperty.set( false );
           }
         }
       );
@@ -67,7 +67,7 @@ define( function( require ) {
       options.grayOutProperty.link( function( grayOut ) {
         if ( grayOut ) {
           self.barNodes.forEach( function( barNode ) {
-            barNode.rectangleNode.fill = '#908f8f'
+            barNode.rectangleNode.fill = '#908f8f';
           } );
         }
         else {
@@ -85,5 +85,4 @@ define( function( require ) {
 
     return inherit( Node, VerticalCompositeBarNode );
   }
-)
-;
+);

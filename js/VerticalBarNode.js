@@ -35,6 +35,7 @@ define( function( require ) {
       lineWidth: 0,
       label: null,  // x-axis label associated with this bar node
       width: 30,
+      minBarHeight: 40, // the furthest a barNode will extend below the x-axis
       maxBarHeight: 300, // maximum threshold that the bar height can reach before being represented as continuous
       displayContinuousArrow: false, // sets visibility of an arrow that represents a continuous bar
       visible: true,
@@ -72,7 +73,12 @@ define( function( require ) {
     property.link( function( value ) {
       assert && assert( typeof value === 'number' );
 
-      self.rectangleNode.visible = ( value > 0 ); // because we can't create a zero height rectangle
+      // To represent negative values we are adjusting the bottom of the rectangle
+      if ( value < 0 ) {
+        self.rectangleNode.setRectHeight( Math.min( options.minBarHeight, Math.abs( value ) ) ); // caps the height of the bar
+        self.rectangleNode.bottom = ( Math.min( options.minBarHeight, Math.abs( value ) ) );
+        return;
+      }
       var height = Math.max( 0.0000001, value ); // bar must have non-zero size
       self.rectangleNode.setRectHeight( Math.min( self.maxBarHeight, height ) ); // caps the height of the bar
       self.rectangleNode.bottom = 0;

@@ -46,7 +46,6 @@ define( function( require ) {
     this.maxBarHeight = options.maxBarHeight;
 
     // @public Creates the body of the bar.
-    // TODO: Remove exposure make private.
     this.rectangleNode = new Rectangle( 0, 0, this.options.width, 100, {
       fill: this.options.fill,
       stroke: this.options.stroke,

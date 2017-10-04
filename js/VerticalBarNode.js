@@ -29,7 +29,7 @@ define( function( require ) {
     Node.call( this );
     var self = this;
 
-    options = _.extend( {
+    this.options = _.extend( {
       fill: 'blue',
       stroke: 'black',
       lineWidth: 0,
@@ -47,40 +47,45 @@ define( function( require ) {
 
     // @public Creates the body of the bar.
     // TODO: Remove exposure make private.
-    this.rectangleNode = new Rectangle( 0, 0, options.width, 100, {
-      fill: options.fill,
-      stroke: options.stroke,
-      lineWidth: options.lineWidth,
-      visible: options.visible
+    this.rectangleNode = new Rectangle( 0, 0, this.options.width, 100, {
+      fill: this.options.fill,
+      stroke: this.options.stroke,
+      lineWidth: this.options.lineWidth,
+      visible: this.options.visible
     } );
     this.addChild( this.rectangleNode );
 
     // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
-    if ( options.displayContinuousArrow ) {
-      this.arrowNode = new ArrowNode( this.rectangleNode.centerX, -options.maxBarHeight - 8, this.rectangleNode.centerX, -options.maxBarHeight - 25, {
-        fill: options.fill,
-        headWidth: options.width,
-        tailWidth: 10,
-        stroke: 'black',
-        visible: options.visible
-      } );
+    if ( this.options.displayContinuousArrow ) {
+      this.arrowNode = new ArrowNode(
+        this.rectangleNode.centerX,
+        -this.options.maxBarHeight - 8,
+        this.rectangleNode.centerX,
+        -this.options.maxBarHeight - 25,
+        {
+          fill: this.options.fill,
+          headWidth: this.options.width,
+          tailWidth: 10,
+          stroke: 'black',
+          visible: this.options.visible
+        } );
       this.addChild( this.arrowNode );
     }
 
     // Determines whether the arrow should be shown
-    this.displayContinuousArrow = new Property( options.displayContinuousArrow );
+    this.displayContinuousArrow = new Property( this.options.displayContinuousArrow );
 
     property.link( function( value ) {
       assert && assert( typeof value === 'number' );
 
       // To represent negative values we are adjusting the bottom of the rectangle
       if ( value < 0 ) {
-        self.rectangleNode.setRectHeight( Math.min( options.minBarHeight, Math.abs( value ) ) ); // caps the height of the bar
-        self.rectangleNode.bottom = ( Math.min( options.minBarHeight, Math.abs( value ) ) );
+        self.rectangleNode.setRectHeight( Math.min( self.options.minBarHeight, Math.abs( value ) ) ); // caps the height of the bar
+        self.rectangleNode.bottom = ( Math.min( self.options.minBarHeight, Math.abs( value ) ) );
         return;
       }
       var height = Math.max( 0.0000001, value ); // bar must have non-zero size
-      self.rectangleNode.setRectHeight( Math.min( self.maxBarHeight, height ) ); // caps the height of the bar
+      self.rectangleNode.setRectHeight( Math.min( self.options.maxBarHeight, height ) ); // caps the height of the bar
       self.rectangleNode.bottom = 0;
 
       // Change the visibility of the arrowNode
@@ -90,7 +95,7 @@ define( function( require ) {
       self.currentHeight = value;
     } );
 
-    this.mutate( options );
+    this.mutate( this.options );
   }
 
   griddle.register( 'VerticalBarNode', VerticalBarNode );

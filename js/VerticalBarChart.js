@@ -69,7 +69,7 @@ define( function( require ) {
     // TODO: Use clipArea, ask JO
     this.barLayer = new Node( {
       visible: options.visible
-      // clipArea: Shape.rect( 0, -220, 140, 400 )
+      // clipArea: Shape.rect( 0, -220, 140, 400 );
     } );
 
     // Layer for the x-axis labels

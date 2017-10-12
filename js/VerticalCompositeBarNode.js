@@ -14,6 +14,7 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
     var Property = require( 'AXON/Property' );
+  var Shape = require( 'KITE/Shape' );
     var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
 
     /**
@@ -51,7 +52,7 @@ define( function( require ) {
         self.barStack.addChild( verticalBarNode );
         return verticalBarNode;
       } );
-      self.barStack.setMaxHeight( options.maxBarHeight );
+      self.barStack.setClipArea( Shape.rect( 0, 0, this.barStack.width, -options.maxBarHeight ) );
 
       // Responsible for positioning the barNodes
       Property.multilink( properties, function() {

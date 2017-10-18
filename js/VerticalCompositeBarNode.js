@@ -39,7 +39,7 @@ define( function( require ) {
       }, options );
 
       var self = this;
-      assert && assert( properties.length === colors.length, 'There are not the same amount of properties and colors.' );
+      assert && assert( properties.length === colors.length, 'There are not the same amount of barNode properties and colors.' );
 
       this.barStack = new Node();
       // Creates an array of verticalBarNodes with the array of properties passed in above.
@@ -48,7 +48,7 @@ define( function( require ) {
           fill: colors[ index ],
           displayContinuousArrow: false,
           maxBarHeight: options.maxBarHeight,
-          width: 15 // TODO: Why should we have to redefine this? And Why half the default width of the verticalBarNode?
+          width: options.width // TODO: Why should we have to redefine this? And Why half the default width of the verticalBarNode?
         } );
         self.barStack.addChild( verticalBarNode );
         return verticalBarNode;

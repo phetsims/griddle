@@ -16,6 +16,8 @@ define( function( require ) {
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Line = require( 'SCENERY/nodes/Line' );
+  var Panel = require( 'SUN/Panel' );
+  var Color = require( 'SCENERY/util/Color' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
 
@@ -99,7 +101,15 @@ define( function( require ) {
       // Determine the placement for the labels if they exist. There must be the same amount of labels as barNodes.
       // TODO: Add assert so that labels.length === barNodes.length;
       if ( options.xAxisLabels !== null && (barNodes.length === options.xAxisLabels.length) ) {
-        self.labelLayer.addChild( options.xAxisLabels[ index ] );
+        var valueNode = new Panel( options.xAxisLabels[ index ], {
+          stroke: null,
+          fill: new Color( 255, 255, 255, 0.6 ),// put transparency in the color so that the children aren't transparent
+          cornerRadius: 3,
+          xMargin: 3,
+          yMargin: 1
+        } );
+        self.labelLayer.addChild( valueNode );
+
 
         // Empirically determined spacing for the labels. 10% of the chart vertical space.
         var labelSpacing = options.height * 0.10;
@@ -108,10 +118,10 @@ define( function( require ) {
         yAxis.setTailAndTip( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20 );
         xAxis.setY1( -labelSpacing );
         xAxis.setY2( -labelSpacing );
-        options.xAxisLabels[ index ].centerX = centerX;
-        options.xAxisLabels[ index ].centerY = xAxis.centerY + 20;
-        options.xAxisLabels.forEach( function( label ) {
-          label.maxWidth = labelSpacing;
+        valueNode.centerX = centerX;
+        valueNode.centerY = xAxis.centerY + 20;
+        options.xAxisLabels.forEach( function( valueNode ) {
+          valueNode.maxWidth = labelSpacing;
         } );
       }
 
@@ -135,8 +145,9 @@ define( function( require ) {
         top: self.labelLayer.bottom,
         scale: 0.5
       } );
-      options.thermalEnergyProperty.link( function( value ) {
-        clearThermalButton.enabled = value !== 0;
+      options.thermalEnergyProperty.lazyLink( function( value ) {
+        console.log( 'thermalEnergyProperty = ' + value );
+        clearThermalButton.enabled = !(value === 0);
       } );
       chartNode.addChild( clearThermalButton );
     }

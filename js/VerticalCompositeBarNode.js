@@ -47,6 +47,7 @@ define( function( require ) {
         var verticalBarNode = new VerticalBarNode( property, {
           fill: colors[ index ],
           displayContinuousArrow: false,
+          maxBarHeight: options.maxBarHeight,
           width: 15 // TODO: Why should we have to redefine this? And Why half the default width of the verticalBarNode?
         } );
         self.barStack.addChild( verticalBarNode );

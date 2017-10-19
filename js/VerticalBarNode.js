@@ -61,7 +61,7 @@ define( function( require ) {
       centerX: this.rectangleNode.centerX
     } );
 
-    this.addChild( barHighlight );
+    // this.addChild( barHighlight );
     this.addChild( this.rectangleNode );
 
     // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph

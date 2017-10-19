@@ -80,6 +80,9 @@ define( function( require ) {
             self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
             properties[ i ].value < 0 ? options.grayOutProperty.set( true ) : options.grayOutProperty.set( false );
           }
+        if ( self.arrowNode ) {
+          self.arrowNode.visible = ( self.barStack.height >= options.maxBarHeight);
+        }
         }
       );
 

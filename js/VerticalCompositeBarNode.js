@@ -10,6 +10,7 @@ define( function( require ) {
     'use strict';
 
     // modules
+  var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
     var griddle = require( 'GRIDDLE/griddle' );
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
@@ -34,7 +35,7 @@ define( function( require ) {
         label: null, // x-axis label associated with this bar node
         width: 30,
         maxBarHeight: 200, // maximum threshold that the bar height can reach before being represented as continuous
-        displayContinuousArrow: false,
+        displayContinuousArrow: false, // sets visibility of an arrow that represents a continuous bar
         grayOutProperty: new Property( false ) // used to gray out the fill of the whole barNode.
       }, options );
 
@@ -48,12 +49,29 @@ define( function( require ) {
           fill: colors[ index ],
           displayContinuousArrow: false,
           maxBarHeight: options.maxBarHeight,
-          width: options.width // TODO: Why should we have to redefine this? And Why half the default width of the verticalBarNode?
+          width: options.width
         } );
         self.barStack.addChild( verticalBarNode );
         return verticalBarNode;
       } );
       self.barStack.setClipArea( Shape.rect( 0, 0, this.barStack.width, -options.maxBarHeight ) );
+
+      // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
+      if ( options.displayContinuousArrow ) {
+        this.arrowNode = new ArrowNode(
+          this.barNodes[ 0 ].rectangleNode.centerX,
+          -options.maxBarHeight - 8,
+          this.barNodes[ 0 ].rectangleNode.centerX,
+          -options.maxBarHeight - 25,
+          {
+            fill: options.arrowFill,
+            headWidth: options.width,
+            tailWidth: 10,
+            stroke: 'black',
+            visible: false
+          } );
+      }
+      this.addChild( this.arrowNode );
 
       // Responsible for positioning the barNodes
       Property.multilink( properties, function() {

@@ -13,6 +13,7 @@ define( function( require ) {
 
   // modules
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  var Bounds2 = require( 'DOT/Bounds2' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
@@ -32,7 +33,7 @@ define( function( require ) {
     this.options = _.extend( {
       fill: 'blue',
       stroke: 'black',
-      lineWidth: 0,
+      lineWidth: 0, // line width of stroke of rectangle node
       label: null,  // x-axis label associated with this bar node
       width: 30,
       minBarHeight: 40, // the furthest a barNode will extend below the x-axis
@@ -52,6 +53,15 @@ define( function( require ) {
       lineWidth: this.options.lineWidth,
       visible: this.options.visible
     } );
+
+    var barHighlight = new Rectangle( 0, 0, this.options.width, 100, {
+      fill: 'black',
+      stroke: 'black',
+      lineWidth: 0.5,
+      centerX: this.rectangleNode.centerX
+    } );
+
+    this.addChild( barHighlight );
     this.addChild( this.rectangleNode );
 
     // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
@@ -92,6 +102,9 @@ define( function( require ) {
         self.arrowNode.visible = ( self.rectangleNode.getRectHeight() === self.maxBarHeight);
       }
       self.currentHeight = value;
+      barHighlight.setRectHeight( height );
+      barHighlight.bottom = 0;
+      barHighlight.lineWidth = height === 0.0000001 ? 0 : 1;
     } );
 
     this.mutate( this.options );

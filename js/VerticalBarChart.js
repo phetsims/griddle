@@ -55,7 +55,7 @@ define( function( require ) {
 
     // Creation of xAxis
     var xAxis = new Line( 0, 0, options.width - 20, 0, {
-      stroke: 'gray'
+      stroke: 'black'
     } );
 
     // Creation of yAxis in respect to the xAxis

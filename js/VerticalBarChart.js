@@ -49,7 +49,7 @@ define( function( require ) {
       fill: options.backgroundFill,
       stroke: STROKE_COLOR,
       lineWidth: LINE_WIDTH,
-      cornerRadius: 5
+      cornerRadius: 7
     } );
     this.background.setRectHeight( options.height );
 

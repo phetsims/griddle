@@ -38,6 +38,7 @@ define( function( require ) {
       titleFill: 'black',
       xAxisLabels: null,
       thermalEnergyProperty: null,
+      thermalEnergyIndex: null, // {number} Index of the thermal energy property to be monitored. Used for ClearThermalButton positioning.
       thermalEnergyListener: null,
       visible: true
     }, options );
@@ -71,7 +72,6 @@ define( function( require ) {
     // TODO: Use clipArea, ask JO
     this.barLayer = new Node( {
       visible: options.visible
-      // clipArea: Shape.rect( 0, -220, 140, 400 );
     } );
 
     // Layer for the x-axis labels
@@ -112,7 +112,7 @@ define( function( require ) {
 
 
         // Empirically determined spacing for the labels. 10% of the chart vertical space.
-        var labelSpacing = options.height * 0.10;
+        var labelSpacing = options.height * 0.125;
 
         //Realign the axises
         yAxis.setTailAndTip( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20 );
@@ -139,16 +139,21 @@ define( function( require ) {
     } );
 
     if ( options.thermalEnergyProperty ) {
+      // var buttonCenter = (xAxis.width / barNodes.length) * options.thermalEnergyIndex;
+      var buttonCenter = barNodes[ options.thermalEnergyIndex ].centerX;
+
       var clearThermalButton = new ClearThermalButton( {
         listener: options.thermalEnergyListener,
-        centerX: self.labelLayer.centerX,
-        top: self.labelLayer.bottom,
-        scale: 0.5
+        centerX: buttonCenter,
+        top: self.labelLayer.bottom + 2,
+        scale: 0.7
       } );
       options.thermalEnergyProperty.lazyLink( function( value ) {
         clearThermalButton.enabled = !(value === 0);
       } );
       chartNode.addChild( clearThermalButton );
+
+
     }
 
     // TODO: Max Height of bar should adjust to height of chart area.

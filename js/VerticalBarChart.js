@@ -111,7 +111,7 @@ define( function( require ) {
         self.labelLayer.addChild( valueNode );
 
 
-        // Empirically determined spacing for the labels. 10% of the chart vertical space.
+        // Empirically determined spacing for the labels.
         var labelSpacing = options.height * 0.125;
 
         //Realign the axises
@@ -121,7 +121,7 @@ define( function( require ) {
         valueNode.centerX = centerX;
         valueNode.centerY = xAxis.centerY + 20;
         options.xAxisLabels.forEach( function( valueNode ) {
-          valueNode.maxWidth = labelSpacing;
+          valueNode.maxWidth = labelSpacing * .5;
         } );
       }
 

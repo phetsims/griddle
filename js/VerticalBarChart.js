@@ -60,7 +60,8 @@ define( function( require ) {
     } );
 
     // Creation of yAxis in respect to the xAxis
-    var yAxis = new ArrowNode( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20, {
+    var yAxisHeight = -options.height + 20;
+    var yAxis = new ArrowNode( xAxis.getX1(), xAxis.getY1(), 0, yAxisHeight, {
       headHeight: 10,
       headWidth: 10,
       tailWidth: 1,
@@ -93,6 +94,10 @@ define( function( require ) {
 
     this.barNodes = barNodes;
 
+    //TODO: Find an appropriate derivation for the label spacing
+    // Empirically determined spacing for the labels.
+    var labelSpacing = options.height * 0.11;
+
     // TODO: Make sure to unlink and remove listeners for memory leaks.
 
     this.positionBar = function( barNode, index ) {
@@ -101,27 +106,25 @@ define( function( require ) {
       // Determine the placement for the labels if they exist. There must be the same amount of labels as barNodes.
       // TODO: Add assert so that labels.length === barNodes.length;
       if ( options.xAxisLabels !== null && (barNodes.length === options.xAxisLabels.length) ) {
+
+        // The valueNode is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
         var valueNode = new Panel( options.xAxisLabels[ index ], {
           stroke: null,
           fill: new Color( 255, 255, 255, 0.6 ),// put transparency in the color so that the children aren't transparent
-          cornerRadius: 3,
+          cornerRadius: 0,
           xMargin: 3,
-          yMargin: 1
+          yMargin: 7
         } );
         self.labelLayer.addChild( valueNode );
-
-
-        // Empirically determined spacing for the labels.
-        var labelSpacing = options.height * 0.125;
 
         //Realign the axises
         yAxis.setTailAndTip( xAxis.getX1(), xAxis.getY1(), 0, -options.height + 20 );
         xAxis.setY1( -labelSpacing );
         xAxis.setY2( -labelSpacing );
         valueNode.centerX = centerX;
-        valueNode.centerY = xAxis.centerY + 20;
-        options.xAxisLabels.forEach( function( valueNode ) {
-          valueNode.maxWidth = labelSpacing * .5;
+        valueNode.top = xAxis.centerY;
+        options.xAxisLabels.forEach( function( label ) {
+          label.maxWidth = labelSpacing * .5;
         } );
       }
 
@@ -145,7 +148,7 @@ define( function( require ) {
       var clearThermalButton = new ClearThermalButton( {
         listener: options.thermalEnergyListener,
         centerX: buttonCenter,
-        top: self.labelLayer.bottom + 2,
+        top: xAxis.centerY + this.labelLayer.height - 3, //TODO: This -3 number is a slight offset. Can we find a work around for this?
         scale: 0.7
       } );
       options.thermalEnergyProperty.lazyLink( function( value ) {

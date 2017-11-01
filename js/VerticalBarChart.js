@@ -96,7 +96,7 @@ define( function( require ) {
 
     //TODO: Find an appropriate derivation for the label spacing
     // Empirically determined spacing for the labels.
-    var labelSpacing = options.height * 0.11;
+    var labelSpacing = options.height * 0.14;
 
     // TODO: Make sure to unlink and remove listeners for memory leaks.
 
@@ -148,7 +148,7 @@ define( function( require ) {
       var clearThermalButton = new ClearThermalButton( {
         listener: options.thermalEnergyListener,
         centerX: buttonCenter,
-        top: xAxis.centerY + this.labelLayer.height - 3, //TODO: This -3 number is a slight offset. Can we find a work around for this?
+        top: xAxis.centerY + this.labelLayer.height,
         scale: 0.7
       } );
       options.thermalEnergyProperty.lazyLink( function( value ) {

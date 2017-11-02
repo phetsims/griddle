@@ -15,6 +15,7 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
     var Property = require( 'AXON/Property' );
+  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Shape = require( 'KITE/Shape' );
     var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
 
@@ -43,6 +44,7 @@ define( function( require ) {
       assert && assert( properties.length === colors.length, 'There are not the same amount of barNode properties and colors.' );
 
       this.barStack = new Node();
+
       // Creates an array of verticalBarNodes with the array of properties passed in above.
       this.barNodes = properties.map( function( property, index ) {
         var verticalBarNode = new VerticalBarNode( property, {
@@ -55,6 +57,15 @@ define( function( require ) {
         return verticalBarNode;
       } );
       self.barStack.setClipArea( Shape.rect( 0, 0, this.barStack.width, -options.maxBarHeight ) );
+
+      // Highlight around the barNode.
+      var barHighlight = new Rectangle( 0, 0, options.width, 100, {
+        fill: 'black',
+        stroke: 'black',
+        lineWidth: 2,
+        centerX: this.barStack.centerX
+      } );
+      this.addChild( barHighlight );
 
       // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
       if ( options.displayContinuousArrow ) {
@@ -79,10 +90,15 @@ define( function( require ) {
           for ( var i = 0; i < properties.length - 1; i++ ) {
             self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
             properties[ i ].value < 0 ? options.grayOutProperty.set( true ) : options.grayOutProperty.set( false );
+            barHighlight.visible = properties[ i ].value < 0;
+            console.log( barHighlight.visible );
           }
         if ( self.arrowNode ) {
           self.arrowNode.visible = ( self.barStack.height >= options.maxBarHeight);
         }
+        barHighlight.bottom = 0;
+        barHighlight.setRect( self.barStack.x, self.barStack.y, self.barStack.width,
+          self.barStack.height );
         }
       );
 

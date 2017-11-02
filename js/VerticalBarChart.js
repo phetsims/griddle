@@ -155,8 +155,6 @@ define( function( require ) {
         clearThermalButton.enabled = !(value === 0);
       } );
       chartNode.addChild( clearThermalButton );
-
-
     }
 
     // TODO: Max Height of bar should adjust to height of chart area.

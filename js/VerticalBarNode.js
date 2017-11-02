@@ -39,7 +39,8 @@ define( function( require ) {
       maxBarHeight: 300, // maximum threshold that the bar height can reach before being represented as continuous
       displayContinuousArrow: false, // sets visibility of an arrow that represents a continuous bar
       visible: true,
-      scaledProperty: null // property that is scaled for zoom in/out functionality
+      scaledProperty: null, // property that is scaled for zoom in/out functionality
+      barHighlightStroke: null // color of the highlight on the edges of the barNode
     }, options );
 
     this.property = property;
@@ -53,14 +54,15 @@ define( function( require ) {
       visible: this.options.visible
     } );
 
-    var barHighlight = new Rectangle( 0, 0, this.options.width, 100, {
-      fill: 'black',
-      stroke: 'black',
-      lineWidth: 0.5,
-      centerX: this.rectangleNode.centerX
-    } );
-
-    // this.addChild( barHighlight );
+    if ( this.options.barHighlightStroke ) {
+      var barHighlight = new Rectangle( 0, 0, this.options.width, 100, {
+        fill: 'white',
+        stroke: this.options.barHighlightStroke,
+        centerX: this.rectangleNode.centerX,
+        lineWidth: 1.5
+      } );
+      // this.addChild( barHighlight );
+    }
     this.addChild( this.rectangleNode );
 
     // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
@@ -92,8 +94,7 @@ define( function( require ) {
         self.rectangleNode.bottom = ( Math.min( self.options.minBarHeight, Math.abs( value ) ) );
         return;
       }
-      var height = Math.max( 0.0000001, value ); // bar must have non-zero size
-      self.rectangleNode.setRectHeight( Math.min( self.options.maxBarHeight, height ) ); // caps the height of the bar
+      self.rectangleNode.setRectHeight( Math.min( self.options.maxBarHeight, value ) ); // caps the height of the bar
       self.rectangleNode.bottom = 0;
 
       // Change the visibility of the arrowNode
@@ -101,9 +102,12 @@ define( function( require ) {
         self.arrowNode.visible = ( self.rectangleNode.getRectHeight() === self.maxBarHeight);
       }
       self.currentHeight = value;
-      barHighlight.setRectHeight( height );
-      barHighlight.bottom = 0;
-      barHighlight.lineWidth = height === 0.0000001 ? 0 : 1;
+      if ( barHighlight ) {
+        barHighlight.setRectHeight( Math.min( self.options.maxBarHeight, value ) );
+        barHighlight.bottom = 0;
+        barHighlight.stroke = value <= 1 ? 'white' : 'black';
+        // barHighlight.fill = height <= 0.001 ? 'white' : 'black';
+      }
     } );
 
     this.mutate( this.options );

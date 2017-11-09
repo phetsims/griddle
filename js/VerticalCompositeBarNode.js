@@ -37,7 +37,8 @@ define( function( require ) {
         width: 30,
         maxBarHeight: 200, // maximum threshold that the bar height can reach before being represented as continuous
         displayContinuousArrow: false, // sets visibility of an arrow that represents a continuous bar
-        grayOutProperty: new Property( false ) // used to gray out the fill of the whole barNode.
+        grayOutProperty: new Property( false ), // used to gray out the fill of the whole barNode.
+        barHighlightStroke: null // color of the highlight on the edges of the barNode
       }, options );
 
       var self = this;
@@ -59,13 +60,16 @@ define( function( require ) {
       self.barStack.setClipArea( Shape.rect( 0, 0, this.barStack.width, -options.maxBarHeight ) );
 
       // Highlight around the barNode.
-      var barHighlight = new Rectangle( 0, 0, options.width, 100, {
-        fill: 'black',
-        stroke: 'black',
-        lineWidth: 2,
-        centerX: this.barStack.centerX
-      } );
-      this.addChild( barHighlight );
+      if ( options.barHighlightStroke ) {
+        var barHighlight = new Rectangle( 0, 0, options.width, 100, {
+          fill: 'black',
+          stroke: 'black',
+          lineWidth: 2,
+          centerX: this.barStack.centerX
+        } );
+        // barHighlight.setClipArea( Shape.rect( 0, 0, this.barStack.width*200, -options.maxBarHeight ) );
+        this.addChild( barHighlight );
+      }
 
       // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph
       if ( options.displayContinuousArrow ) {
@@ -90,8 +94,7 @@ define( function( require ) {
           for ( var i = 0; i < properties.length - 1; i++ ) {
             self.barNodes[ i + 1 ].bottom = self.barNodes[ i ].top;
             properties[ i ].value < 0 ? options.grayOutProperty.set( true ) : options.grayOutProperty.set( false );
-            barHighlight.visible = properties[ i ].value < 0;
-            console.log( barHighlight.visible );
+            // barHighlight.visible = properties[ i ].value < 0;
           }
         if ( self.arrowNode ) {
           self.arrowNode.visible = ( self.barStack.height >= options.maxBarHeight);

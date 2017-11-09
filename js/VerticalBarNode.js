@@ -61,7 +61,7 @@ define( function( require ) {
         centerX: this.rectangleNode.centerX,
         lineWidth: 1.5
       } );
-      // this.addChild( barHighlight );
+      this.addChild( barHighlight );
     }
     this.addChild( this.rectangleNode );
 
@@ -92,6 +92,9 @@ define( function( require ) {
       if ( value < 0 ) {
         self.rectangleNode.setRectHeight( Math.min( self.options.minBarHeight, Math.abs( value ) ) ); // caps the height of the bar
         self.rectangleNode.bottom = ( Math.min( self.options.minBarHeight, Math.abs( value ) ) );
+        if ( barHighlight ) {
+          barHighlight.stroke = 'white';
+        }
         return;
       }
       self.rectangleNode.setRectHeight( Math.min( self.options.maxBarHeight, value ) ); // caps the height of the bar
@@ -105,8 +108,7 @@ define( function( require ) {
       if ( barHighlight ) {
         barHighlight.setRectHeight( Math.min( self.options.maxBarHeight, value ) );
         barHighlight.bottom = 0;
-        barHighlight.stroke = value <= 1 ? 'white' : 'black';
-        // barHighlight.fill = height <= 0.001 ? 'white' : 'black';
+        barHighlight.stroke = 'black';
       }
     } );
 

@@ -26,6 +26,9 @@ define( function( require ) {
   var STROKE_COLOR = 'gray';
 
   /**
+   * @param {Array.<verticalBarNode>} barNodes- array of barNodes to be added into the chart area
+   * @param {Object} options
+   *
    * @constructor
    */
   function VerticalBarChart( barNodes, options ) {

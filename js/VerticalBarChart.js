@@ -152,10 +152,12 @@ define( function( require ) {
         listener: options.thermalEnergyListener,
         centerX: buttonCenter,
         top: xAxis.centerY + this.labelLayer.height,
-        scale: 0.7
+        scale: 0.7,
+        enabled: false
       } );
       options.thermalEnergyProperty.lazyLink( function( value ) {
-        clearThermalButton.enabled = !(value === 0);
+        clearThermalButton.enabled = ( value > 0.001);
+        console.log( value );
       } );
       chartNode.addChild( clearThermalButton );
     }

@@ -9,13 +9,18 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var BarChartNode = require( 'GRIDDLE/BarChartNode' );
   var griddle = require( 'GRIDDLE/griddle' );
+  var HBox = require( 'SCENERY/nodes/HBox' );
+  var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var Node = require( 'SCENERY/nodes/Node' );
   var Property = require( 'AXON/Property' );
+  var Range = require( 'DOT/Range' );
   var Screen = require( 'JOIST/Screen' );
   var ScreenView = require( 'JOIST/ScreenView' );
-  var VerticalBarChart = require( 'GRIDDLE/VerticalBarChart' );
-  var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var VBox = require( 'SCENERY/nodes/VBox' );
 
   /**
    * @constructor
@@ -26,31 +31,76 @@ define( function( require ) {
 
       // createModel
       function() {
-        var kineticEnergyProperty = new Property( 100 );
         return {
-          kineticEnergyProperty: kineticEnergyProperty,
-          step: function() {
-            kineticEnergyProperty.set( 100 * Math.abs( Math.sin( Date.now() / 1000 ) ) );
-          }
+          aProperty: new Property( 0 ),
+          bProperty: new Property( 0 ),
+          cProperty: new Property( 0 )
         };
       },
 
       // createView
       function( model ) {
+        var aEntry = {
+          property: model.aProperty,
+          color: 'red'
+        };
+        var bEntry = {
+          property: model.bProperty,
+          color: 'green'
+        };
+        var cEntry = {
+          property: model.cProperty,
+          color: 'blue'
+        };
 
-        return new ScreenView( {
-          children: [ new VerticalBarChart( [ new VerticalBarNode( model.kineticEnergyProperty, {
-            fill: 'red',
-            lineWidth: 1
-          } ),
-            new VerticalBarNode( model.kineticEnergyProperty, {
-              fill: 'red',
-              lineWidth: 1
-            } ), new VerticalBarNode( model.kineticEnergyProperty, {
-              fill: 'red',
-              lineWidth: 1
-          } ) ] ) ]
+        var barChartNode = new BarChartNode( [
+          {
+            entries: [ aEntry ],
+            label: new Node()
+          },
+          {
+            entries: [ bEntry ],
+            label: new Node()
+          },
+          {
+            entries: [ cEntry ],
+            label: new Node()
+          },
+          {
+            entries: [ cEntry, bEntry, aEntry ],
+            label: new Node()
+          }
+        ], new Property( new Range( -100, 200 ) ), {
+          barOptions: {
+            totalRange: new Range( -100, 200 )
+          }
         } );
+
+        var screenView = new ScreenView( {
+          children: [
+            new HBox( {
+              center: new Vector2( 512, 309 ),
+              children: [
+                new Node( {
+                  children: [ barChartNode ]
+                } ),
+                new VBox( {
+                  children: [
+                    new HSlider( model.aProperty, new Range( -200, 300 ), {} ),
+                    new HSlider( model.bProperty, new Range( -200, 300 ), {} ),
+                    new HSlider( model.cProperty, new Range( -200, 300 ), {} )
+                  ]
+                } )
+              ]
+            } )
+          ]
+        } );
+
+        screenView.step = function( dt ) {
+          barChartNode.update();
+        };
+
+        return screenView;
       },
 
       // options

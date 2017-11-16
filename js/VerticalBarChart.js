@@ -13,12 +13,12 @@ define( function( require ) {
   // modules
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   var ClearThermalButton = require( 'SCENERY_PHET/ClearThermalButton' );
+  var Color = require( 'SCENERY/util/Color' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Line = require( 'SCENERY/nodes/Line' );
-  var Panel = require( 'SUN/Panel' );
-  var Color = require( 'SCENERY/util/Color' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var Panel = require( 'SUN/Panel' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
 
   // constants

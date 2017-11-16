@@ -19,8 +19,8 @@ define( function( require ) {
   var Range = require( 'DOT/Range' );
   var Screen = require( 'JOIST/Screen' );
   var ScreenView = require( 'JOIST/ScreenView' );
-  var Vector2 = require( 'DOT/Vector2' );
   var VBox = require( 'SCENERY/nodes/VBox' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   /**
    * @constructor

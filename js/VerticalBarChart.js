@@ -157,7 +157,6 @@ define( function( require ) {
       } );
       options.thermalEnergyProperty.lazyLink( function( value ) {
         clearThermalButton.enabled = ( value > 0.001);
-        console.log( value );
       } );
       chartNode.addChild( clearThermalButton );
     }

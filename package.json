@@ -13,7 +13,8 @@
     "requirejsNamespace": "GRIDDLE",
     "runnable": true,
     "supportedBrands": [
-      "phet"
+      "phet",
+      "adapted-from-phet"
     ]
   }
 }

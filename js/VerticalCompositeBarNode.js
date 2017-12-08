@@ -68,7 +68,7 @@ define( function( require ) {
           centerX: this.barStack.centerX
         } );
         // barHighlight.setClipArea( Shape.rect( 0, 0, this.barStack.width*200, -options.maxBarHeight ) );
-        this.addChild( barHighlight );
+        // this.addChild( barHighlight );
       }
 
       // @public Arrow node used to indicate when the value has gone beyond the threshold of this graph

@@ -1,7 +1,7 @@
 // Copyright 2014-2017, University of Colorado Boulder
 
 /**
- *
+ * node that depicts an XYDataSeries as a line on a canvas
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author Aadish Gupta
@@ -61,13 +61,18 @@ define( function( require ) {
   return inherit( CanvasNode, XYDataSeriesNode, {
 
     /**
-     * Make eligible for garbage collection.
+     * make eligible for garbage collection
      */
     dispose: function() {
       this.disposeXYDataSeriesNode();
       CanvasNode.prototype.dispose.call( this );
     },
 
+    /**
+     * paint the data series on the canvas, generally only called from the Scenery framework
+     * @param context
+     * @public
+     */
     paintCanvas: function( context ) {
 
       var xPoints = this.xyDataSeries.getXPoints();
@@ -75,21 +80,22 @@ define( function( require ) {
       var dataPointsLength = this.xyDataSeries.getLength();
       if ( dataPointsLength > 0 ) {
         context.beginPath();
+        context.moveTo( xPoints[ 0 ] * this.xScaleFactor, yPoints[ 0 ] * this.yScaleFactor );
         for ( var i = 1; i < dataPointsLength; i++ ) {
+
           // make sure current x and y are in the range before plotting them
           if ( this.bound.containsCoordinates( xPoints[ i ] * this.xScaleFactor, yPoints[ i ] * this.yScaleFactor ) &&
                this.bound.containsCoordinates( xPoints[ i - 1 ] * this.xScaleFactor, yPoints[ i - 1 ] * this.yScaleFactor ) ) {
-            context.moveTo( xPoints[ i - 1 ] * this.xScaleFactor, yPoints[ i - 1 ] * this.yScaleFactor );
             context.lineTo( xPoints[ i ] * this.xScaleFactor, yPoints[ i ] * this.yScaleFactor );
           }
         }
 
+        context.setLineDash([]);
+        context.lineJoin = 'round';
         context.strokeStyle = this.xyDataSeries.color.computeCSS();
         context.lineWidth = this.xyDataSeries.lineWidth;
         context.stroke();
       }
-
     }
-
   } );
 } );

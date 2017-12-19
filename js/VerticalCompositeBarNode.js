@@ -14,10 +14,10 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Node = require( 'SCENERY/nodes/Node' );
     var Property = require( 'AXON/Property' );
-  var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Shape = require( 'KITE/Shape' );
+  var VerticalBarNode = require( 'GRIDDLE/VerticalBarNode' );
 
     /**
      * @param {Array.<Property.<number>>} properties - the properties provided will be used to create new bar nodes

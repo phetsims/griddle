@@ -13,6 +13,7 @@ define( function( require ) {
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   /**
    *
@@ -47,8 +48,12 @@ define( function( require ) {
     xyDataSeries.addDataSeriesListener( listener );
     xyDataSeries.cleared.addListener( clearListener );
 
+    // reusable vectors for optimal performace
+    this.previousPoint = new Vector2();
+    this.currentPoint = new Vector2();
+
     /**
-     * @public
+     * @private
      */
     this.disposeXYDataSeriesNode = function() {
       xyDataSeries.removeDataSeriesListener( listener );
@@ -70,7 +75,7 @@ define( function( require ) {
 
     /**
      * paint the data series on the canvas, generally only called from the Scenery framework
-     * @param context
+     * @param {CanvasRenderingContext2D} context
      * @public
      */
     paintCanvas: function( context ) {
@@ -78,18 +83,34 @@ define( function( require ) {
       var xPoints = this.xyDataSeries.getXPoints();
       var yPoints = this.xyDataSeries.getYPoints();
       var dataPointsLength = this.xyDataSeries.getLength();
-      if ( dataPointsLength > 0 ) {
-        context.beginPath();
-        context.moveTo( xPoints[ 0 ] * this.xScaleFactor, yPoints[ 0 ] * this.yScaleFactor );
-        for ( var i = 1; i < dataPointsLength; i++ ) {
 
-          // make sure current x and y are in the range before plotting them
-          if ( this.bound.containsCoordinates( xPoints[ i ] * this.xScaleFactor, yPoints[ i ] * this.yScaleFactor ) &&
-               this.bound.containsCoordinates( xPoints[ i - 1 ] * this.xScaleFactor, yPoints[ i - 1 ] * this.yScaleFactor ) ) {
-            context.lineTo( xPoints[ i ] * this.xScaleFactor, yPoints[ i ] * this.yScaleFactor );
+      if ( dataPointsLength > 0 ) {
+
+        var previousPointOnGraph = false;
+        context.beginPath();
+
+        // draw the line by connecting all of the points in the data set
+        for ( var i = 0; i < dataPointsLength; i++ ) {
+
+          var xPos = xPoints[ i ] * this.xScaleFactor;
+          var yPos = yPoints[ i ] * this.yScaleFactor;
+
+          // only render points that are on the graph
+          if ( this.bound.containsCoordinates( xPos, yPos ) ){
+            if ( previousPointOnGraph ){
+              context.lineTo( xPos, yPos );
+            }
+            else{
+              context.moveTo( xPos, yPos );
+            }
+            previousPointOnGraph = true;
+          }
+          else{
+            previousPointOnGraph = false;
           }
         }
 
+        // stroke the line
         context.setLineDash([]);
         context.lineJoin = 'round';
         context.strokeStyle = this.xyDataSeries.color.computeCSS();

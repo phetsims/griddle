@@ -92,6 +92,7 @@ define( function( require ) {
           fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
           // maxWidth:40
         } );
+        barLabelVBox.addChild(labelText);
 
         // The valueNode is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
         var valueNode = new Panel( labelText, {
@@ -104,7 +105,7 @@ define( function( require ) {
         self.barNodes.forEach(  function( bar ) {
           valueNode.center = bar.center;
         } );
-        barLabelVBox.addChild( valueNode );
+        // barLabelVBox.addChild( valueNode );
       }
       if ( bar.labelNode ) {
         barLabelVBox.addChild( bar.labelNode );
@@ -120,7 +121,7 @@ define( function( require ) {
     } );
 
     var labelBox = new HBox( {
-      spacing: options.barSpacing+6,
+      spacing: options.barSpacing+4,
       align: 'origin',
       children: this.barLabelNodes
     } );
@@ -143,9 +144,9 @@ define( function( require ) {
       headHeight: 9,
       headWidth: 8
     } );
-    if ( labelBox ) {
-      labelBox.top = yAxis.tailY + 5;
-    }
+    // if ( labelBox ) {
+    //   labelBox.top = yAxis.tailY + 5;
+    // }
 
     rangeProperty.link( function( range ) {
       yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );

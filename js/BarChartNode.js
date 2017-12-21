@@ -17,6 +17,9 @@ define( function( require ) {
   var BarNode = require( 'GRIDDLE/BarNode' );
   var griddle = require( 'GRIDDLE/griddle' );
   var HBox = require( 'SCENERY/nodes/HBox' );
+  var RichText = require( 'SCENERY/nodes/RichText' );
+  var VBox = require( 'SCENERY/nodes/VBox' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Line = require( 'SCENERY/nodes/Line' );
   var Node = require( 'SCENERY/nodes/Node' );
@@ -30,7 +33,8 @@ define( function( require ) {
    * @param {Array.<Object>} bars - Entries of the format:
    *   {
    *     entries: {Array.<{ property: {Property.<number>}, color: {paint} }>}
-   *     [label]: {Node},
+   *     [labelString]: {string} formatted for RichText
+   *     [labelNode]: {node} displayed below the label string if the label string exist
    *     [offScaleArrowFill]: {paint} - If provided, allows bar-specific arrow fills (that are different than the color)
    *   }
    * @param {Property.<Range>} rangeProperty
@@ -76,12 +80,44 @@ define( function( require ) {
       return new BarNode( bar.entries, rangeProperty, barOptions );
     } );
 
+    // @private {Array.<Node>}
+    this.barLabelNodes = bars.map( function( bar ) {
+      var barLabelVBox = new VBox( { spacing: 4 } );
+      if ( bar.labelString ) {
+        barLabelVBox.addChild( new RichText( bar.labelString, {
+          rotation: -Math.PI/2,
+          font: new PhetFont( { size: 12, weight: 'bold' } ),
+          fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
+        } ) );
+      }
+      if ( bar.labelNode ) {
+        barLabelVBox.addChild( bar.labelNode );
+      }
+      return barLabelVBox;
+    } );
+
+    // TODO: Why doesn't the commented code below change the x position of the bars? Ask JO
     var barBox = new HBox( {
       spacing: options.barSpacing,
       align: 'origin',
       children: this.barNodes
     } );
+
+    var labelBox = new HBox( {
+      spacing: options.barSpacing,
+      align: 'origin',
+      children: this.barLabelNodes
+    } );
+
+    // // Position the labels and the barNodes.
+    // for ( var i = 0; i < bars.length; i++ ) {
+    //   var centerX = (i + 1) / (this.barNodes.length + 1) * 90;
+    //   console.log('centerX= '+ centerX);
+    //   labelBox.children[i].center.setX( centerX);
+    //   console.log('barBox.children[i].center.x = '+ barBox.children[i].center.x );
+    // }
     this.addChild( barBox );
+    this.addChild(labelBox);
 
     var xAxis = new Line( -options.xAxisOptions.minPadding, 0, barBox.width + options.xAxisOptions.maxExtension, 0, options.xAxisOptions );
     this.addChild( xAxis );
@@ -91,6 +127,9 @@ define( function( require ) {
       headHeight: 7,
       headWidth: 6
     } );
+    labelBox.top= yAxis.tailY+5;
+
+
     rangeProperty.link( function( range ) {
       yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );
     } );
@@ -99,7 +138,7 @@ define( function( require ) {
     // Update localBounds to the correct value
     rangeProperty.link( function( range ) {
       self.localBounds = self.localBounds.withMinY( Math.min( yAxis.bottom, -range.max ) )
-                                         .withMaxY( Math.max( options.xAxisOptions.lineWidth / 2, -range.min ) );
+        .withMaxY( Math.max( options.xAxisOptions.lineWidth / 2, -range.min ) );
     } );
 
     this.mutate( options );

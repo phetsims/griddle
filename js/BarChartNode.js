@@ -47,15 +47,15 @@ define( function( require ) {
 
     options = _.extend( {
       // {number} - Space in-between each bar
-      barSpacing: 13,
+      barSpacing: 12,
 
       // provided to the x-axis Line
       xAxisOptions: {
         stroke: 'black',
         lineWidth: 1,
 
-        minPadding: 12,
-        maxExtension: 10
+        minPadding: 8,
+        maxExtension: 5
       },
 
       barOptions: {
@@ -123,12 +123,13 @@ define( function( require ) {
     this.addChild( xAxis );
 
     var yAxis = new ArrowNode( 0, 0, 0, -rangeProperty.value.max, {
-      tailWidth: 2,
-      headHeight: 7,
-      headWidth: 6
+      tailWidth: 0.5,
+      headHeight: 9,
+      headWidth: 8
     } );
-    labelBox.top= yAxis.tailY+5;
-
+    if (labelBox){
+      labelBox.top= yAxis.tailY+5;
+    }
 
     rangeProperty.link( function( range ) {
       yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );

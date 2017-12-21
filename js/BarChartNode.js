@@ -15,10 +15,12 @@ define( function( require ) {
   // modules
   var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   var BarNode = require( 'GRIDDLE/BarNode' );
+  var Color = require( 'SCENERY/util/Color' );
   var griddle = require( 'GRIDDLE/griddle' );
   var HBox = require( 'SCENERY/nodes/HBox' );
   var RichText = require( 'SCENERY/nodes/RichText' );
   var VBox = require( 'SCENERY/nodes/VBox' );
+  var Panel = require( 'SUN/Panel' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Line = require( 'SCENERY/nodes/Line' );
@@ -84,11 +86,25 @@ define( function( require ) {
     this.barLabelNodes = bars.map( function( bar ) {
       var barLabelVBox = new VBox( { spacing: 4 } );
       if ( bar.labelString ) {
-        barLabelVBox.addChild( new RichText( bar.labelString, {
-          rotation: -Math.PI/2,
+        var labelText = new RichText( bar.labelString, {
+          rotation: -Math.PI / 2,
           font: new PhetFont( { size: 12, weight: 'bold' } ),
           fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
-        } ) );
+          // maxWidth:40
+        } );
+
+        // The valueNode is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
+        var valueNode = new Panel( labelText, {
+          stroke: null,
+          fill: new Color( 255, 255, 255, 0),// put transparency in the color so that the children aren't transparent
+          cornerRadius: 0,
+          xMargin: 0,
+          yMargin: 10
+        } );
+        self.barNodes.forEach(  function( bar ) {
+          valueNode.center = bar.center;
+        } );
+        barLabelVBox.addChild( valueNode );
       }
       if ( bar.labelNode ) {
         barLabelVBox.addChild( bar.labelNode );
@@ -104,7 +120,7 @@ define( function( require ) {
     } );
 
     var labelBox = new HBox( {
-      spacing: options.barSpacing,
+      spacing: options.barSpacing+6,
       align: 'origin',
       children: this.barLabelNodes
     } );
@@ -117,7 +133,7 @@ define( function( require ) {
     //   console.log('barBox.children[i].center.x = '+ barBox.children[i].center.x );
     // }
     this.addChild( barBox );
-    this.addChild(labelBox);
+    this.addChild( labelBox );
 
     var xAxis = new Line( -options.xAxisOptions.minPadding, 0, barBox.width + options.xAxisOptions.maxExtension, 0, options.xAxisOptions );
     this.addChild( xAxis );
@@ -127,8 +143,8 @@ define( function( require ) {
       headHeight: 9,
       headWidth: 8
     } );
-    if (labelBox){
-      labelBox.top= yAxis.tailY+5;
+    if ( labelBox ) {
+      labelBox.top = yAxis.tailY + 5;
     }
 
     rangeProperty.link( function( range ) {

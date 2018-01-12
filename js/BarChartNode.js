@@ -51,6 +51,9 @@ define( function( require ) {
       // {number} - Space in-between each bar
       barSpacing: 12,
 
+      // {Color}  Color of the background behind the labels
+      labelBackgroundColor: Color.TRANSPARENT,
+
       // provided to the x-axis Line
       xAxisOptions: {
         stroke: 'black',
@@ -89,23 +92,20 @@ define( function( require ) {
         var labelText = new RichText( bar.labelString, {
           rotation: -Math.PI / 2,
           font: new PhetFont( { size: 12, weight: 'bold' } ),
-          fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
-          // maxWidth:40 // TODO: Standardize
+          fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black',
+          maxWidth: 40 // TODO: Standardize
         } );
-        barLabelVBox.addChild( labelText );
+        // barLabelVBox.addChild( labelText );
 
-        // The valueNode is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
-        var valueNode = new Panel( labelText, {
+        // The valuePanel is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
+        var valuePanel = new Panel( labelText, {
           stroke: null,
-          fill: new Color( 255, 255, 255, 0 ),// put transparency in the color so that the children aren't transparent
-          cornerRadius: 0,
+          fill: options.labelBackgroundColor, // put transparency in the color so that the children aren't transparent
+          cornerRadius: 3,
           xMargin: 0,
-          yMargin: 10
+          yMargin: 2
         } );
-        self.barNodes.forEach( function( bar ) {
-          valueNode.center = bar.center;
-        } );
-        // barLabelVBox.addChild( valueNode );
+        barLabelVBox.addChild( valuePanel );
       }
       if ( bar.labelNode ) {
         barLabelVBox.addChild( bar.labelNode );
@@ -128,7 +128,7 @@ define( function( require ) {
     // Manual positioning of labels to match position of barNodes in HBox.
     for ( var i = 0; i < bars.length; i++ ) {
       labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;
-      labelBox.children[ i ].top = 5;
+      labelBox.children[ i ].top = 3;
     }
     this.addChild( barBox );
     this.addChild( labelBox );

@@ -73,7 +73,7 @@ define( function( require ) {
       rotation: Math.PI
     } );
 
-    // @private {Array.<BarNode>}
+    // @private {Array.<BarNode>} Initializing barNodes.
     this.barNodes = bars.map( function( bar ) {
       assert && assert( bar.entries && bar.entries instanceof Array );
       var barOptions = _.extend( {
@@ -90,19 +90,19 @@ define( function( require ) {
           rotation: -Math.PI / 2,
           font: new PhetFont( { size: 12, weight: 'bold' } ),
           fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
-          // maxWidth:40
+          // maxWidth:40 // TODO: Standardize
         } );
-        barLabelVBox.addChild(labelText);
+        barLabelVBox.addChild( labelText );
 
         // The valueNode is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
         var valueNode = new Panel( labelText, {
           stroke: null,
-          fill: new Color( 255, 255, 255, 0),// put transparency in the color so that the children aren't transparent
+          fill: new Color( 255, 255, 255, 0 ),// put transparency in the color so that the children aren't transparent
           cornerRadius: 0,
           xMargin: 0,
           yMargin: 10
         } );
-        self.barNodes.forEach(  function( bar ) {
+        self.barNodes.forEach( function( bar ) {
           valueNode.center = bar.center;
         } );
         // barLabelVBox.addChild( valueNode );
@@ -113,40 +113,36 @@ define( function( require ) {
       return barLabelVBox;
     } );
 
-    // TODO: Why doesn't the commented code below change the x position of the bars? Ask JO
+    // Adding barNodes into HBox
     var barBox = new HBox( {
       spacing: options.barSpacing,
       align: 'origin',
       children: this.barNodes
     } );
 
-    var labelBox = new HBox( {
-      spacing: options.barSpacing+4,
-      align: 'origin',
+    // Adding barNode labels into Node.
+    var labelBox = new Node( {
       children: this.barLabelNodes
     } );
 
-    // // Position the labels and the barNodes.
-    // for ( var i = 0; i < bars.length; i++ ) {
-    //   var centerX = (i + 1) / (this.barNodes.length + 1) * 90;
-    //   console.log('centerX= '+ centerX);
-    //   labelBox.children[i].center.setX( centerX);
-    //   console.log('barBox.children[i].center.x = '+ barBox.children[i].center.x );
-    // }
+    // Manual positioning of labels to match position of barNodes in HBox.
+    for ( var i = 0; i < bars.length; i++ ) {
+      labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;
+      labelBox.children[ i ].top = 5;
+    }
     this.addChild( barBox );
     this.addChild( labelBox );
 
+    // Initializing xAxis
     var xAxis = new Line( -options.xAxisOptions.minPadding, 0, barBox.width + options.xAxisOptions.maxExtension, 0, options.xAxisOptions );
     this.addChild( xAxis );
 
+    // Initializing yAxis
     var yAxis = new ArrowNode( 0, 0, 0, -rangeProperty.value.max, {
       tailWidth: 0.5,
       headHeight: 9,
       headWidth: 8
     } );
-    // if ( labelBox ) {
-    //   labelBox.top = yAxis.tailY + 5;
-    // }
 
     rangeProperty.link( function( range ) {
       yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );

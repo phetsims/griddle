@@ -127,7 +127,6 @@ define( function( require ) {
 
     // Manual positioning of labels to match position of barNodes in HBox.
     for ( var i = 0; i < bars.length; i++ ) {
-
       // Checks if the labelBox's VBox has any children.
       if ( typeof(labelBox.children[ i ].children[ 0 ]) !== 'undefined' ) {
         labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;

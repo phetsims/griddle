@@ -128,7 +128,7 @@ define( function( require ) {
     // Manual positioning of labels to match position of barNodes in HBox.
     for ( var i = 0; i < bars.length; i++ ) {
       // Checks if the labelBox's VBox has any children.
-      if ( typeof(labelBox.children[ i ].children[ 0 ]) !== 'undefined' ) {
+      if ( typeof( labelBox.children[ i ].children[ 0 ] ) !== 'undefined' ) {
         labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;
         labelBox.children[ i ].top = 3;
       }
@@ -155,7 +155,7 @@ define( function( require ) {
     // Update localBounds to the correct value
     rangeProperty.link( function( range ) {
       self.localBounds = self.localBounds.withMinY( Math.min( yAxis.bottom, -range.max ) )
-        .withMaxY( Math.max( options.xAxisOptions.lineWidth / 2, -range.min ) );
+        .withMaxY( Math.max( options.xAxisOptions.lineWidth / 2, -range.min, labelBox.bottom ) );
     } );
 
     this.mutate( options );

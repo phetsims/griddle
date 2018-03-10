@@ -78,7 +78,7 @@ define( function( require ) {
 
     // @private {Array.<BarNode>} Initializing barNodes.
     this.barNodes = bars.map( function( bar ) {
-      assert && assert( bar.entries && bar.entries instanceof Array );
+      assert && assert( bar.entries && Array.isArray(bar.entries) );
       var barOptions = _.extend( {
         offScaleArrowFill: bar.offScaleArrowFill === undefined ? ( bar.entries.length > 1 ? '#bbb' : bar.entries[ 0 ].color ) : bar.offScaleArrowFill
       }, options.barOptions );

@@ -102,7 +102,7 @@ define( function( require ) {
 
       // Change the visibility of the arrowNode
       if ( self.arrowNode ) {
-        self.arrowNode.visible = ( self.rectangleNode.getRectHeight() === self.maxBarHeight);
+        self.arrowNode.visible = ( self.rectangleNode.getRectHeight() === self.maxBarHeight );
       }
       self.currentHeight = value;
       if ( barHighlight ) {

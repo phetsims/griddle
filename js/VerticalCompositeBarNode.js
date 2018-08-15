@@ -97,11 +97,15 @@ define( function( require ) {
             // barHighlight.visible = properties[ i ].value < 0;
           }
         if ( self.arrowNode ) {
-          self.arrowNode.visible = ( self.barStack.height >= options.maxBarHeight);
+          self.arrowNode.visible = ( self.barStack.height >= options.maxBarHeight );
         }
         barHighlight.bottom = 0;
-        barHighlight.setRect( self.barStack.x, self.barStack.y, self.barStack.width,
-          self.barStack.height );
+        barHighlight.setRect(
+          self.barStack.x,
+          self.barStack.y,
+          self.barStack.width,
+          self.barStack.height
+        );
         }
       );
 

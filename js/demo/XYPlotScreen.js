@@ -53,7 +53,7 @@ define( function( require ) {
         var count = 0;
         screenView.step = function() {
           series.addPoint( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) );
-          time = time + (forward ? 1 : -1);
+          time = time + ( forward ? 1 : -1 );
 
           if ( time > 400 ) {
             forward = false;

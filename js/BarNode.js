@@ -145,7 +145,7 @@ define( function( require ) {
       effectiveRange = new Range( effectiveRange.min < 0 ? effectiveRange.min + this.borderWidth : effectiveRange.min, effectiveRange.max - this.borderWidth );
       if ( this.showOffScaleArrow ) {
         effectiveRange = new Range( effectiveRange.min < 0 ? effectiveRange.min + arrowPadding : effectiveRange.min,
-                                    effectiveRange.max - arrowPadding );
+          effectiveRange.max - arrowPadding );
       }
 
       // Total (scaled) sum of values for all bars

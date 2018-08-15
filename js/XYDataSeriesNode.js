@@ -96,22 +96,22 @@ define( function( require ) {
           var yPos = yPoints[ i ] * this.yScaleFactor;
 
           // only render points that are on the graph
-          if ( this.bound.containsCoordinates( xPos, yPos ) ){
-            if ( previousPointOnGraph ){
+          if ( this.bound.containsCoordinates( xPos, yPos ) ) {
+            if ( previousPointOnGraph ) {
               context.lineTo( xPos, yPos );
             }
-            else{
+            else {
               context.moveTo( xPos, yPos );
             }
             previousPointOnGraph = true;
           }
-          else{
+          else {
             previousPointOnGraph = false;
           }
         }
 
         // stroke the line
-        context.setLineDash([]);
+        context.setLineDash( [] );
         context.lineJoin = 'round';
         context.strokeStyle = this.xyDataSeries.color.computeCSS();
         context.lineWidth = this.xyDataSeries.lineWidth;

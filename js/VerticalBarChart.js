@@ -104,11 +104,11 @@ define( function( require ) {
     // TODO: Make sure to unlink and remove listeners for memory leaks.
 
     this.positionBar = function( barNode, index ) {
-      var centerX = (index + 1) / (barNodes.length + 1) * options.width - 10;
+      var centerX = ( index + 1 ) / ( barNodes.length + 1 ) * options.width - 10;
 
       // Determine the placement for the labels if they exist. There must be the same amount of labels as barNodes.
       // TODO: Add assert so that labels.length === barNodes.length;
-      if ( options.xAxisLabels !== null && (barNodes.length === options.xAxisLabels.length) ) {
+      if ( options.xAxisLabels !== null && ( barNodes.length === options.xAxisLabels.length ) ) {
 
         // The valueNode is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
         var valueNode = new Panel( options.xAxisLabels[ index ], {
@@ -156,7 +156,7 @@ define( function( require ) {
         enabled: false
       } );
       options.thermalEnergyProperty.lazyLink( function( value ) {
-        clearThermalButton.enabled = ( value > 0.001);
+        clearThermalButton.enabled = ( value > 0.001 );
       } );
       chartNode.addChild( clearThermalButton );
     }

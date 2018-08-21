@@ -19,7 +19,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Property = require( 'AXON/Property' );
-  var sceneryPhet = require( 'SCENERY_PHET/sceneryPhet' );
+  var griddle = require( 'GRIDDLE/griddle' );
   var sceneryPhetQueryParameters = require( 'SCENERY_PHET/sceneryPhetQueryParameters' );
 
   /**
@@ -41,8 +41,6 @@ define( function( require ) {
       selectedDemoLabel: sceneryPhetQueryParameters.component
     } );
   }
-
-  sceneryPhet.register( 'GriddleScreenView', GriddleScreenView );
 
   // Creates a demo for ArrowNode
   var demoArrowNode = function( layoutBounds ) {
@@ -69,6 +67,8 @@ define( function( require ) {
       ]
     } );
   };
+
+  griddle.register( 'GriddleScreenView', GriddleScreenView );
 
   return inherit( DemosScreenView, GriddleScreenView );
 } );

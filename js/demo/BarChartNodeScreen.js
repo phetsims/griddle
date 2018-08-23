@@ -25,7 +25,7 @@ define( function( require ) {
   /**
    * @constructor
    */
-  function VerticalBarChartScreen() {
+  function BarChartNodeScreen() {
 
     Screen.call( this,
 
@@ -111,7 +111,7 @@ define( function( require ) {
     );
   }
 
-  griddle.register( 'VerticalBarChartScreen', VerticalBarChartScreen );
+  griddle.register( 'BarChartNodeScreen', BarChartNodeScreen );
 
-  return inherit( Screen, VerticalBarChartScreen );
+  return inherit( Screen, BarChartNodeScreen );
 } );

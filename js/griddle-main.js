@@ -9,8 +9,7 @@ define( function( require ) {
   // modules
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
-  var BarChartNodeScreen = require( 'GRIDDLE/demo/BarChartNodeScreen' );
-  var GriddleScreenView = require( 'GRIDDLE/demo/GriddleScreenView' );
+  var GriddleDemoScreenView = require( 'GRIDDLE/demo/GriddleDemoScreenView' );
   var Screen = require( 'JOIST/Screen' );
 
   // strings
@@ -25,8 +24,7 @@ define( function( require ) {
   SimLauncher.launch( function() {
     // Create and start the sim
     new Sim( griddleTitleString, [
-      new BarChartNodeScreen(),
-      new Screen( function() {return {};}, function() {return new GriddleScreenView();}, {
+      new Screen( function() {return {};}, function() {return new GriddleDemoScreenView();}, {
         name: 'Griddle Demo'
       } )
     ], simOptions ).start();

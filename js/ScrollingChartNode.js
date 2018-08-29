@@ -23,7 +23,7 @@ define( require => {
   const Text = require( 'SCENERY/nodes/Text' );
   const Util = require( 'DOT/Util' );
   const VBox = require( 'SCENERY/nodes/VBox' );
-  const waveInterference = require( 'WAVE_INTERFERENCE/waveInterference' );
+  const griddle = require( 'GRIDDLE/griddle' );
 
   // constants
   const PATH_LINE_WIDTH = 2;
@@ -218,5 +218,5 @@ define( require => {
     }
   }
 
-  return waveInterference.register( 'ScrollingChartNode', ScrollingChartNode );
+  return griddle.register( 'ScrollingChartNode', ScrollingChartNode );
 } );

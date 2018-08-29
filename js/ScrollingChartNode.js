@@ -205,6 +205,7 @@ define( require => {
         } );
       };
 
+      // TODO: series.series is odd
       seriesArray.forEach( series => addSeries( series.color, series.series, series.emitter ) );
 
       // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.

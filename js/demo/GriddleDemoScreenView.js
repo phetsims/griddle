@@ -12,24 +12,26 @@ define( function( require ) {
   'use strict';
 
   // modules
+  const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  var BarChartNode = require( 'GRIDDLE/BarChartNode' );
   var Color = require( 'SCENERY/util/Color' );
   var DemosScreenView = require( 'SUN/demo/DemosScreenView' );
   var Emitter = require( 'AXON/Emitter' );
   var griddle = require( 'GRIDDLE/griddle' );
+  var HBox = require( 'SCENERY/nodes/HBox' );
+  var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Property = require( 'AXON/Property' );
-  var sceneryPhetQueryParameters = require( 'SCENERY_PHET/sceneryPhetQueryParameters' );
-  var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
-  var XYPlot = require( 'GRIDDLE/XYPlot' );
-  var BarChartNode = require( 'GRIDDLE/BarChartNode' );
-  var HBox = require( 'SCENERY/nodes/HBox' );
-  var HSlider = require( 'SUN/HSlider' );
-  var Node = require( 'SCENERY/nodes/Node' );
   var Range = require( 'DOT/Range' );
+  var sceneryPhetQueryParameters = require( 'SCENERY_PHET/sceneryPhetQueryParameters' );
   var VBox = require( 'SCENERY/nodes/VBox' );
   var Vector2 = require( 'DOT/Vector2' );
+  var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
+  var XYPlot = require( 'GRIDDLE/XYPlot' );
 
   // constants - this is a hack to enable components to animate from the animation loop
   var emitter = new Emitter();
@@ -48,7 +50,8 @@ define( function( require ) {
        * {function(Bounds2): Node} getNode - creates the scene graph for the demo
        */
       { label: 'XYPlot', getNode: demoXYPlot },
-      { label: 'BarChart', getNode: demoBarChart }
+      { label: 'BarChart', getNode: demoBarChart },
+      { label: 'ScrollingChartNode', getNode: demoScrollingChartNode }
     ], {
       comboBoxItemFont: new PhetFont( 12 ),
       comboBoxItemYMargin: 3,
@@ -139,6 +142,37 @@ define( function( require ) {
     } );
   };
 
+  var demoScrollingChartNode = function( layoutBounds ) {
+
+    var WIDTH = 200;
+    var HEIGHT = 150;
+    var timeProperty = new Property( 0 );
+    var series1 = {
+      color: 'blue',
+      series: [],
+      emitter: emitter
+    };
+    var maxSeconds = 4;
+    emitter.addListener( function( dt ) {
+      timeProperty.value += dt;
+      series1.series.push( new Vector2( timeProperty.value, Math.sin( timeProperty.value ) ) );
+      while ( series1.series[ 0 ].x < timeProperty.value - maxSeconds ) {
+        series1.series.shift();
+      }
+    } );
+    return new Panel( new ScrollingChartNode(
+      new Text( 'Height (m)', { rotation: 3 * Math.PI / 2 } ),
+      new Text( '1 s' ),
+      timeProperty,
+      WIDTH,
+      HEIGHT,
+      [ series1 ],
+      new Text( 'timeString' )
+    ), {
+      fill: 'gray',
+      center: layoutBounds.center
+    } );
+  };
 
   griddle.register( 'GriddleDemoScreenView', GriddleDemoScreenView );
 

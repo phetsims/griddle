@@ -12,20 +12,25 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  var Checkbox = require( 'SUN/Checkbox' );
   var DemosScreenView = require( 'SUN/demo/DemosScreenView' );
+  var Emitter = require( 'AXON/Emitter' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var Node = require( 'SCENERY/nodes/Node' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Property = require( 'AXON/Property' );
   var griddle = require( 'GRIDDLE/griddle' );
   var sceneryPhetQueryParameters = require( 'SCENERY_PHET/sceneryPhetQueryParameters' );
+  var Color = require( 'SCENERY/util/Color' );
+  var Panel = require( 'SUN/Panel' );
+  var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
+  var XYPlot = require( 'GRIDDLE/XYPlot' );
+
+  // constants - this is a hack to enable components to animate from the animation loop
+  var emitter = new Emitter();
 
   /**
    * @constructor
    */
   function GriddleScreenView() {
+
     DemosScreenView.call( this, [
 
       /**
@@ -34,7 +39,7 @@ define( function( require ) {
        * {string} label - label in the combo box
        * {function(Bounds2): Node} getNode - creates the scene graph for the demo
        */
-      { label: 'ArrowNode', getNode: demoArrowNode }
+      { label: 'XYPlot', getNode: demoXYPlot }
     ], {
       comboBoxItemFont: new PhetFont( 12 ),
       comboBoxItemYMargin: 3,
@@ -43,32 +48,42 @@ define( function( require ) {
   }
 
   // Creates a demo for ArrowNode
-  var demoArrowNode = function( layoutBounds ) {
+  var demoXYPlot = function( layoutBounds ) {
 
-    var arrowNode = new ArrowNode( 0, 0, 200, 200, {
-      headWidth: 30,
-      headHeight: 30,
-      center: layoutBounds.center
+    var time = 0;
+    var plot = new XYPlot( { backgroundFill: '#efecd9' } );
+    var plotPanel = new Panel( plot, {
+      fill: '#efecd9',
+      xMargin: 10,
+      yMargin: 10,
+      x: 100,
+      y: 100
     } );
+    var series = new XYDataSeries( { color: Color.BLUE } );
+    plot.addSeries( series, false );
+    var forward = true;
+    var count = 0;
+    emitter.addListener( function( dt ) {
+      series.addPoint( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) );
+      time = time + ( forward ? 1 : -1 );
 
-    var checkedProperty = new Property( false );
-    checkedProperty.link( function( checked ) {
-      arrowNode.setDoubleHead( checked );
+      if ( time > 400 ) {
+        forward = false;
+        count++;
+      }
+      if ( time < 0 ) {
+        forward = true;
+        count++;
+      }
     } );
-
-    var checkbox = Checkbox.createTextCheckbox( 'Double head', { font: new PhetFont( 20 ) }, checkedProperty, {
-      centerX: layoutBounds.centerX,
-      top: arrowNode.bottom + 50
-    } );
-    return new Node( {
-      children: [
-        checkbox,
-        arrowNode
-      ]
-    } );
+    return plotPanel;
   };
 
   griddle.register( 'GriddleScreenView', GriddleScreenView );
 
-  return inherit( DemosScreenView, GriddleScreenView );
+  return inherit( DemosScreenView, GriddleScreenView, {
+    step: function( dt ) {
+      emitter.emit1( dt );
+    }
+  } );
 } );

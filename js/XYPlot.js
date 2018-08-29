@@ -166,6 +166,8 @@ define( function( require ) {
      */
     this.seriesViewMap = {};
     this.content = content;
+
+    this.mutate( options );
   }
 
   griddle.register( 'XYPlot', XYPlot );

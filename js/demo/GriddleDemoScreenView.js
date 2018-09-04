@@ -16,11 +16,11 @@ define( function( require ) {
   const Text = require( 'SCENERY/nodes/Text' );
   var BarChartNode = require( 'GRIDDLE/BarChartNode' );
   var Color = require( 'SCENERY/util/Color' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var DemosScreenView = require( 'SUN/demo/DemosScreenView' );
   var Emitter = require( 'AXON/Emitter' );
   var griddle = require( 'GRIDDLE/griddle' );
   var HBox = require( 'SCENERY/nodes/HBox' );
-  var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
@@ -28,8 +28,8 @@ define( function( require ) {
   var Property = require( 'AXON/Property' );
   var Range = require( 'DOT/Range' );
   var sceneryPhetQueryParameters = require( 'SCENERY_PHET/sceneryPhetQueryParameters' );
-  var VBox = require( 'SCENERY/nodes/VBox' );
   var Vector2 = require( 'DOT/Vector2' );
+  var VSlider = require( 'SUN/VSlider' );
   var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
   var XYPlot = require( 'GRIDDLE/XYPlot' );
 
@@ -125,17 +125,23 @@ define( function( require ) {
       barChartNode.update();
     } );
     const sliderRange = new Range( -200, 300 );
+    const sliderOptions = {
+      trackSize: new Dimension2( 200, 5 )
+    };
     return new HBox( {
+      align: 'top',
+      spacing: 60,
       center: new Vector2( 512, 309 ),
       children: [
         new Node( {
           children: [ barChartNode ]
         } ),
-        new VBox( {
+        new HBox( {
+          spacing: 25,
           children: [
-            new HSlider( model.aProperty, sliderRange ),
-            new HSlider( model.bProperty, sliderRange ),
-            new HSlider( model.cProperty, sliderRange )
+            new VSlider( model.aProperty, sliderRange, _.extend( {}, sliderOptions, { trackFillEnabled: aEntry.color } ) ),
+            new VSlider( model.bProperty, sliderRange, _.extend( {}, sliderOptions, { trackFillEnabled: bEntry.color } ) ),
+            new VSlider( model.cProperty, sliderRange, _.extend( {}, sliderOptions, { trackFillEnabled: cEntry.color } ) )
           ]
         } )
       ]

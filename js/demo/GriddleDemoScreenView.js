@@ -161,13 +161,13 @@ define( function( require ) {
       }
     } );
     return new Panel( new ScrollingChartNode(
-      new Text( 'Height (m)', { rotation: 3 * Math.PI / 2 } ),
-      new Text( '1 s' ),
+      new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
+      new Text( '1 s', { fill: 'white' } ),
       timeProperty,
       WIDTH,
       HEIGHT,
       [ series1 ],
-      new Text( 'timeString' )
+      'time (s)'
     ), {
       fill: 'gray',
       center: layoutBounds.center

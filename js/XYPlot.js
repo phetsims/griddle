@@ -173,9 +173,6 @@ define( function( require ) {
   griddle.register( 'XYPlot', XYPlot );
 
   return inherit( Node, XYPlot, {
-    step: function( timeElapsed ) {
-      // Does nothing for now.
-    },
 
     /**
      *

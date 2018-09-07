@@ -1,7 +1,7 @@
 // Copyright 2018, University of Colorado Boulder
 
 /**
- * The scrolling graph component which can be shown in the MeterNode or used alone.  Like a seismograph, it has pens on
+ * The scrolling graph component which can be shown in the MeterBodyNode or used alone.  Like a seismograph, it has pens on
  * the right hand side that record data, and the paper scrolls to the left.
  *
  * Moved from wave-interference repo to griddle repo on Wed, Aug 29, 2018.

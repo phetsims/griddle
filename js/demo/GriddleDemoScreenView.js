@@ -47,11 +47,11 @@ define( function( require ) {
        * To add a demo, add an object literal here. Each object has these properties:
        *
        * {string} label - label in the combo box
-       * {function(Bounds2): Node} getNode - creates the scene graph for the demo
+       * {function(Bounds2): Node} createNode - creates the scene graph for the demo
        */
-      { label: 'XYPlot', getNode: demoXYPlot },
-      { label: 'BarChart', getNode: demoBarChart },
-      { label: 'ScrollingChartNode', getNode: demoScrollingChartNode }
+      { label: 'XYPlot', createNode: demoXYPlot },
+      { label: 'BarChart', createNode: demoBarChart },
+      { label: 'ScrollingChartNode', createNode: demoScrollingChartNode }
     ], {
       comboBoxItemFont: new PhetFont( 12 ),
       comboBoxItemYMargin: 3,

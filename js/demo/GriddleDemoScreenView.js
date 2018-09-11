@@ -75,7 +75,7 @@ define( function( require ) {
     plot.addSeries( series, false );
     var forward = true;
     var count = 0;
-    emitter.addListener( function( dt ) {
+    const listener = function( dt ) {
       series.addPoint( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) );
       time = time + ( forward ? 1 : -1 );
 
@@ -87,7 +87,15 @@ define( function( require ) {
         forward = true;
         count++;
       }
-    } );
+    };
+    emitter.addListener( listener );
+
+    // Swap out the dispose function for one that also removes the Emitter listener
+    var plotPanelDispose = plotPanel.dispose.bind( plotPanel );
+    plotPanel.dispose = function() {
+      emitter.removeListener( listener );
+      plotPanelDispose();
+    };
     return plotPanel;
   };
 
@@ -121,14 +129,15 @@ define( function( require ) {
         totalRange: new Range( -100, 200 )
       }
     } );
-    emitter.addListener( function( dt ) {
+    const listener = function( dt ) {
       barChartNode.update();
-    } );
+    };
+    emitter.addListener( listener );
     const sliderRange = new Range( -200, 300 );
     const sliderOptions = {
       trackSize: new Dimension2( 200, 5 )
     };
-    return new HBox( {
+    const hBox = new HBox( {
       align: 'top',
       spacing: 60,
       center: new Vector2( 512, 309 ),
@@ -146,6 +155,14 @@ define( function( require ) {
         } )
       ]
     } );
+
+    // Swap out the dispose function for one that also removes the Emitter listener
+    var hboxDispose = hBox.dispose.bind( hBox );
+    hBox.dispose = function() {
+      emitter.removeListener( listener );
+      hboxDispose();
+    };
+    return hBox;
   };
 
   var demoScrollingChartNode = function( layoutBounds ) {
@@ -159,14 +176,15 @@ define( function( require ) {
       emitter: emitter
     };
     var maxSeconds = 4;
-    emitter.addListener( function( dt ) {
+    const listener = function( dt ) {
       timeProperty.value += dt;
       series1.series.push( new Vector2( timeProperty.value, Math.sin( timeProperty.value ) ) );
       while ( series1.series[ 0 ].x < timeProperty.value - maxSeconds ) {
         series1.series.shift();
       }
-    } );
-    return new Panel( new ScrollingChartNode(
+    };
+    emitter.addListener( listener );
+    const panel = new Panel( new ScrollingChartNode(
       new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
       new Text( '1 s', { fill: 'white' } ),
       timeProperty,
@@ -178,6 +196,14 @@ define( function( require ) {
       fill: 'gray',
       center: layoutBounds.center
     } );
+
+    // Swap out the dispose function for one that also removes the Emitter listener
+    var panelDispose = panel.dispose.bind( panel );
+    panel.dispose = function() {
+      emitter.removeListener( listener );
+      panelDispose();
+    };
+    return panel;
   };
 
   griddle.register( 'GriddleDemoScreenView', GriddleDemoScreenView );

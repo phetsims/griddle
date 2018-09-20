@@ -172,15 +172,15 @@ define( function( require ) {
     var timeProperty = new Property( 0 );
     var series1 = {
       color: 'blue',
-      series: [],
+      data: [],
       emitter: emitter
     };
     var maxSeconds = 4;
     const listener = function( dt ) {
       timeProperty.value += dt;
-      series1.series.push( new Vector2( timeProperty.value, Math.sin( timeProperty.value ) ) );
-      while ( series1.series[ 0 ].x < timeProperty.value - maxSeconds ) {
-        series1.series.shift();
+      series1.data.push( new Vector2( timeProperty.value, Math.sin( timeProperty.value ) ) );
+      while ( series1.data[ 0 ].x < timeProperty.value - maxSeconds ) {
+        series1.data.shift();
       }
     };
     emitter.addListener( listener );

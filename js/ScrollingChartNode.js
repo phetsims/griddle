@@ -47,7 +47,7 @@ define( require => {
      * @param {NumberProperty} timeProperty - indicates the passage of time in the model
      * @param {number} width - width of the container panel (not of the chart within the container)
      * @param {number} height - height of the container panel (not of the chart within the container)
-     * @param {Object[]} seriesArray, each element has {series: Vector2[],emitter: Emitter, color: Color}
+     * @param {Object[]} seriesArray, each element has {data: Vector2[],emitter: Emitter, color: Color}
      * @param {string} timeString - text shown beneath the horizontal axis
      * @param {Object} [options]
      */
@@ -163,10 +163,10 @@ define( require => {
       /**
        * Creates and adds a series with the given color
        * @param {Color|string} color
-       * @param {Vector2[]} series
+       * @param {Vector2[]} data
        * @param {Emitter} emitter
        */
-      const addSeries = ( color, series, emitter ) => {
+      const addSeries = ( color, data, emitter ) => {
 
         // Create the "pens" which draw the data at the right side of the graph
         const penNode = new Circle( 4.5, {
@@ -193,8 +193,8 @@ define( require => {
 
           // Draw the graph with line segments
           const pathShape = new Shape();
-          for ( let i = 0; i < series.length; i++ ) {
-            const sample = series[ i ];
+          for ( let i = 0; i < data.length; i++ ) {
+            const sample = data[ i ];
             const scaledValue = Util.linear( 0, 2, graphHeight / 2, 0, sample.y );
 
             // Clamp at max values
@@ -202,7 +202,7 @@ define( require => {
 
             const xAxisValue = Util.linear( timeProperty.value, timeProperty.value - maxSeconds, plotWidth, 0, sample.x );
             pathShape.lineTo( xAxisValue, clampedValue );
-            if ( i === series.length - 1 ) {
+            if ( i === data.length - 1 ) {
               penNode.centerY = clampedValue;
             }
           }
@@ -210,8 +210,7 @@ define( require => {
         } );
       };
 
-      // TODO: series.series is odd
-      seriesArray.forEach( series => addSeries( series.color, series.series, series.emitter ) );
+      seriesArray.forEach( series => addSeries( series.color, series.data, series.emitter ) );
 
       // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
       // This is a faster alternative to clipping.
@@ -221,6 +220,14 @@ define( require => {
       } ) );
 
       this.mutate( options );
+    }
+
+    /**
+     * Releases resources when no longer used.
+     * @public
+     */
+    dispose() {
+
     }
   }
 

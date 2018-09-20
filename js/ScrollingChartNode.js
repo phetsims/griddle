@@ -37,15 +37,16 @@ define( require => {
   const LABEL_GRAPH_MARGIN = 3;
   const LABEL_EDGE_MARGIN = 6;
   const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
+  const LABEL_FONT_SIZE = 14;
 
   class ScrollingChartNode extends Node {
 
     /**
-     * @param {Node} verticalAxisTitleNode
-     * @param {Node} scaleIndicatorTextNode
-     * @param {NumberProperty} timeProperty
-     * @param {number} width
-     * @param {number} height
+     * @param {Node} verticalAxisTitleNode - node to show along the vertical axis
+     * @param {Node} scaleIndicatorTextNode - node that shows the extent between the first two time divisions
+     * @param {NumberProperty} timeProperty - indicates the passage of time in the model
+     * @param {number} width - width of the container panel (not of the chart within the container)
+     * @param {number} height - height of the container panel (not of the chart within the container)
      * @param {Object[]} seriesArray, each element has {series: Vector2[],emitter: Emitter, color: Color}
      * @param {string} timeString - text shown beneath the horizontal axis
      * @param {Object} [options]
@@ -54,11 +55,9 @@ define( require => {
       super();
 
       options = _.extend( {
-        isIcon: false,
         timeDivisions: 4
       }, options );
 
-      const LABEL_FONT_SIZE = 14;
       const horizontalAxisTitle = new Text( timeString, {
         fontSize: LABEL_FONT_SIZE,
         fill: AXIS_LABEL_FILL
@@ -70,7 +69,7 @@ define( require => {
       const graphWidth = width - leftMargin - RIGHT_MARGIN;
       const graphHeight = height - TOP_MARGIN - bottomMargin;
 
-      // Now that we know the graphHeight, use it to limit the text size for the vertical axis label
+      // Now that we have computed the graphHeight, use it to limit the text size for the vertical axis label
       verticalAxisTitleNode.maxHeight = graphHeight;
 
       const NUMBER_VERTICAL_DASHES = 12;

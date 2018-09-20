@@ -71,7 +71,7 @@ define( require => {
       const graphHeight = height - TOP_MARGIN - bottomMargin;
 
       // Now that we know the graphHeight, use it to limit the text size for the vertical axis label
-      verticalAxisTitleNode.maxWidth = graphHeight;
+      verticalAxisTitleNode.maxHeight = graphHeight;
 
       const NUMBER_VERTICAL_DASHES = 12;
       const dashLength = graphHeight / NUMBER_VERTICAL_DASHES / 2;
@@ -134,6 +134,9 @@ define( require => {
       const arrowWithBars = new Node( {
         children: [ leftBar, rightBar, arrowNode ]
       } );
+
+      // Prevent the scale indicator text from being wider than the corresponding arrow
+      scaleIndicatorTextNode.maxWidth = arrowWithBars.width;
 
       const lengthScaleIndicatorNode = new VBox( {
         spacing: -2,

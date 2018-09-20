@@ -18,6 +18,8 @@ define( require => {
   const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   const Bounds2 = require( 'DOT/Bounds2' );
   const Circle = require( 'SCENERY/nodes/Circle' );
+  const Emitter = require( 'AXON/Emitter' );
+  const griddle = require( 'GRIDDLE/griddle' );
   const Line = require( 'SCENERY/nodes/Line' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Path = require( 'SCENERY/nodes/Path' );
@@ -26,7 +28,6 @@ define( require => {
   const Text = require( 'SCENERY/nodes/Text' );
   const Util = require( 'DOT/Util' );
   const VBox = require( 'SCENERY/nodes/VBox' );
-  const griddle = require( 'GRIDDLE/griddle' );
 
   // constants
   const PATH_LINE_WIDTH = 2;
@@ -45,8 +46,8 @@ define( require => {
      * @param {Node} verticalAxisTitleNode - node to show along the vertical axis
      * @param {Node} scaleIndicatorTextNode - node that shows the extent between the first two time divisions
      * @param {NumberProperty} timeProperty - indicates the passage of time in the model
-     * @param {number} width - width of the container panel (not of the chart within the container)
-     * @param {number} height - height of the container panel (not of the chart within the container)
+     * @param {number} width - width of the entire node, which includes the labels (this is not the width of the chart grid alone)
+     * @param {number} height - height of the entire node, which includes the labels (this is not the height of the chart grid alone)
      * @param {Object[]} seriesArray, each element has {data: Vector2[],emitter: Emitter, color: Color}
      * @param {string} timeString - text shown beneath the horizontal axis
      * @param {Object} [options]
@@ -160,6 +161,9 @@ define( require => {
         top: graphPanel.bottom + LABEL_GRAPH_MARGIN
       } );
 
+      // @private - for disposal
+      this.scrollingChartNodeDisposeEmitter = new Emitter();
+
       /**
        * Creates and adds a series with the given color
        * @param {Color|string} color
@@ -186,7 +190,7 @@ define( require => {
         graphPanel.addChild( pathNode );
         graphPanel.addChild( penNode );
 
-        emitter.addListener( () => {
+        const seriesListener = () => {
 
           // Set the range by incorporating the model's time units, so it will match with the timer.
           const maxSeconds = options.timeDivisions;
@@ -207,7 +211,9 @@ define( require => {
             }
           }
           pathNode.shape = pathShape;
-        } );
+        };
+        emitter.addListener( seriesListener );
+        this.scrollingChartNodeDisposeEmitter.addListener( () => emitter.removeListener( seriesListener ) );
       };
 
       seriesArray.forEach( series => addSeries( series.color, series.data, series.emitter ) );
@@ -227,7 +233,8 @@ define( require => {
      * @public
      */
     dispose() {
-
+      this.scrollingChartNodeDisposeEmitter.emit();
+      this.scrollingChartNodeDisposeEmitter.dispose();
     }
   }
 

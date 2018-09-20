@@ -42,7 +42,7 @@ define( require => {
 
     /**
      * @param {Node} verticalAxisTitleNode
-     * @param {Node} scaleIndicatorText
+     * @param {Node} scaleIndicatorTextNode
      * @param {NumberProperty} timeProperty
      * @param {number} width
      * @param {number} height
@@ -50,7 +50,7 @@ define( require => {
      * @param {string} timeString - text shown beneath the horizontal axis
      * @param {Object} [options]
      */
-    constructor( verticalAxisTitleNode, scaleIndicatorText, timeProperty, width, height, seriesArray, timeString, options ) {
+    constructor( verticalAxisTitleNode, scaleIndicatorTextNode, timeProperty, width, height, seriesArray, timeString, options ) {
       super();
 
       options = _.extend( {
@@ -137,7 +137,7 @@ define( require => {
 
       const lengthScaleIndicatorNode = new VBox( {
         spacing: -2,
-        children: [ arrowWithBars, scaleIndicatorText ],
+        children: [ arrowWithBars, scaleIndicatorTextNode ],
         left: graphPanel.left,
         top: graphPanel.bottom + 2
       } );

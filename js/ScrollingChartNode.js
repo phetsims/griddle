@@ -1,8 +1,11 @@
 // Copyright 2018, University of Colorado Boulder
 
 /**
- * The scrolling graph component which can be shown in the MeterBodyNode or used alone.  Like a seismograph, it has pens on
- * the right hand side that record data, and the paper scrolls to the left.
+ * The scrolling graph component.  Like a seismograph, it has pens on the right hand side that record data, and the
+ * paper scrolls to the left.  It is currently sized accordingly to be used in a small draggable sensor, like the ones
+ * in Wave Interference, Bending Light or Circuit Construction Kit: AC.
+ *
+ * Please see the demo in http://localhost/griddle/griddle_en.html
  *
  * Moved from wave-interference repo to griddle repo on Wed, Aug 29, 2018.
  *

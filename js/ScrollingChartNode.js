@@ -1,9 +1,9 @@
 // Copyright 2018, University of Colorado Boulder
 
 /**
- * The scrolling graph component.  Like a seismograph, it has pens on the right hand side that record data, and the
- * paper scrolls to the left.  It is currently sized accordingly to be used in a small draggable sensor, like the ones
- * in Wave Interference, Bending Light or Circuit Construction Kit: AC.
+ * The scrolling graph component, which would typically be embedded in a Panel.  Like a seismograph, it has pens on the
+ * right hand side that record data, and the paper scrolls to the left.  It is currently sized accordingly to be used in
+ * a small draggable sensor, like the ones in Wave Interference, Bending Light or Circuit Construction Kit: AC.
  *
  * Please see the demo in http://localhost/griddle/griddle_en.html
  *

@@ -11,8 +11,8 @@ define( function( require ) {
   // modules
   const Emitter = require( 'AXON/Emitter' );
   const Property = require( 'AXON/Property' );
-  const Text = require( 'SCENERY/nodes/Text' );
   const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
+  const Text = require( 'SCENERY/nodes/Text' );
 
   QUnit.module( 'ScrollingChartNode' );
 

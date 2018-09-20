@@ -18,13 +18,13 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var griddle = require( 'GRIDDLE/griddle' );
   var HBox = require( 'SCENERY/nodes/HBox' );
-  var RichText = require( 'SCENERY/nodes/RichText' );
-  var VBox = require( 'SCENERY/nodes/VBox' );
-  var Panel = require( 'SUN/Panel' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Line = require( 'SCENERY/nodes/Line' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var Panel = require( 'SUN/Panel' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var RichText = require( 'SCENERY/nodes/RichText' );
+  var VBox = require( 'SCENERY/nodes/VBox' );
 
   /**
    * @constructor

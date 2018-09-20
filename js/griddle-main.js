@@ -7,10 +7,10 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var Sim = require( 'JOIST/Sim' );
-  var SimLauncher = require( 'JOIST/SimLauncher' );
   var GriddleDemoScreenView = require( 'GRIDDLE/demo/GriddleDemoScreenView' );
   var Screen = require( 'JOIST/Screen' );
+  var Sim = require( 'JOIST/Sim' );
+  var SimLauncher = require( 'JOIST/SimLauncher' );
 
   // strings
   var griddleTitleString = require( 'string!GRIDDLE/griddle.title' );

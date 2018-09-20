@@ -16,8 +16,8 @@ define( function( require ) {
   const Text = require( 'SCENERY/nodes/Text' );
   var BarChartNode = require( 'GRIDDLE/BarChartNode' );
   var Color = require( 'SCENERY/util/Color' );
-  var Dimension2 = require( 'DOT/Dimension2' );
   var DemosScreenView = require( 'SUN/demo/DemosScreenView' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var Emitter = require( 'AXON/Emitter' );
   var griddle = require( 'GRIDDLE/griddle' );
   var HBox = require( 'SCENERY/nodes/HBox' );

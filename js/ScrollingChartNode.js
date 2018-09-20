@@ -39,6 +39,11 @@ define( require => {
   const LABEL_EDGE_MARGIN = 6;
   const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
   const LABEL_FONT_SIZE = 14;
+  const NUMBER_VERTICAL_DASHES = 12;
+  const LINE_WIDTH = 0.8;
+
+  // There is a blank space on the right side of the graph so there is room for the pens
+  const RIGHT_GRAPH_MARGIN = 10;
 
   class ScrollingChartNode extends Node {
 
@@ -59,13 +64,13 @@ define( require => {
         timeDivisions: 4
       }, options );
 
-      const horizontalAxisTitle = new Text( timeString, {
+      const horizontalAxisTitleNode = new Text( timeString, {
         fontSize: LABEL_FONT_SIZE,
         fill: AXIS_LABEL_FILL
       } );
 
       const leftMargin = LABEL_EDGE_MARGIN + verticalAxisTitleNode.width + LABEL_GRAPH_MARGIN;
-      const bottomMargin = LABEL_EDGE_MARGIN + horizontalAxisTitle.height + LABEL_GRAPH_MARGIN;
+      const bottomMargin = LABEL_EDGE_MARGIN + horizontalAxisTitleNode.height + LABEL_GRAPH_MARGIN;
 
       const graphWidth = width - leftMargin - RIGHT_MARGIN;
       const graphHeight = height - TOP_MARGIN - bottomMargin;
@@ -73,18 +78,16 @@ define( require => {
       // Now that we have computed the graphHeight, use it to limit the text size for the vertical axis label
       verticalAxisTitleNode.maxHeight = graphHeight;
 
-      const NUMBER_VERTICAL_DASHES = 12;
       const dashLength = graphHeight / NUMBER_VERTICAL_DASHES / 2;
-
-      const DASH_PATTERN = [ dashLength + 0.6, dashLength - 0.6 ];
-      const LINE_WIDTH = 0.8;
-      const LINE_OPTIONS = {
+      const dashPattern = [ dashLength + 0.6, dashLength - 0.6 ];
+      const lineOptions = {
         stroke: 'lightGray',
-        lineDash: DASH_PATTERN,
+        lineDash: dashPattern,
         lineWidth: LINE_WIDTH,
         lineDashOffset: dashLength / 2
       };
 
+      // White panel with gridlines that shows the data
       const graphPanel = new Rectangle( 0, 0, graphWidth, graphHeight, GRAPH_CORNER_RADIUS, GRAPH_CORNER_RADIUS, {
         fill: 'white',
         stroke: 'black', // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
@@ -95,25 +98,25 @@ define( require => {
 
       // Horizontal Lines
       [ 1, 2, 3 ].forEach( i =>
-        graphPanel.addChild( new Line( 0, graphHeight * i / 4, graphWidth, graphHeight * i / 4, LINE_OPTIONS ) )
+        graphPanel.addChild( new Line( 0, graphHeight * i / 4, graphWidth, graphHeight * i / 4, lineOptions ) )
       );
 
-      // There is a blank space on the right side of the graph so there is room for the pens
-      const rightGraphMargin = 10;
-      const plotWidth = graphWidth - rightGraphMargin;
+      const plotWidth = graphWidth - RIGHT_GRAPH_MARGIN;
 
       // Vertical lines
       [ 1, 2, 3, 4 ].forEach( i =>
-        graphPanel.addChild( new Line( plotWidth * i / options.timeDivisions, 0, plotWidth * i / options.timeDivisions, graphHeight, LINE_OPTIONS ) )
+        graphPanel.addChild( new Line( plotWidth * i / options.timeDivisions, 0, plotWidth * i / options.timeDivisions, graphHeight, lineOptions ) )
       );
 
       this.addChild( graphPanel );
 
-      horizontalAxisTitle.mutate( {
+      // Position the horizontal axis title node
+      horizontalAxisTitleNode.mutate( {
         top: graphPanel.bottom + LABEL_GRAPH_MARGIN,
         centerX: graphPanel.left + plotWidth / 2
       } );
 
+      // Position the vertical axis title node
       verticalAxisTitleNode.mutate( {
         right: graphPanel.left - LABEL_GRAPH_MARGIN,
         centerY: graphPanel.centerY
@@ -146,18 +149,18 @@ define( require => {
       } );
 
       this.addChild( lengthScaleIndicatorNode );
-      this.addChild( horizontalAxisTitle );
+      this.addChild( horizontalAxisTitleNode );
       this.addChild( verticalAxisTitleNode );
 
       // For i18n, “Time” will expand symmetrically L/R until it gets too close to the scale bar. Then, the string will
       // expand to the R only, until it reaches the point it must be scaled down in size.
-      horizontalAxisTitle.maxWidth = graphPanel.right - lengthScaleIndicatorNode.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
-      if ( horizontalAxisTitle.left < lengthScaleIndicatorNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
-        horizontalAxisTitle.left = lengthScaleIndicatorNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
+      horizontalAxisTitleNode.maxWidth = graphPanel.right - lengthScaleIndicatorNode.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
+      if ( horizontalAxisTitleNode.left < lengthScaleIndicatorNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
+        horizontalAxisTitleNode.left = lengthScaleIndicatorNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
       }
 
       // If maxWidth reduced the scale of the text, it may be too far below the graph.  In that case, move it back up.
-      horizontalAxisTitle.mutate( {
+      horizontalAxisTitleNode.mutate( {
         top: graphPanel.bottom + LABEL_GRAPH_MARGIN
       } );
 
@@ -166,11 +169,10 @@ define( require => {
 
       /**
        * Creates and adds a series with the given color
-       * @param {Color|string} color
-       * @param {Vector2[]} data
-       * @param {Emitter} emitter
+       * @param {Object} series - see constructor docs
        */
-      const addSeries = ( color, data, emitter ) => {
+      const addSeries = series => {
+        const { color, data, emitter } = series;
 
         // Create the "pens" which draw the data at the right side of the graph
         const penNode = new Circle( 4.5, {
@@ -198,13 +200,13 @@ define( require => {
           // Draw the graph with line segments
           const pathShape = new Shape();
           for ( let i = 0; i < data.length; i++ ) {
-            const sample = data[ i ];
-            const scaledValue = Util.linear( 0, 2, graphHeight / 2, 0, sample.y );
+            const dataPoint = data[ i ];
+            const scaledValue = Util.linear( 0, 2, graphHeight / 2, 0, dataPoint.y );
 
             // Clamp at max values
             const clampedValue = Util.clamp( scaledValue, 0, graphHeight );
 
-            const xAxisValue = Util.linear( timeProperty.value, timeProperty.value - maxSeconds, plotWidth, 0, sample.x );
+            const xAxisValue = Util.linear( timeProperty.value, timeProperty.value - maxSeconds, plotWidth, 0, dataPoint.x );
             pathShape.lineTo( xAxisValue, clampedValue );
             if ( i === data.length - 1 ) {
               penNode.centerY = clampedValue;
@@ -216,7 +218,7 @@ define( require => {
         this.scrollingChartNodeDisposeEmitter.addListener( () => emitter.removeListener( seriesListener ) );
       };
 
-      seriesArray.forEach( series => addSeries( series.color, series.data, series.emitter ) );
+      seriesArray.forEach( addSeries );
 
       // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
       // This is a faster alternative to clipping.

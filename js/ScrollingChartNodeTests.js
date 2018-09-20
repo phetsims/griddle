@@ -33,6 +33,20 @@ define( function( require ) {
       'time (s)'
     );
     scrollingChartNode.dispose();
+
+    // You can uncomment this and run a memory test to check for dispose leaks.
+    // setInterval( () => {
+    //   var scrollingChartNode = new ScrollingChartNode(
+    //     new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
+    //     new Text( '1 s', { fill: 'white' } ),
+    //     timeProperty,
+    //     200,
+    //     150,
+    //     [ series1 ],
+    //     'time (s)'
+    //   );
+    //   scrollingChartNode.dispose();
+    // }, 16 );
     assert.ok( true, 'dispose completed' );
   } );
 } );

@@ -12,6 +12,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  const LabeledScrollingChartNode = require( 'GRIDDLE/LabeledScrollingChartNode' );
   const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
   const Text = require( 'SCENERY/nodes/Text' );
   var BarChartNode = require( 'GRIDDLE/BarChartNode' );
@@ -184,13 +185,11 @@ define( function( require ) {
       }
     };
     emitter.addListener( listener );
-    const panel = new Panel( new ScrollingChartNode(
+    const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], WIDTH, HEIGHT );
+    const panel = new Panel( new LabeledScrollingChartNode(
+      scrollingChartNode,
       new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
       new Text( '1 s', { fill: 'white' } ),
-      timeProperty,
-      WIDTH,
-      HEIGHT,
-      [ series1 ],
       'time (s)'
     ), {
       fill: 'gray',

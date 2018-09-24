@@ -12,7 +12,6 @@ define( function( require ) {
   const Emitter = require( 'AXON/Emitter' );
   const Property = require( 'AXON/Property' );
   const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
-  const Text = require( 'SCENERY/nodes/Text' );
 
   QUnit.module( 'ScrollingChartNode' );
 
@@ -24,13 +23,8 @@ define( function( require ) {
       emitter: new Emitter()
     };
     var scrollingChartNode = new ScrollingChartNode(
-      new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
-      new Text( '1 s', { fill: 'white' } ),
       timeProperty,
-      200,
-      150,
-      [ series1 ],
-      'time (s)'
+      [ series1 ]
     );
     scrollingChartNode.dispose();
 

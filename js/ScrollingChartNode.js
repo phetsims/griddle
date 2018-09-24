@@ -49,12 +49,13 @@ define( require => {
       super();
 
       options = _.extend( {
-        timeDivisions: 4,
         width: 190,
-        height: 140
+        height: 140,
+        numberHorizontalLines: 3,
+        numberVerticalLines: 4 // Determines the time between vertical gridlines
       }, options );
 
-      const { width, height, timeDivisions } = options;
+      const { width, height, numberHorizontalLines, numberVerticalLines } = options;
 
       const dashLength = height / NUMBER_VERTICAL_DASHES / 2;
       const dashPattern = [ dashLength + 0.6, dashLength - 0.6 ];
@@ -75,9 +76,10 @@ define( require => {
       } );
 
       // Horizontal Lines
-      [ 1, 2, 3 ].forEach( i =>
-        graphPanel.addChild( new Line( 0, height * i / 4, width, height * i / 4, lineOptions ) )
-      );
+      for ( let i = 1; i <= numberHorizontalLines; i++ ) {
+        const y = height * i / ( numberHorizontalLines + 1 );
+        graphPanel.addChild( new Line( 0, y, width, y, lineOptions ) );
+      }
 
       const plotWidth = width - RIGHT_GRAPH_MARGIN;
 
@@ -86,9 +88,10 @@ define( require => {
       this.plotWidth = plotWidth;
 
       // Vertical lines
-      [ 1, 2, 3, 4 ].forEach( i =>
-        graphPanel.addChild( new Line( plotWidth * i / timeDivisions, 0, plotWidth * i / timeDivisions, height, lineOptions ) )
-      );
+      for ( let i = 1; i <= numberVerticalLines; i++ ) {
+        const x = plotWidth * i / numberVerticalLines;
+        graphPanel.addChild( new Line( x, 0, x, height, lineOptions ) );
+      }
 
       this.addChild( graphPanel );
 
@@ -123,7 +126,7 @@ define( require => {
         const seriesListener = () => {
 
           // Set the range by incorporating the model's time units, so it will match with the timer.
-          const maxSeconds = timeDivisions;
+          const maxSeconds = numberVerticalLines;
 
           // Draw the graph with line segments
           const pathShape = new Shape();

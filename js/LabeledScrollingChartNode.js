@@ -28,7 +28,8 @@ define( require => {
   class LabeledScrollingChartNode extends Node {
 
     /**
-     * @param {ScrollingChartNode} scrollingChartNode - scrolling chart node to decorate.  Needed to get dimensions between gridlines
+     * @param {ScrollingChartNode} scrollingChartNode - scrolling chart node to decorate.  Needed to get dimensions between gridlines.
+     *                                                - also considered "owned" by this decorator and hence is disposed on dispose()
      * @param {Node} verticalAxisTitleNode - node to show along the vertical axis
      * @param {Node} scaleIndicatorTextNode - node that shows the extent between the first two time divisions
      * @param {string} timeString - text shown beneath the horizontal axis
@@ -46,6 +47,9 @@ define( require => {
       verticalAxisTitleNode.maxHeight = scrollingChartNode.height;
 
       this.addChild( scrollingChartNode );
+
+      // @private - for dispose
+      this.scrollingChartNode = scrollingChartNode;
 
       // Position the horizontal axis title node
       horizontalAxisTitleNode.mutate( {
@@ -109,8 +113,7 @@ define( require => {
      * @public
      */
     dispose() {
-      this.scrollingChartNodeDisposeEmitter.emit();
-      this.scrollingChartNodeDisposeEmitter.dispose();
+      this.scrollingChartNode.dispose();
     }
   }
 

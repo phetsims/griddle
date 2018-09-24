@@ -36,10 +36,6 @@ define( require => {
     constructor( scrollingChartNode, verticalAxisTitleNode, scaleIndicatorTextNode, timeString, options ) {
       super();
 
-      options = _.extend( {
-        timeDivisions: 4
-      }, options );
-
       const horizontalAxisTitleNode = new Text( timeString, {
         fontSize: LABEL_FONT_SIZE,
         fill: AXIS_LABEL_FILL

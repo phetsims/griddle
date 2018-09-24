@@ -1,10 +1,10 @@
 // Copyright 2018, University of Colorado Boulder
 
 /**
- * The scrolling graph component, which would typically be embedded in a LabeledScrollingChartNode or Panel.  Like a
- * seismograph, it has pens on the right hand side that record data, and the paper scrolls to the left.  It is currently
- * sized accordingly to be used in a small draggable sensor, like the ones in Wave Interference, Bending Light or
- * Circuit Construction Kit: AC.
+ * A scrolling graph component.  Like a seismograph, it has pens on the right hand side that record data, and the paper
+ * scrolls to the left.  It is currently sized accordingly to be used in a small draggable sensor, like the ones in Wave
+ * Interference, Bending Light or Circuit Construction Kit: AC. It would typically be embedded in a
+ * LabeledScrollingChartNode or Panel.
  *
  * Please see the demo in http://localhost/griddle/griddle_en.html
  *
@@ -49,12 +49,13 @@ define( require => {
       super();
 
       options = _.extend( {
-        width: 190,
-        height: 140,
-        numberHorizontalLines: 3,
+        width: 190,  // dimensions
+        height: 140, // dimensions
+        numberHorizontalLines: 3, // Number of horizontal lines (not counting top and bottom)
         numberVerticalLines: 4 // Determines the time between vertical gridlines
       }, options );
 
+      // Promote to local variables for readability
       const { width, height, numberHorizontalLines, numberVerticalLines } = options;
 
       const dashLength = height / NUMBER_VERTICAL_DASHES / 2;

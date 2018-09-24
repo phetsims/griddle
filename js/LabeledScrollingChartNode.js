@@ -27,7 +27,7 @@ define( require => {
   class LabeledScrollingChartNode extends Node {
 
     /**
-     * @param {LabeledScrollingChartNode} scrollingChartNode - scrolling chart node to decorate
+     * @param {ScrollingChartNode} scrollingChartNode - scrolling chart node to decorate.  Needed to get dimensions between gridlines
      * @param {Node} verticalAxisTitleNode - node to show along the vertical axis
      * @param {Node} scaleIndicatorTextNode - node that shows the extent between the first two time divisions
      * @param {string} timeString - text shown beneath the horizontal axis

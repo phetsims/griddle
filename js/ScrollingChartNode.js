@@ -43,16 +43,18 @@ define( require => {
     /**
      * @param {NumberProperty} timeProperty - indicates the passage of time in the model
      * @param {Object[]} seriesArray, each element has {data: Vector2[],emitter: Emitter, color: Color}
-     * @param {number} width - width of the entire node, which includes the labels (this is not the width of the chart grid alone)
-     * @param {number} height - height of the entire node, which includes the labels (this is not the height of the chart grid alone)
      * @param {Object} [options]
      */
-    constructor( timeProperty, seriesArray, width, height, options ) {
+    constructor( timeProperty, seriesArray, options ) {
       super();
 
       options = _.extend( {
-        timeDivisions: 4
+        timeDivisions: 4,
+        width: 190,
+        height: 140
       }, options );
+
+      const { width, height, timeDivisions } = options;
 
       const dashLength = height / NUMBER_VERTICAL_DASHES / 2;
       const dashPattern = [ dashLength + 0.6, dashLength - 0.6 ];
@@ -85,7 +87,7 @@ define( require => {
 
       // Vertical lines
       [ 1, 2, 3, 4 ].forEach( i =>
-        graphPanel.addChild( new Line( plotWidth * i / options.timeDivisions, 0, plotWidth * i / options.timeDivisions, height, lineOptions ) )
+        graphPanel.addChild( new Line( plotWidth * i / timeDivisions, 0, plotWidth * i / timeDivisions, height, lineOptions ) )
       );
 
       this.addChild( graphPanel );
@@ -121,7 +123,7 @@ define( require => {
         const seriesListener = () => {
 
           // Set the range by incorporating the model's time units, so it will match with the timer.
-          const maxSeconds = options.timeDivisions;
+          const maxSeconds = timeDivisions;
 
           // Draw the graph with line segments
           const pathShape = new Shape();

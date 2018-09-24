@@ -53,7 +53,7 @@ define( require => {
       // Position the horizontal axis title node
       horizontalAxisTitleNode.mutate( {
         top: scrollingChartNode.bottom + LABEL_GRAPH_MARGIN,
-        centerX: scrollingChartNode.centerX
+        centerX: scrollingChartNode.plotWidth / 2 + scrollingChartNode.bounds.minX
       } );
 
       // Position the vertical axis title node

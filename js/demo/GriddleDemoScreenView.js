@@ -168,8 +168,6 @@ define( function( require ) {
 
   var demoScrollingChartNode = function( layoutBounds ) {
 
-    var WIDTH = 200;
-    var HEIGHT = 150;
     var timeProperty = new Property( 0 );
     var series1 = {
       color: 'blue',
@@ -185,7 +183,10 @@ define( function( require ) {
       }
     };
     emitter.addListener( listener );
-    const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], WIDTH, HEIGHT );
+    const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], {
+      width: 200,
+      height: 150
+    } );
     const panel = new Panel( new LabeledScrollingChartNode(
       scrollingChartNode,
       new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),

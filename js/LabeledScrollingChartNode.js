@@ -1,7 +1,8 @@
 // Copyright 2018, University of Colorado Boulder
 
 /**
- * Decorates a ScrollingChartNode with titles and labels.
+ * Decorates a ScrollingChartNode with titles and labels.  This does not show a background, and would typically be added
+ * to a Panel or ShadedRectangle.
  *
  * Please see the demo in http://localhost/griddle/griddle_en.html
  *

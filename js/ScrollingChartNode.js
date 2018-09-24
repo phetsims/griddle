@@ -137,8 +137,8 @@ define( require => {
             // Clamp at max values
             const clampedValue = Util.clamp( scaledValue, 0, height );
 
-            const xAxisValue = Util.linear( timeProperty.value, timeProperty.value - maxSeconds, plotWidth, 0, dataPoint.x );
-            pathShape.lineTo( xAxisValue, clampedValue );
+            const timeValue = Util.linear( timeProperty.value, timeProperty.value - maxSeconds, plotWidth, 0, dataPoint.x );
+            pathShape.lineTo( timeValue, clampedValue );
             if ( i === data.length - 1 ) {
               penNode.centerY = clampedValue;
             }

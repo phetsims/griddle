@@ -127,7 +127,7 @@ define( require => {
         const seriesListener = () => {
 
           // Set the range by incorporating the model's time units, so it will match with the timer.
-          const maxSeconds = numberVerticalLines;
+          const maxTime = numberVerticalLines;
 
           // Draw the graph with line segments
           const pathShape = new Shape();
@@ -138,7 +138,7 @@ define( require => {
             // Clamp at max values
             const clampedValue = Util.clamp( scaledValue, 0, height );
 
-            const time = Util.linear( timeProperty.value, timeProperty.value - maxSeconds, plotWidth, 0, dataPoint.x );
+            const time = Util.linear( timeProperty.value, timeProperty.value - maxTime, plotWidth, 0, dataPoint.x );
             pathShape.lineTo( time, clampedValue );
             if ( i === data.length - 1 ) {
               penNode.centerY = clampedValue;

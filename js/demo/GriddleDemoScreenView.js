@@ -184,7 +184,7 @@ define( require => {
       data: [],
       emitter: emitter
     };
-    const maxSeconds = 4;
+    const maxTime = 4;
     const listener = dt => {
 
       // Increment the model time
@@ -194,7 +194,7 @@ define( require => {
       series1.data.push( new Vector2( timeProperty.value, Math.sin( timeProperty.value ) ) );
 
       // Data that does not fall within the displayed window should be removed.
-      while ( series1.data[ 0 ].x < timeProperty.value - maxSeconds ) {
+      while ( series1.data[ 0 ].x < timeProperty.value - maxTime ) {
         series1.data.shift();
       }
     };

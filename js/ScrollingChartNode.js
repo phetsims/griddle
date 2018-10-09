@@ -43,10 +43,10 @@ define( require => {
     /**
      * @param {NumberProperty} timeProperty - indicates the passage of time in the model, in the same units as the model.
      *                                      - This may be seconds or another unit depending on the model.
-     * @param {Object[]} seriesArray, each element has {data: Vector2[],emitter: Emitter, color: Color}
+     * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted
      * @param {Object} [options]
      */
-    constructor( timeProperty, seriesArray, options ) {
+    constructor( timeProperty, dynamicSeriesArray, options ) {
       super();
 
       options = _.extend( {
@@ -101,20 +101,19 @@ define( require => {
       this.scrollingChartNodeDisposeEmitter = new Emitter();
 
       /**
-       * Creates and adds a series with the given color
-       * @param {Object} series - see constructor docs
+       * Creates and adds a dynamicSeries with the given color
+       * @param {Object} dynamicSeries - see constructor docs
        */
-      const addSeries = series => {
-        const { color, data, emitter } = series;
+      const addDynamicSeries = dynamicSeries => {
 
         // Create the "pens" which draw the data at the right side of the graph
         const penNode = new Circle( 4.5, {
-          fill: color,
+          fill: dynamicSeries.color,
           centerX: plotWidth,
           centerY: height / 2
         } );
         const pathNode = new Path( new Shape(), {
-          stroke: color,
+          stroke: dynamicSeries.color,
           lineWidth: PATH_LINE_WIDTH,
 
           // prevent bounds computations during main loop
@@ -132,8 +131,8 @@ define( require => {
 
           // Draw the graph with line segments
           const pathShape = new Shape();
-          for ( let i = 0; i < data.length; i++ ) {
-            const dataPoint = data[ i ];
+          for ( let i = 0; i < dynamicSeries.data.length; i++ ) {
+            const dataPoint = dynamicSeries.data[ i ];
             const scaledValue = Util.linear( 0, 2, height / 2, 0, dataPoint.y );
 
             // Clamp at max values
@@ -141,17 +140,17 @@ define( require => {
 
             const time = Util.linear( timeProperty.value, timeProperty.value - maxTime, plotWidth, 0, dataPoint.x );
             pathShape.lineTo( time, clampedValue );
-            if ( i === data.length - 1 ) {
+            if ( i === dynamicSeries.data.length - 1 ) {
               penNode.centerY = clampedValue;
             }
           }
           pathNode.shape = pathShape;
         };
-        emitter.addListener( seriesListener );
-        this.scrollingChartNodeDisposeEmitter.addListener( () => emitter.removeListener( seriesListener ) );
+        dynamicSeries.emitter.addListener( seriesListener );
+        this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeries.emitter.removeListener( seriesListener ) );
       };
 
-      seriesArray.forEach( addSeries );
+      dynamicSeriesArray.forEach( addDynamicSeries );
 
       // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
       // This is a faster alternative to clipping.

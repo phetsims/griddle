@@ -53,34 +53,46 @@ define( require => {
         width: 190,  // dimensions
         height: 140, // dimensions
         numberHorizontalLines: 3, // Number of horizontal lines (not counting top and bottom)
-        numberVerticalLines: 4 // Determines the time between vertical gridlines
+        numberVerticalLines: 4, // Determines the time between vertical gridlines
+        graphPanelOptions: null, // filled in below
+        gridLineOptions: null, // filled in below
+        graphPanelOverlayOptions: null, // filled in below
       }, options );
 
       // Promote to local variables for readability
       const { width, height, numberHorizontalLines, numberVerticalLines } = options;
 
-      const dashLength = height / NUMBER_VERTICAL_DASHES / 2;
-      const dashPattern = [ dashLength + 0.6, dashLength - 0.6 ];
-      const lineOptions = {
-        stroke: 'lightGray',
-        lineDash: dashPattern,
-        lineWidth: LINE_WIDTH,
-        lineDashOffset: dashLength / 2
-      };
-
-      // White panel with gridlines that shows the data
-      const graphPanel = new Rectangle( 0, 0, width, height, GRAPH_CORNER_RADIUS, GRAPH_CORNER_RADIUS, {
+      // default options to be passed into the graphPanel Rectangle
+      options.graphPanelOptions = _.extend( {
         fill: 'white',
         stroke: 'black', // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
         right: width - RIGHT_MARGIN,
         top: TOP_MARGIN,
         pickable: false
-      } );
+      }, options.graphPanelOptions );
+
+      // default options for the horizontal and vertical grid lines
+      const dashLength = height / NUMBER_VERTICAL_DASHES / 2;
+      options.gridLineOptions = _.extend( {
+        stroke: 'lightGray',
+        lineDash: [ dashLength + 0.6, dashLength - 0.6 ],
+        lineWidth: LINE_WIDTH,
+        lineDashOffset: dashLength / 2
+      }, options.gridLineOptions );
+
+      // default options for the Rectangle on top (to make sure graph lines don't protrude)
+      options.graphPanelOverlayOptions = _.extend( {
+        stroke: 'black',
+        pickable: false
+      }, options.graphPanelOverlayOptions );
+
+      // White panel with gridlines that shows the data
+      const graphPanel = new Rectangle( 0, 0, width, height, GRAPH_CORNER_RADIUS, GRAPH_CORNER_RADIUS, options.graphPanelOptions );
 
       // Horizontal Lines
       for ( let i = 1; i <= numberHorizontalLines; i++ ) {
         const y = height * i / ( numberHorizontalLines + 1 );
-        graphPanel.addChild( new Line( 0, y, width, y, lineOptions ) );
+        graphPanel.addChild( new Line( 0, y, width, y, options.gridLineOptions ) );
       }
 
       const plotWidth = width - RIGHT_GRAPH_MARGIN;
@@ -92,7 +104,7 @@ define( require => {
       // Vertical lines
       for ( let i = 1; i <= numberVerticalLines; i++ ) {
         const x = plotWidth * i / numberVerticalLines;
-        graphPanel.addChild( new Line( x, 0, x, height, lineOptions ) );
+        graphPanel.addChild( new Line( x, 0, x, height, options.gridLineOptions ) );
       }
 
       this.addChild( graphPanel );
@@ -154,10 +166,7 @@ define( require => {
 
       // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
       // This is a faster alternative to clipping.
-      graphPanel.addChild( new Rectangle( 0, 0, width, height, GRAPH_CORNER_RADIUS, GRAPH_CORNER_RADIUS, {
-        stroke: 'black',
-        pickable: false
-      } ) );
+      graphPanel.addChild( new Rectangle( 0, 0, width, height, GRAPH_CORNER_RADIUS, GRAPH_CORNER_RADIUS, options.graphPanelOverlayOptions ) );
 
       this.mutate( options );
     }

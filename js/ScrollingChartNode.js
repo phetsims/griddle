@@ -112,7 +112,7 @@ define( require => {
           centerX: plotWidth,
           centerY: height / 2
         } );
-        const pathNode = new Path( new Shape(), {
+        const dynamicSeriesPath = new Path( new Shape(), {
           stroke: dynamicSeries.color,
           lineWidth: PATH_LINE_WIDTH,
 
@@ -120,17 +120,17 @@ define( require => {
           boundsMethod: 'none',
           localBounds: Bounds2.NOTHING
         } );
-        pathNode.computeShapeBounds = () => Bounds2.NOTHING; // prevent bounds computations during main loop
-        graphPanel.addChild( pathNode );
+        dynamicSeriesPath.computeShapeBounds = () => Bounds2.NOTHING; // prevent bounds computations during main loop
+        graphPanel.addChild( dynamicSeriesPath );
         graphPanel.addChild( penNode );
 
-        const seriesListener = () => {
+        const dynamicSeriesListener = () => {
 
           // Set the range by incorporating the model's time units, so it will match with the timer.
           const maxTime = numberVerticalLines;
 
           // Draw the graph with line segments
-          const pathShape = new Shape();
+          const dynamicSeriesPathShape = new Shape();
           for ( let i = 0; i < dynamicSeries.data.length; i++ ) {
             const dataPoint = dynamicSeries.data[ i ];
             const scaledValue = Util.linear( 0, 2, height / 2, 0, dataPoint.y );
@@ -139,15 +139,15 @@ define( require => {
             const clampedValue = Util.clamp( scaledValue, 0, height );
 
             const time = Util.linear( timeProperty.value, timeProperty.value - maxTime, plotWidth, 0, dataPoint.x );
-            pathShape.lineTo( time, clampedValue );
+            dynamicSeriesPathShape.lineTo( time, clampedValue );
             if ( i === dynamicSeries.data.length - 1 ) {
               penNode.centerY = clampedValue;
             }
           }
-          pathNode.shape = pathShape;
+          dynamicSeriesPath.shape = dynamicSeriesPathShape;
         };
-        dynamicSeries.emitter.addListener( seriesListener );
-        this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeries.emitter.removeListener( seriesListener ) );
+        dynamicSeries.emitter.addListener( dynamicSeriesListener );
+        this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeries.emitter.removeListener( dynamicSeriesListener ) );
       };
 
       dynamicSeriesArray.forEach( addDynamicSeries );

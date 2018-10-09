@@ -56,7 +56,7 @@ define( require => {
         numberVerticalLines: 4, // Determines the time between vertical gridlines
         graphPanelOptions: null, // filled in below
         gridLineOptions: null, // filled in below
-        graphPanelOverlayOptions: null, // filled in below
+        graphPanelOverlayOptions: null // filled in below
       }, options );
 
       // Promote to local variables for readability

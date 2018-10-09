@@ -41,7 +41,8 @@ define( require => {
   class ScrollingChartNode extends Node {
 
     /**
-     * @param {NumberProperty} timeProperty - indicates the passage of time in the model
+     * @param {NumberProperty} timeProperty - indicates the passage of time in the model, in the same units as the model.
+     *                                      - This may be seconds or another unit depending on the model.
      * @param {Object[]} seriesArray, each element has {data: Vector2[],emitter: Emitter, color: Color}
      * @param {Object} [options]
      */

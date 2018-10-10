@@ -27,23 +27,13 @@ define( require => {
   const Shape = require( 'KITE/Shape' );
   const Util = require( 'DOT/Util' );
 
-  // constants
-  const PATH_LINE_WIDTH = 2;
-  const TOP_MARGIN = 10;
-  const RIGHT_MARGIN = 10;
-  const GRAPH_CORNER_RADIUS = 5;
-  const NUMBER_VERTICAL_DASHES = 12;
-  const LINE_WIDTH = 0.8;
-
-  // There is a blank space on the right side of the graph so there is room for the pens
-  const RIGHT_GRAPH_MARGIN = 10;
-
   class ScrollingChartNode extends Node {
 
     /**
      * @param {NumberProperty} timeProperty - indicates the passage of time in the model, in the same units as the model.
      *                                      - This may be seconds or another unit depending on the model.
-     * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted
+     * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted. The client is responsible for pruning data as
+     *                                             - it leaves the visible window.
      * @param {Object} [options]
      */
     constructor( timeProperty, dynamicSeriesArray, options ) {
@@ -54,6 +44,12 @@ define( require => {
         height: 140, // dimensions
         numberHorizontalLines: 3, // Number of horizontal lines (not counting top and bottom)
         numberVerticalLines: 4, // Determines the time between vertical gridlines
+        rightGraphMargin: 10, // There is a blank space on the right side of the graph so there is room for the pens
+        cornerRadius: 5,
+        seriesLineWidth: 2,
+        topMargin: 10,
+        numberVerticalDashes: 12,
+        rightMargin: 10,
         graphPanelOptions: null, // filled in below
         gridLineOptions: null, // filled in below
         graphPanelOverlayOptions: null // filled in below
@@ -66,17 +62,17 @@ define( require => {
       options.graphPanelOptions = _.extend( {
         fill: 'white',
         stroke: 'black', // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
-        right: width - RIGHT_MARGIN,
-        top: TOP_MARGIN,
+        right: width - options.rightMargin,
+        top: options.topMargin,
         pickable: false
       }, options.graphPanelOptions );
 
       // default options for the horizontal and vertical grid lines
-      const dashLength = height / NUMBER_VERTICAL_DASHES / 2;
+      const dashLength = height / options.numberVerticalDashes / 2;
       options.gridLineOptions = _.extend( {
         stroke: 'lightGray',
         lineDash: [ dashLength + 0.6, dashLength - 0.6 ],
-        lineWidth: LINE_WIDTH,
+        lineWidth: 0.8,
         lineDashOffset: dashLength / 2
       }, options.gridLineOptions );
 
@@ -87,7 +83,12 @@ define( require => {
       }, options.graphPanelOverlayOptions );
 
       // White panel with gridlines that shows the data
-      const graphPanel = new Rectangle( 0, 0, width, height, GRAPH_CORNER_RADIUS, GRAPH_CORNER_RADIUS, options.graphPanelOptions );
+      options.graphPanelOptions = _.extend( {
+
+        // Prevent data from being plotted outside the graph
+        clipArea: Shape.rect( 0, 0, width, height )
+      }, options.graphPanelOptions );
+      const graphPanel = new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius, options.graphPanelOptions );
 
       // Horizontal Lines
       for ( let i = 1; i <= numberHorizontalLines; i++ ) {
@@ -95,7 +96,7 @@ define( require => {
         graphPanel.addChild( new Line( 0, y, width, y, options.gridLineOptions ) );
       }
 
-      const plotWidth = width - RIGHT_GRAPH_MARGIN;
+      const plotWidth = width - options.rightGraphMargin;
 
       // @public (read-only) {number} - the width of the area that is used for plotting, does not include the margin
       // on the right.
@@ -126,7 +127,7 @@ define( require => {
         } );
         const dynamicSeriesPath = new Path( new Shape(), {
           stroke: dynamicSeries.color,
-          lineWidth: PATH_LINE_WIDTH,
+          lineWidth: dynamicSeries.lineWidth,
 
           // prevent bounds computations during main loop
           boundsMethod: 'none',
@@ -166,7 +167,7 @@ define( require => {
 
       // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
       // This is a faster alternative to clipping.
-      graphPanel.addChild( new Rectangle( 0, 0, width, height, GRAPH_CORNER_RADIUS, GRAPH_CORNER_RADIUS, options.graphPanelOverlayOptions ) );
+      graphPanel.addChild( new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius, options.graphPanelOverlayOptions ) );
 
       this.mutate( options );
     }

@@ -5,24 +5,20 @@
  *
  * @author Sam Reid (PhET Interactive Simulations)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  const Emitter = require( 'AXON/Emitter' );
+  const DynamicSeries = require( 'GRIDDLE/DynamicSeries' );
   const Property = require( 'AXON/Property' );
   const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
 
   QUnit.module( 'ScrollingChartNode' );
 
-  QUnit.test( 'Test dispose', function( assert ) {
-    var timeProperty = new Property( 0 );
-    var series1 = {
-      color: 'blue',
-      data: [],
-      emitter: new Emitter()
-    };
-    var scrollingChartNode = new ScrollingChartNode(
+  QUnit.test( 'Test dispose', assert => {
+    const timeProperty = new Property( 0 );
+    const series1 = new DynamicSeries( { color: 'blue' } );
+    const scrollingChartNode = new ScrollingChartNode(
       timeProperty,
       [ series1 ]
     );

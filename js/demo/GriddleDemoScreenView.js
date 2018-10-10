@@ -12,22 +12,23 @@ define( require => {
   'use strict';
 
   // modules
-  const LabeledScrollingChartNode = require( 'GRIDDLE/LabeledScrollingChartNode' );
-  const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
-  const Text = require( 'SCENERY/nodes/Text' );
   const BarChartNode = require( 'GRIDDLE/BarChartNode' );
   const Color = require( 'SCENERY/util/Color' );
   const DemosScreenView = require( 'SUN/demo/DemosScreenView' );
   const Dimension2 = require( 'DOT/Dimension2' );
+  const DynamicSeries = require( 'GRIDDLE/DynamicSeries' );
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
   const HBox = require( 'SCENERY/nodes/HBox' );
+  const LabeledScrollingChartNode = require( 'GRIDDLE/LabeledScrollingChartNode' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Panel = require( 'SUN/Panel' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
   const sceneryPhetQueryParameters = require( 'SCENERY_PHET/sceneryPhetQueryParameters' );
+  const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
+  const Text = require( 'SCENERY/nodes/Text' );
   const Vector2 = require( 'DOT/Vector2' );
   const VSlider = require( 'SUN/VSlider' );
   const XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
@@ -179,11 +180,7 @@ define( require => {
    */
   const demoLabeledScrollingChartNode = function( layoutBounds ) {
     const timeProperty = new Property( 0 );
-    const series1 = {
-      color: 'blue',
-      data: [],
-      emitter: emitter
-    };
+    const series1 = new DynamicSeries( { color: 'blue' } );
     const maxTime = 4;
     const listener = dt => {
 
@@ -197,6 +194,7 @@ define( require => {
       while ( series1.data[ 0 ].x < timeProperty.value - maxTime ) {
         series1.data.shift();
       }
+      series1.emitter.emit();
     };
     emitter.addListener( listener );
     const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], {

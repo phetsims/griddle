@@ -10,25 +10,32 @@ define( require => {
   'use strict';
 
   // modules
+  const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
 
   class DynamicSeries {
 
     /**
-     * @param {Vector2[]} data - the data points in the series
-     * @param {Emitter} - sends notification when the data series changes
-     * @param {Color|string} - the color associated with this data series
+     * @param {Object} [options]
      */
-    constructor( data, emitter, color ) {
+    constructor( options ) {
 
-      // @public {Vector2[]}
-      this.data = data;
+      // @public {Vector2[]} - the data points in the series
+      this.data = [];
 
-      // @public {Emitter}
-      this.emitter = emitter;
+      // @public {Emitter} -  sends notification when the data series changes
+      this.emitter = new Emitter();
+
+      options = _.extend( {
+        color: 'black',
+        lineWidth: 1
+      }, options );
 
       // @public (read-only) {Color}
-      this.color = color;
+      this.color = options.color;
+
+      // @public (read-only) {number}
+      this.lineWidth = options.lineWidth;
     }
   }
 

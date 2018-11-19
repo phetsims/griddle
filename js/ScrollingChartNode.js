@@ -162,7 +162,7 @@ define( require => {
         };
         dynamicSeries.emitter.addListener( dynamicSeriesListener );
         this.scrollingChartNodeDisposeEmitter.addListener( () => {
-          dynamicSeries.emitter.removeListener( dynamicSeriesListener )
+          dynamicSeries.emitter.removeListener( dynamicSeriesListener );
         } );
       };
 

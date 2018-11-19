@@ -30,7 +30,7 @@ define( require => {
   class ScrollingChartNode extends Node {
 
     /**
-     * @param {NumberProperty} timeProperty - indicates the passage of time in the model, in the same units as the model.
+     * @param {NumberProperty} timeProperty - indicates the passage of time in the model in the same units as the model.
      *                                      - This may be seconds or another unit depending on the model.
      * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted. The client is responsible for pruning data as
      *                                             - it leaves the visible window.
@@ -61,7 +61,9 @@ define( require => {
       // default options to be passed into the graphPanel Rectangle
       options.graphPanelOptions = _.extend( {
         fill: 'white',
-        stroke: 'black', // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
+
+        // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
+        stroke: 'black',
         right: width - options.rightMargin,
         top: options.topMargin,
         pickable: false
@@ -88,7 +90,9 @@ define( require => {
         // Prevent data from being plotted outside the graph
         clipArea: Shape.rect( 0, 0, width, height )
       }, options.graphPanelOptions );
-      const graphPanel = new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius, options.graphPanelOptions );
+      const graphPanel = new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius,
+        options.graphPanelOptions
+      );
 
       // Horizontal Lines
       for ( let i = 1; i <= numberHorizontalLines; i++ ) {
@@ -157,14 +161,18 @@ define( require => {
           dynamicSeriesPath.shape = dynamicSeriesPathShape;
         };
         dynamicSeries.emitter.addListener( dynamicSeriesListener );
-        this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeries.emitter.removeListener( dynamicSeriesListener ) );
+        this.scrollingChartNodeDisposeEmitter.addListener( () => {
+          dynamicSeries.emitter.removeListener( dynamicSeriesListener )
+        } );
       };
 
       dynamicSeriesArray.forEach( addDynamicSeries );
 
       // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
       // This is a faster alternative to clipping.
-      graphPanel.addChild( new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius, options.graphPanelOverlayOptions ) );
+      graphPanel.addChild( new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius,
+        options.graphPanelOverlayOptions )
+      );
 
       this.mutate( options );
     }

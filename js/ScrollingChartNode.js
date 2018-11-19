@@ -148,13 +148,10 @@ define( require => {
             const dataPoint = dynamicSeries.data[ i ];
             const scaledValue = Util.linear( 0, 2, height / 2, 0, dataPoint.y );
 
-            // Clamp at max values
-            const clampedValue = Util.clamp( scaledValue, 0, height );
-
             const time = Util.linear( timeProperty.value, timeProperty.value - maxTime, plotWidth, 0, dataPoint.x );
-            dynamicSeriesPathShape.lineTo( time, clampedValue );
+            dynamicSeriesPathShape.lineTo( time, scaledValue );
             if ( i === dynamicSeries.data.length - 1 ) {
-              penNode.centerY = clampedValue;
+              penNode.centerY = scaledValue;
             }
           }
           dynamicSeriesPath.shape = dynamicSeriesPathShape;

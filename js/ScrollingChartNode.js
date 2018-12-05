@@ -184,6 +184,7 @@ define( require => {
     dispose() {
       this.scrollingChartNodeDisposeEmitter.emit();
       this.scrollingChartNodeDisposeEmitter.dispose();
+      super.dispose();
     }
   }
 

@@ -16,7 +16,6 @@ define( require => {
   'use strict';
 
   // modules
-  const Bounds2 = require( 'DOT/Bounds2' );
   const Circle = require( 'SCENERY/nodes/Circle' );
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
@@ -131,13 +130,14 @@ define( require => {
         } );
         const dynamicSeriesPath = new Path( new Shape(), {
           stroke: dynamicSeries.color,
-          lineWidth: dynamicSeries.lineWidth,
-
-          // prevent bounds computations during main loop
-          boundsMethod: 'none',
-          localBounds: Bounds2.NOTHING
+          lineWidth: dynamicSeries.lineWidth
         } );
-        dynamicSeriesPath.computeShapeBounds = () => Bounds2.NOTHING; // prevent bounds computations during main loop
+
+        // Record the bounds before adding children
+        const graphPanelBounds = graphPanel.bounds;
+
+        // prevent bounds computations during main loop
+        dynamicSeriesPath.computeShapeBounds = () => graphPanelBounds;
         graphPanel.addChild( dynamicSeriesPath );
         graphPanel.addChild( penNode );
 

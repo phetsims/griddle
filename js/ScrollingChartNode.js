@@ -113,6 +113,17 @@ define( require => {
 
       this.addChild( graphPanel );
 
+      // Ordinarily penNodes could be added directly to the graphPanel, which is already clipped.  However, that
+      // became broken when Firefox went from 63 to 64.  See https://github.com/phetsims/wave-interference/issues/238
+      // This workaround fixes repaint regions on firefox without introducing significant performance overhead.
+      // Once this is fixed in Firefox, we can revert this workaround.
+      const penArea = new Node( {
+        clipArea: Shape.rect( 0, 0, width, height ),
+        x: graphPanel.x,
+        y: graphPanel.y
+      } );
+      this.addChild( penArea );
+
       // @private - for disposal
       this.scrollingChartNodeDisposeEmitter = new Emitter();
 
@@ -139,7 +150,9 @@ define( require => {
         // prevent bounds computations during main loop
         dynamicSeriesPath.computeShapeBounds = () => graphPanelBounds;
         graphPanel.addChild( dynamicSeriesPath );
-        graphPanel.addChild( penNode );
+
+        // See notes regarding penArea
+        penArea.addChild( penNode );
 
         const dynamicSeriesListener = () => {
 

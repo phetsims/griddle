@@ -23,7 +23,6 @@ define( require => {
   const LabeledScrollingChartNode = require( 'GRIDDLE/LabeledScrollingChartNode' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Panel = require( 'SUN/Panel' );
-  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
   const sceneryPhetQueryParameters = require( 'SCENERY_PHET/sceneryPhetQueryParameters' );
@@ -52,8 +51,6 @@ define( require => {
         { label: 'BarChart', createNode: demoBarChart },
         { label: 'LabeledScrollingChartNode', createNode: demoLabeledScrollingChartNode }
       ], {
-        comboBoxItemFont: new PhetFont( 12 ),
-        comboBoxItemYMargin: 3,
         selectedDemoLabel: sceneryPhetQueryParameters.component
       } );
     }

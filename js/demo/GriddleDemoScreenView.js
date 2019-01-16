@@ -77,8 +77,7 @@ define( require => {
       fill: '#efecd9',
       xMargin: 10,
       yMargin: 10,
-      x: 100,
-      y: 100
+      center: layoutBounds.center
     } );
     const series = new XYDataSeries( { color: Color.BLUE } );
     plot.addSeries( series, false );
@@ -149,7 +148,7 @@ define( require => {
     const hBox = new HBox( {
       align: 'top',
       spacing: 60,
-      center: new Vector2( 512, 309 ),
+      center: layoutBounds.center,
       children: [
         new Node( {
           children: [ barChartNode ]

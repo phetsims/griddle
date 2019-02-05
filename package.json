@@ -12,6 +12,7 @@
   "phet": {
     "requirejsNamespace": "GRIDDLE",
     "runnable": true,
+    "generatedUnitTests": true,
     "supportedBrands": [
       "phet",
       "adapted-from-phet"

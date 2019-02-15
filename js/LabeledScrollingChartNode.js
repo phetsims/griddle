@@ -64,7 +64,7 @@ define( require => {
       } );
 
       // Create double-headed arrow with bars to show the time between gridlines
-      const createBar = centerX => new Line( 0, 0, 0, 6, { stroke: 'white', centerX } );
+      const createBar = centerX => new Line( 0, 0, 0, 6, { stroke: 'white', centerX: centerX } );
       const leftBar = createBar( 0 );
       const rightBar = createBar( scrollingChartNode.plotWidth / 4 );
       const arrowNode = new ArrowNode( leftBar.right + 1, leftBar.centerY, rightBar.left - 1, rightBar.centerY, {

@@ -49,8 +49,8 @@ define( function( require ) {
     xyDataSeries.cleared.addListener( clearListener );
 
     // reusable vectors for optimal performace
-    this.previousPoint = new Vector2();
-    this.currentPoint = new Vector2();
+    this.previousPoint = new Vector2( 0, 0 );
+    this.currentPoint = new Vector2( 0, 0 );
 
     /**
      * @private

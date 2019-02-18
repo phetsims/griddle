@@ -1,4 +1,4 @@
-// Copyright 2018, University of Colorado Boulder
+// Copyright 2018-2019, University of Colorado Boulder
 
 /**
  * Decorates a ScrollingChartNode with titles and labels.  This does not show a background, and would typically be added

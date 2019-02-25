@@ -37,6 +37,15 @@ define( require => {
       // @public (read-only) {number}
       this.lineWidth = options.lineWidth;
     }
+
+    /**
+     * Remove all data from the DynamicSeries
+     * @public
+     */
+    clear() {
+      this.data.length = 0;
+      this.emitter.emit();
+    }
   }
 
   return griddle.register( 'DynamicSeries', DynamicSeries );

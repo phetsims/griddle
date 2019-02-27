@@ -34,7 +34,7 @@ define( require => {
   const XYPlot = require( 'GRIDDLE/XYPlot' );
 
   // constants - this is a hack to enable components to animate from the animation loop
-  const emitter = new Emitter();
+  const emitter = new Emitter( { validationEnabled: false } );
 
   class GriddleDemoScreenView extends DemosScreenView {
     constructor() {
@@ -61,7 +61,7 @@ define( require => {
      * @public
      */
     step( dt ) {
-      emitter.emit1( dt );
+      emitter.emit( dt );
     }
   }
 

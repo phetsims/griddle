@@ -118,9 +118,13 @@ define( require => {
 
       /**
        * Creates and adds a dynamicSeries with the given color
-       * @param {Object} dynamicSeries - see constructor docs
+       * @param {DynamicSeries} dynamicSeries - see constructor docs
        */
       const addDynamicSeries = dynamicSeries => {
+
+        // So initial call will be moveTo
+        // TODO: now this has state, consider making a class
+        let lastPointNaN = true;
 
         // Create the "pens" which draw the data at the right side of the graph
         const penNode = new Circle( 4.5, {
@@ -150,12 +154,24 @@ define( require => {
           const dynamicSeriesPathShape = new Shape();
           for ( let i = 0; i < dynamicSeries.data.length; i++ ) {
             const dataPoint = dynamicSeries.data[ i ];
-            const scaledValue = Util.linear( 0, 2, height / 2, 0, dataPoint.y );
+            if ( isNaN( dataPoint.y ) ) {
+              lastPointNaN = true;
+            }
+            else {
+              const scaledValue = Util.linear( 0, 2, height / 2, 0, dataPoint.y );
 
-            const time = Util.linear( timeProperty.value, timeProperty.value - maxTime, plotWidth, 0, dataPoint.x );
-            dynamicSeriesPathShape.lineTo( time, scaledValue );
-            if ( i === dynamicSeries.data.length - 1 ) {
-              penNode.centerY = scaledValue;
+              const time = Util.linear( timeProperty.value, timeProperty.value - maxTime, plotWidth, 0, dataPoint.x );
+              if ( lastPointNaN ) {
+                dynamicSeriesPathShape.moveTo( time, scaledValue );
+              }
+              else {
+                dynamicSeriesPathShape.lineTo( time, scaledValue );
+              }
+
+              if ( i === dynamicSeries.data.length - 1 ) {
+                penNode.centerY = scaledValue;
+              }
+              lastPointNaN = false;
             }
           }
           dynamicSeriesPath.shape = dynamicSeriesPathShape;

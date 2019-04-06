@@ -20,7 +20,8 @@ define( require => {
      */
     constructor( options ) {
 
-      // @public {Vector2[]} - the data points in the series
+      // @public {Vector2[]} - the data points in the series.  A NaN "y" value indicates there is no sample at that
+      // point in time
       this.data = [];
 
       // @public {Emitter} -  sends notification when the data series changes

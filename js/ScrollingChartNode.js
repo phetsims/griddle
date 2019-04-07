@@ -16,15 +16,13 @@ define( require => {
   'use strict';
 
   // modules
-  const Circle = require( 'SCENERY/nodes/Circle' );
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
+  const DynamicSeriesNode = require( 'GRIDDLE/DynamicSeriesNode' );
   const Line = require( 'SCENERY/nodes/Line' );
   const Node = require( 'SCENERY/nodes/Node' );
-  const Path = require( 'SCENERY/nodes/Path' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Shape = require( 'KITE/Shape' );
-  const Util = require( 'DOT/Util' );
 
   class ScrollingChartNode extends Node {
 
@@ -121,65 +119,16 @@ define( require => {
        * @param {DynamicSeries} dynamicSeries - see constructor docs
        */
       const addDynamicSeries = dynamicSeries => {
-
-        // So initial call will be moveTo
-        // TODO: now this has state, consider making a class
-        let lastPointNaN = true;
-
-        // Create the "pens" which draw the data at the right side of the graph
-        const penNode = new Circle( 4.5, {
-          fill: dynamicSeries.color,
-          centerX: plotWidth,
-          centerY: height / 2
-        } );
-        const dynamicSeriesPath = new Path( new Shape(), {
-          stroke: dynamicSeries.color,
-          lineWidth: dynamicSeries.lineWidth
-        } );
-
-        // Record the bounds before adding children
-        const graphPanelBounds = graphPanel.bounds;
-
-        // prevent bounds computations during main loop
-        dynamicSeriesPath.computeShapeBounds = () => graphPanelBounds;
-        graphPanel.addChild( dynamicSeriesPath );
-        graphPanel.addChild( penNode );
-
-        const dynamicSeriesListener = () => {
-
-          // Set the range by incorporating the model's time units, so it will match with the timer.
-          const maxTime = numberVerticalLines;
-
-          // Draw the graph with line segments
-          const dynamicSeriesPathShape = new Shape();
-          for ( let i = 0; i < dynamicSeries.data.length; i++ ) {
-            const dataPoint = dynamicSeries.data[ i ];
-            if ( isNaN( dataPoint.y ) ) {
-              lastPointNaN = true;
-            }
-            else {
-              const scaledValue = Util.linear( 0, 2, height / 2, 0, dataPoint.y );
-
-              const time = Util.linear( timeProperty.value, timeProperty.value - maxTime, plotWidth, 0, dataPoint.x );
-              if ( lastPointNaN ) {
-                dynamicSeriesPathShape.moveTo( time, scaledValue );
-              }
-              else {
-                dynamicSeriesPathShape.lineTo( time, scaledValue );
-              }
-
-              if ( i === dynamicSeries.data.length - 1 ) {
-                penNode.centerY = scaledValue;
-              }
-              lastPointNaN = false;
-            }
-          }
-          dynamicSeriesPath.shape = dynamicSeriesPathShape;
-        };
-        dynamicSeries.emitter.addListener( dynamicSeriesListener );
-        this.scrollingChartNodeDisposeEmitter.addListener( () => {
-          dynamicSeries.emitter.removeListener( dynamicSeriesListener );
-        } );
+        const dynamicSeriesNode = new DynamicSeriesNode(
+          dynamicSeries,
+          plotWidth,
+          height,
+          graphPanel.bounds,
+          numberVerticalLines,
+          timeProperty
+        );
+        graphPanel.addChild( dynamicSeriesNode );
+        this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeriesNode.dispose() );
       };
 
       dynamicSeriesArray.forEach( addDynamicSeries );

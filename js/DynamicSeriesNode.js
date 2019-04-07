@@ -20,13 +20,12 @@ define( require => {
 
     /**
      * @param {DynamicSeries} dynamicSeries - the series of data to render
-     * @param {number} plotWidth - the horizontal size of the plot
-     * @param {number} height - height of the plot -- TODO: should name be similar to plotWidth?
-     * @param {Bounds2} bounds - bounds for rendering -- TODO: is this redundant with prior 2 parameters?
+     * @param {number} plotWidth - the horizontal size of the plot, up to the center of the pen
+     * @param {Bounds2} bounds - bounds for rendering, includes area to the right of the pens
      * @param {number} maxTime - Set the range by incorporating the model's time units, so it will match with the timer.
      * @param {Property.<number>} timeProperty
      */
-    constructor( dynamicSeries, plotWidth, height, bounds, maxTime, timeProperty ) {
+    constructor( dynamicSeries, plotWidth, bounds, maxTime, timeProperty ) {
 
       // For the initial point or when there has been NaN data, the next call should be moveTo() instead of lineTo()
       let moveToNextPoint = true;
@@ -35,7 +34,7 @@ define( require => {
       const penNode = new Circle( 4.5, {
         fill: dynamicSeries.color,
         centerX: plotWidth,
-        centerY: height / 2
+        centerY: bounds.height / 2
       } );
       const pathNode = new Path( new Shape(), {
         stroke: dynamicSeries.color,
@@ -59,7 +58,7 @@ define( require => {
             moveToNextPoint = true;
           }
           else {
-            const scaledValue = Util.linear( 0, 2, height / 2, 0, dataPoint.y );
+            const scaledValue = Util.linear( 0, 2, bounds.height / 2, 0, dataPoint.y );
 
             const time = Util.linear( timeProperty.value, timeProperty.value - maxTime, plotWidth, 0, dataPoint.x );
             if ( moveToNextPoint ) {

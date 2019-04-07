@@ -122,7 +122,6 @@ define( require => {
         const dynamicSeriesNode = new DynamicSeriesNode(
           dynamicSeries,
           plotWidth,
-          height,
           graphPanel.bounds,
           numberVerticalLines,
           timeProperty

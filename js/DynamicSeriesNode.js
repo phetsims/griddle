@@ -30,7 +30,7 @@ define( require => {
       // For the initial point or when there has been NaN data, the next call should be moveTo() instead of lineTo()
       let moveToNextPoint = true;
 
-      // Create the "pens" which draw the data at the right side of the graph
+      // Create the pen which draws the data at the right side of the graph
       const penNode = new Circle( 4.5, {
         fill: dynamicSeries.color,
         centerX: plotWidth,
@@ -56,6 +56,9 @@ define( require => {
           const dataPoint = dynamicSeries.data[ i ];
           if ( isNaN( dataPoint.y ) ) {
             moveToNextPoint = true;
+
+            // Center the pen when data is NaN
+            penNode.centerY = Util.linear( 0, 2, bounds.height / 2, 0, 0 );
           }
           else {
             const scaledValue = Util.linear( 0, 2, bounds.height / 2, 0, dataPoint.y );

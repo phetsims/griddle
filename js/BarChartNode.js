@@ -51,9 +51,6 @@ define( function( require ) {
       // {number} - Space in-between each bar
       barSpacing: 12,
 
-      // {Color}  Color of the background behind the labels
-      labelBackgroundColor: Color.TRANSPARENT,
-
       // provided to the x-axis Line
       xAxisOptions: {
         stroke: 'black',
@@ -68,7 +65,10 @@ define( function( require ) {
       },
 
       // {*|null} - options for the bar RichText labels, see extended options below
-      barLabelOptions: null
+      barLabelOptions: null,
+
+      // {Color}  Color of the background behind the labels
+      labelBackgroundColor: Color.TRANSPARENT
     }, options );
 
     // @private {Array.<Object>}

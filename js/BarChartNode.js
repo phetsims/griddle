@@ -65,7 +65,10 @@ define( function( require ) {
 
       barOptions: {
         // See BarNode's options.
-      }
+      },
+
+      // {*|null} - options for the bar RichText labels, see extended options below
+      barLabelOptions: null
     }, options );
 
     // @private {Array.<Object>}
@@ -75,6 +78,18 @@ define( function( require ) {
     options.barOptions = _.extend( {}, options.barOptions, {
       rotation: Math.PI
     } );
+
+    // passed along to the RichText
+    options.barLabelOptions = _.extend( {
+      font: new PhetFont( { size: 12, weight: 'bold' } ),
+
+      // chosen by inspection, good for short labels
+      maxWidth: 40
+    }, options.barLabelOptions );
+
+    assert && assert( options.barLabelOptions.fill === undefined, 'label fill set by entries, see constructor' );
+    assert && assert( options.barLabelOptions.rotation === undefined, 'label rotation set for BarChartNode orientation' );
+    options.barLabelOptions.rotation = -Math.PI / 2;
 
     // @private {Array.<BarNode>} Initializing barNodes.
     this.barNodes = bars.map( function( bar ) {
@@ -89,13 +104,10 @@ define( function( require ) {
     this.barLabelNodes = bars.map( function( bar ) {
       var barLabelVBox = new VBox( { spacing: 4 } );
       if ( bar.labelString ) {
-        var labelText = new RichText( bar.labelString, {
-          rotation: -Math.PI / 2,
-          font: new PhetFont( { size: 12, weight: 'bold' } ),
-          fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black',
-          maxWidth: 40 // TODO: Standardize
-        } );
-        // barLabelVBox.addChild( labelText );
+
+        var labelText = new RichText( bar.labelString, _.extend( {}, options.barLabelOptions, {
+          fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
+        } ) );
 
         // The valuePanel is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
         var valuePanel = new Panel( labelText, {

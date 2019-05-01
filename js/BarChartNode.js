@@ -83,13 +83,14 @@ define( function( require ) {
     options.barLabelOptions = _.extend( {
       font: new PhetFont( { size: 12, weight: 'bold' } ),
 
+      // good for vertical bars that are close to each other
+      rotation: -Math.PI / 2,
+
       // chosen by inspection, good for short labels
       maxWidth: 40
     }, options.barLabelOptions );
 
     assert && assert( options.barLabelOptions.fill === undefined, 'label fill set by entries, see constructor' );
-    assert && assert( options.barLabelOptions.rotation === undefined, 'label rotation set for BarChartNode orientation' );
-    options.barLabelOptions.rotation = -Math.PI / 2;
 
     // @private {Array.<BarNode>} Initializing barNodes.
     this.barNodes = bars.map( function( bar ) {

@@ -166,12 +166,16 @@ define( function( require ) {
       // Start with the first bar at the origin.
       var currentY = 0;
 
-      // When we have an "invalid bar" case (one negative with multiple values), we just use the first bar to display
-      // the range, and hide all of the other bars.
+      // Composite bars are represented by one bar with multiple entries stacked on top of each other.
+      // If a composite bar contains an entry with a negative value, only the first entry is used to display the effective
+      // range and the remaining entries are hidden. Also the color of the composite bar is updated.
       if ( hasNegative && this.barEntries.length > 1 ) {
-        currentY = effectiveRange.constrainValue( total );
 
+        // Use only the first entry to display the effective range
+        currentY = effectiveRange.constrainValue( total );
         var firstBar = this.bars[ 0 ];
+
+        // Change the color of the displayed bar.
         firstBar.fill = this.invalidBarColor;
         setBarYValues( firstBar, 0, currentY );
         firstBar.visible = true;
@@ -186,15 +190,18 @@ define( function( require ) {
           var barEntry = this.barEntries[ i ];
           var bar = this.bars[ i ];
           bar.fill = barEntry.color;
-
           var barValue = barEntry.property.value * scale;
 
           // The bar would be displayed between currentY and nextY
           var nextY = effectiveRange.constrainValue( currentY + barValue );
+
+          // Set the bar to the next stacked position
           if ( nextY !== currentY ) {
             setBarYValues( bar, currentY, nextY );
             bar.visible = true;
           }
+
+          // Quell bars that are extremely small.
           else {
             bar.visible = false;
           }

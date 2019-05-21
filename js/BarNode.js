@@ -188,7 +188,7 @@ define( function( require ) {
         // optionally further modify the bar height
         const barEntry = this.barEntries[ 0 ];
         if ( barEntry.modifyBarHeight ) {
-          barValue = barEntry.modifyBarHeight( barEntry.property.value, scale );
+          currentY = barEntry.modifyBarHeight( barEntry.property.value, scale );
         }
 
         // Use only the first entry to display the effective range

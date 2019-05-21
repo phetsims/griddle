@@ -29,7 +29,21 @@ define( function( require ) {
    * NOTE: update() should be called between when the bars change and a Display.updateDisplay(). This node does not
    * otherwise update its view.
    *
-   * @param {Array.<Object>} barEntries - Objects of the type { property: {Property.<number>}, color: {paint} }
+   * @param {Array.<Object>} barEntries - Objects of the type {
+   *                                        property: {Property.<number>},
+   *                                        color: {paint},
+   *
+   *                                        // Optional, modify the bar height in a custom way, called before the height
+   *                                        // is constrained to the totalRangeProperty so bar will still
+   *                                        // be within range
+   *                                        // @optional
+   *                                        // @param {number} value - value of this Bar Property
+   *                                        // @param {number} scale - value of the scale Property
+   *                                        // @returns {number}
+   *                                        modifyBarHeight: function( value, scale ) {
+   *                                          return value * height;
+   *                                        }
+   *                                      }
    * @param {Property.<Range>} totalRangeProperty - Range of visual values displayed (note negative values for min are
    *                           supported).
    * @param {Object} [options]
@@ -171,6 +185,12 @@ define( function( require ) {
       // range and the remaining entries are hidden. Also the color of the composite bar is updated.
       if ( hasNegative && this.barEntries.length > 1 ) {
 
+        // optionally further modify the bar height
+        const barEntry = this.barEntries[ 0 ];
+        if ( barEntry.modifyBarHeight ) {
+          barValue = barEntry.modifyBarHeight( barEntry.property.value, scale );
+        }
+
         // Use only the first entry to display the effective range
         currentY = effectiveRange.constrainValue( total );
         var firstBar = this.bars[ 0 ];
@@ -191,6 +211,11 @@ define( function( require ) {
           var bar = this.bars[ i ];
           bar.fill = barEntry.color;
           var barValue = barEntry.property.value * scale;
+
+          // optionally further modify the bar height
+          if ( barEntry.modifyBarHeight ) {
+            barValue = barEntry.modifyBarHeight( barEntry.property.value, scale );
+          }
 
           // The bar would be displayed between currentY and nextY
           var nextY = effectiveRange.constrainValue( currentY + barValue );

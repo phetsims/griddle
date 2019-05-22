@@ -25,6 +25,7 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var RichText = require( 'SCENERY/nodes/RichText' );
   var VBox = require( 'SCENERY/nodes/VBox' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   /**
    * @constructor
@@ -185,6 +186,31 @@ define( function( require ) {
       for ( var i = 0; i < this.barNodes.length; i++ ) {
         this.barNodes[ i ].update();
       }
+    },
+
+    /**
+     * Get the location of a label in the bar chart. Useful for layout for other components relative to
+     * labels. Returns a Vector2 in the local coordinate frame from bounds of the label Node. Position Vector2
+     * from bounds specified by location parameter, which can be one of the layout getters like "centerTop",
+     * "rightBottom", etc. See Node.js.
+     *
+     * @param {number} barIndex - index of the bar whose
+     * @param {string} location - A Node layout getter that returns Vector2 like centerBottom, leftTop, etc... 
+     *
+     * @returns {Vector2}
+     */
+    getBarLabelLocation( barIndex, location ) {
+      assert && assert( typeof barIndex === 'number' );
+      assert && assert( typeof location === 'string' );
+      assert && assert( barIndex > -1, 'No bar at barIndex' );
+      assert && assert( barIndex < this.barLabelNodes.length, 'No bar label at barIndex' );
+
+      // use index to get the label
+      const labelNode = this.barLabelNodes[ barIndex ];
+      const locationVector = labelNode[ location ];
+
+      assert && assert( locationVector instanceof Vector2, location + ' getter did not produce a location Vector2 from Node' );
+      return locationVector;
     }
   } );
 } );

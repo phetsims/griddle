@@ -194,7 +194,7 @@ define( function( require ) {
      * from bounds specified by location parameter, which can be one of the layout getters like "centerTop",
      * "rightBottom", etc. See Node.js.
      *
-     * @param {number} barIndex - index of the bar whose
+     * @param {number} barIndex - index of the bar whose label you want for the location information
      * @param {string} location - A Node layout getter that returns Vector2 like centerBottom, leftTop, etc... 
      *
      * @returns {Vector2}

@@ -124,7 +124,7 @@ define( function( require ) {
       }
       if ( i % options.stepY === 0 && options.showYAxisTickMarkLabels ) {
         content.addChild( new Text( i + this.minY, {
-          font: new PhetFont( 16 ),
+          font: options.tickLabelFont,
           centerY: yPosition + LINE_WIDTH / 2,
           right: -LABEL_OFFSET
         } ) );
@@ -134,13 +134,13 @@ define( function( require ) {
     // labels for the edges
     if ( options.showYAxisTickMarkLabels ) {
       content.addChild( new Text( 0 + this.minY, {
-        font: new PhetFont( 16 ),
+        font: options.tickLabelFont,
         centerY: LINE_WIDTH / 2,
         right: -LABEL_OFFSET
       } ) );
 
       content.addChild( new Text( i + this.minY, {
-        font: new PhetFont( 16 ),
+        font: options.tickLabelFont,
         centerY: -i * options.height / numHorizontalGridLines + LINE_WIDTH / 2,
         right: -LABEL_OFFSET
       } ) );

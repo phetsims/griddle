@@ -19,10 +19,11 @@ define( function( require ) {
    *
    * @param {XYDataSeries} xyDataSeries
    * @param {Bounds2} plotBounds
+   * @param {Range} yRange - in "model" coordinates for the plotted data
    * @param {Object} [options]
    * @constructor
    */
-  function XYDataSeriesNode( xyDataSeries, plotBounds, options ) {
+  function XYDataSeriesNode( xyDataSeries, plotBounds, yRange, options ) {
 
     var self = this;
     options = _.extend( {
@@ -34,6 +35,11 @@ define( function( require ) {
     this.bound = plotBounds;
     this.xScaleFactor = options.xScaleFactor;
     this.yScaleFactor = options.yScaleFactor;
+
+    // @private - Offset for drawing y data points since the plot may not be drawn
+    // with y=0 at the bottom. This is in "view" coordinates relative to the plotBounds
+    this.yPointOffset = plotBounds.height * ( -yRange.min ) / yRange.getLength();
+
     CanvasNode.call( this, options );
 
     self.setCanvasBounds( plotBounds );
@@ -93,7 +99,7 @@ define( function( require ) {
         for ( var i = 0; i < dataPointsLength; i++ ) {
 
           var xPos = xPoints[ i ] * this.xScaleFactor;
-          var yPos = yPoints[ i ] * this.yScaleFactor;
+          var yPos = yPoints[ i ] * this.yScaleFactor - this.yPointOffset;
 
           // only render points that are on the graph
           if ( this.bound.containsCoordinates( xPos, yPos ) ) {

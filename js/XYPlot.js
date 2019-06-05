@@ -16,6 +16,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var Range = require( 'DOT/Range' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Shape = require( 'KITE/Shape' );
   var Text = require( 'SCENERY/nodes/Text' );
@@ -180,7 +181,7 @@ define( function( require ) {
      * @param {boolean} scaleFactor
      */
     addSeries: function( series, scaleFactor ) {
-      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, this.rectangle.bounds, {
+      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
         xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
         yScaleFactor: scaleFactor ? -this.yScaleFactor : 1
       } );

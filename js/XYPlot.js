@@ -161,7 +161,8 @@ define( function( require ) {
     this.addChild( content );
 
     /**
-     * Map XYDataSeries -> XYDataSeriesNode
+     * Map XYDataSeries.uniqueId -> XYDataSeriesNode, for disposal and so that one can access an XYDataSeriesNode
+     * if necessary.
      * @public
      * @type {{}}
      */
@@ -181,11 +182,11 @@ define( function( require ) {
      * @param {boolean} scaleFactor
      */
     addSeries: function( series, scaleFactor ) {
-      this.seriesViewMap[ series ] = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
+      this.seriesViewMap[ series.uniqueId ] = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
         xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
         yScaleFactor: scaleFactor ? -this.yScaleFactor : 1
       } );
-      this.content.addChild( this.seriesViewMap[ series ] );
+      this.content.addChild( this.seriesViewMap[ series.uniqueId ] );
     },
 
     /**
@@ -193,10 +194,10 @@ define( function( require ) {
      * @param {XYDataSeries} series
      */
     removeSeries: function( series ) {
-      var view = this.seriesViewMap[ series ];
+      var view = this.seriesViewMap[ series.uniqueId ];
       this.content.removeChild( view );
       view.dispose();
-      delete this.seriesViewMap[ series ];
+      delete this.seriesViewMap[ series.uniqueId ];
     }
   } );
 } );

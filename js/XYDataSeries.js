@@ -26,9 +26,8 @@ define( function( require ) {
       initialSize: 1000
     }, options );
 
-    // @public (read-only) - each instance is given a uniqueId so that it can be mapped to an XYDataSeriesNode. When
-    // we can use native maps, this should no longer be necessary, see https://github.com/phetsims/griddle/issues/41
-    // and https://github.com/phetsims/tasks/issues/992
+    // @public (read-only) - each instance is given a uniqueId so that it can be mapped to an XYDataSeriesNode.
+    // TODO: When we can use native maps, this should no longer be necessary, see https://github.com/phetsims/tasks/issues/992
     this.uniqueId = instanceCount++;
 
     this.cleared = new Emitter(); // @public, event emitted when the series is cleared

@@ -1,10 +1,12 @@
 // Copyright 2014-2017, University of Colorado Boulder
 
 /**
- * XY Data Series
+ * XY Data series for a plot. When added to an XYPlot, adding points to the series will allow points to be drawn
+ * on the XYPlot.
  *
  * @author Sam Reid
  * @author Aadish Gupta
+ * @author Jesse Greenberg
  */
 define( function( require ) {
   'use strict';
@@ -22,6 +24,7 @@ define( function( require ) {
     options = _.extend( {
       color: 'black',
       lineWidth: 1,
+
       // size of array to initially allocate for the series, specify expected max in options for best performance
       initialSize: 1000
     }, options );
@@ -67,11 +70,73 @@ define( function( require ) {
       this.xPoints[ index ] = x;
       this.yPoints[ index ] = y;
 
+      this.notifyListeners( index );
+    },
+
+    // notify listeners - note that the previous data series values can be undefined in the notification
+    notifyListeners: function( index ) {
+      const lastIndex = this.dataSeriesLength;
+      const lastX = this.xPoints[ lastIndex - 1 ];
+      const lastY = this.yPoints[ lastIndex - 1 ];
+
+      const pointBeforeLastX = this.xPoints[ lastIndex - 2 ];
+      const pointBeforeLastY = this.yPoints[ lastIndex - 2 ];
+
       // notify listeners - note that the previous data series values can be undefined in the notification
       for ( var i = 0; i < this.listeners.length; i++ ) {
-        this.listeners[ i ]( x, y, this.xPoints[ index - 1 ], this.yPoints[ index - 1 ] );
+        this.listeners[ i ]( lastX, lastY, pointBeforeLastX, pointBeforeLastY );
       }
+    },
 
+    /**
+     * Remove the last point from both x and y data lists. xPoints and yPoints have preallocated sizes, so instead of
+     * splicing, we fill in the points at index with 0.
+     * @public
+     *
+     * @param {number} index
+     */
+    removePoint: function( index ) {
+
+      // previous slot
+      this.dataSeriesLength--;
+
+      // remove the point from the array, then splice to end of array to preserve array length for performance during
+      // addPoint
+      this.xPoints = this.xPoints.concat( this.xPoints.splice( index, 1 ) );
+      this.yPoints = this.yPoints.concat( this.yPoints.splice( index, 1 ) );
+
+      this.notifyListeners( this.dataSeriesLength );
+    },
+
+    /**
+     * Fast way to remove a number of points at once for the series. Listeners are only called once after all points
+     * between startIndex and endIndex are removed.
+     * @public
+     *
+     * @param {number} startIndex - index of first point to remove
+     * @param {number} endIndex - index of last point to remove
+     */
+    removePoints: function( startIndex, endIndex ) {
+      assert && assert( startIndex < this.xPoints.length, 'startIndex larger than xPoints length' );
+      assert && assert( startIndex < this.yPoints.length, 'startIndex larger than yPoints length' );
+      assert && assert( endIndex < this.xPoints.length, 'endIndex larger than xPoints length' );
+      assert && assert( endIndex < this.yPoints.length, 'endIndex larger than yPoints length' );
+      assert && assert( endIndex > startIndex, 'startIndex larger than end index' );
+
+      // just used for sanity checks
+      const lengthBeforeRemoval = this.xPoints.length;
+
+      this.xPoints = this.xPoints.concat( this.xPoints.splice( startIndex, endIndex ) );
+      this.yPoints = this.yPoints.concat( this.yPoints.splice( startIndex, endIndex ) );
+
+      const numberToRemove = endIndex - startIndex;
+      this.dataSeriesLength -= numberToRemove;
+
+      // sanity checks
+      assert && assert( this.xPoints.length === this.yPoints.length, 'x and y data should be of the same length' );
+      assert && assert( this.xPoints.length === lengthBeforeRemoval, 'data arrays should not change size during point removal' );
+
+      this.notifyListeners( this.dataSeriesLength );
     },
 
     clear: function() {

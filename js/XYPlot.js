@@ -152,11 +152,13 @@ define( function( require ) {
       content.addChild( new ArrowNode( 0, 0, options.width, 0, {} ) );
     }
 
-    content.addChild( new Path( plotShape, {
+    // @protected - for decoration and layout of sub classes
+    this.plotPath = new Path( plotShape, {
       stroke: STROKE_COLOR,
       lineWidth: LINE_WIDTH,
       lineDash: options.lineDash
-    } ) );
+    } );
+    content.addChild( this.plotPath );
 
     this.addChild( content );
 
@@ -167,6 +169,12 @@ define( function( require ) {
      * @type {{}}
      */
     this.seriesViewMap = {};
+
+    // @public - the list of XYDataSeries attached to this XYPlot.
+    // TODO: not necessary when we support Map because these can be the keys of this.seriesViewMap and retrieved that
+    // way, see https://github.com/phetsims/tasks/issues/992
+    this.dataSeriesList = [];
+
     this.content = content;
 
     this.mutate( options );
@@ -182,6 +190,8 @@ define( function( require ) {
      * @param {boolean} scaleFactor
      */
     addSeries: function( series, scaleFactor ) {
+      assert && assert( this.dataSeriesList.indexOf( series ) < 0, 'XYDataSeries already added to XYPlot' );
+      this.dataSeriesList.push( series );
       this.seriesViewMap[ series.uniqueId ] = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
         xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
         yScaleFactor: scaleFactor ? -this.yScaleFactor : 1
@@ -194,6 +204,10 @@ define( function( require ) {
      * @param {XYDataSeries} series
      */
     removeSeries: function( series ) {
+      const seriesIndex = this.dataSeriesList.indexOf( series );
+      assert && assert( seriesIndex >= 0, 'XYDataSeries not attached to XYPlot' );
+      this.dataSeriesList.splice( seriesIndex, 1 );
+
       var view = this.seriesViewMap[ series.uniqueId ];
       this.content.removeChild( view );
       view.dispose();

@@ -1,8 +1,7 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- * An XYPlot that is intended to plot data against time. A draggable cursor is included that allows the user to scrub
- * or playback in time.
+ * An XYPlot that includes as draggable cursor is included that allows the user to scrub or play back through the data.
  * 
  * @author Jesse Greenberg
  */
@@ -24,7 +23,7 @@ define( require => {
   const CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
   const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 
-  class XYTimePlot extends XYPlot {
+  class XYCursorPlot extends XYPlot {
 
     constructor( options ) {
 
@@ -39,17 +38,17 @@ define( require => {
 
       super( options );
 
-      // {number} - time for the cursor in seconds, impacts positioning
-      this.cursorTime = 0;
+      // {number} - value for the cursor, determines cursor positioning
+      this.cursorValue = 0;
 
-      // @private - minimum and maximum recorded time, required by the cursor to limit dragging
-      this.minRecordedTime = 0;
-      this.maxRecordedTime = 0;
+      // @private - minimum and maximum recorded value, required by the cursor to limit dragging
+      this.minRecordedValue = 0;
+      this.maxRecordedValue = 0;
 
-      // maps XYDataSeries.uniqueId to a listener required by XYTimePlot so that it can be removed if the series
+      // maps XYDataSeries.uniqueId to a listener required by XYCursorPlot so that it can be removed if the series
       // is removed.
       // TODO: This can be replaced by an actual Map when we can use them
-      this.timeSeriesListenerMap = {};
+      this.valueSeriesListenerMap = {};
 
       // @private
       this.chartCursor = new ChartCursor( this, this.plotPath.width * WIDTH_PROPORTION, this.plotPath.height, options.cursorOptions );
@@ -66,50 +65,50 @@ define( require => {
     addSeries( series, scaleFactor ) {
       super.addSeries( series, scaleFactor );
 
-      // find the min and max recorded times for limiting the cursor
+      // find the min and max recorded values for limiting the cursor
       // TODO: more efficient approach? Perhaps just do this on drag instead of on addition of data point?
       const seriesListener = ( x, y, previousX, previousY ) => {
-        let minRecordedTime = Number.POSITIVE_INFINITY;
-        let maxRecordedTime = Number.NEGATIVE_INFINITY;
+        let minRecordedValue = Number.POSITIVE_INFINITY;
+        let maxRecordedValue = Number.NEGATIVE_INFINITY;
         for ( let i = 0; i < series.dataSeriesLength; i++ ) {
           const seriesX = series.getX( i );
-          if ( seriesX > maxRecordedTime ) {
-            maxRecordedTime = seriesX;
+          if ( seriesX > maxRecordedValue ) {
+            maxRecordedValue = seriesX;
           }
-          if ( seriesX < minRecordedTime ) {
-            minRecordedTime = seriesX;
+          if ( seriesX < minRecordedValue ) {
+            minRecordedValue = seriesX;
           }
         }
 
-        this.maxRecordedTime = maxRecordedTime;
-        this.minRecordedTime = minRecordedTime;
+        this.maxRecordedValue = maxRecordedValue;
+        this.minRecordedValue = minRecordedValue;
       };
 
       // save to map so that listener can be found again for disposal
-      this.timeSeriesListenerMap[ series.uniqueId ] = seriesListener;
+      this.valueSeriesListenerMap[ series.uniqueId ] = seriesListener;
       series.addDataSeriesListener( seriesListener );
     }
 
     /**
-     * Remove a series from the plot and dispose of the time plot specific series listener.
+     * Remove a series from the plot and dispose of the plot specific series listener.
      * @public
      *
      * @param {XYDataSeries} series - to remove
      */
     removeSeries( series ) {
-      series.removeDataSeriesListener( this.timeSeriesListenerMap[ series.uniqueId ] );
-      delete this.timeSeriesListenerMap[ series.uniqueId ];
+      series.removeDataSeriesListener( this.valueSeriesListenerMap[ series.uniqueId ] );
+      delete this.valueSeriesListenerMap[ series.uniqueId ];
 
       super.removeSeries( series );
     }
 
-    setCursorTime( time ) {
-      this.cursorTime = time;
+    setCursorValue( value ) {
+      this.cursorValue = value;
       this.updateChartCursor();
     }
 
-    getCursorTime() {
-      return this.cursorTime;
+    getCursorValue() {
+      return this.cursorValue;
     }
 
     // @private - update the position of the chart cursor
@@ -121,9 +120,9 @@ define( require => {
     }
 
     updateChartCursorPos() {
-      const recordingStartTime = this.getMinRecordedTime();
-      const recordingCurrentTime = this.cursorTime;
-      this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) );
+      const recordingStartValue = this.getMinRecordedValue();
+      const recordingCurrentValue = this.cursorValue;
+      this.moveChartCursorToValue( ( recordingCurrentValue - recordingStartValue ) );
     }
 
     updateChartCursorVisibility() {
@@ -131,38 +130,35 @@ define( require => {
       // Deciding whether or not the chart cursor should be visible is a little tricky, so I've tried to make the logic
       // very explicit for easier maintenance.  Basically, any time we are in playback mode and we are somewhere on the
       // chart, or when stepping and recording, the cursor should be seen.
-      const timeOnChart = ( this.cursorTime - this.getMinRecordedTime() );
-      const isCurrentTimeOnChart = ( timeOnChart >= 0 ) && ( timeOnChart <= this.maxX );
+      const valueOnChart = ( this.cursorValue - this.getMinRecordedValue() );
+      const isCurrentValueOnChart = ( valueOnChart >= 0 ) && ( valueOnChart <= this.maxX );
       const dataExists = this.getDataExists();
-      const chartCursorVisible = isCurrentTimeOnChart && dataExists;
+      const chartCursorVisible = isCurrentValueOnChart && dataExists;
       this.chartCursor.setVisible( chartCursorVisible );
     }
 
-    positionToTime( position ) {
+    positionToValue( position ) {
       return position * ( this.maxX - this.minX ) / this.plotPath.width;
     }
 
-    timeToPosition( time ) {
-      return time * this.plotPath.width / ( this.maxX - this.minX );
+    valueToPosition( value ) {
+      return value * this.plotPath.width / ( this.maxX - this.minX );
     }
 
-    moveChartCursorToTime( time ) {
+    moveChartCursorToValue( value ) {
 
       // origin of cursor is at center top
-      const xPosition = time * this.plotPath.width / ( this.maxX - this.minX );
+      const xPosition = value * this.plotPath.width / ( this.maxX - this.minX );
       this.chartCursor.x = Util.clamp( xPosition, 0, this.plotPath.width );
       this.chartCursor.y = this.plotPath.top;
     }
 
-    // TODO: In neuron, it was important to return 0 or the minimum recorded time if any data exists...how to do that
-    // here? This is called frequently, so it must be efficient.
-    // in seconds
-    getMinRecordedTime() {
-      return this.dataSeriesList.length === 0 ? 0 : this.minRecordedTime;
+    getMinRecordedValue() {
+      return this.dataSeriesList.length === 0 ? 0 : this.minRecordedValue;
     }
 
-    getMaxRecordedTime() {
-      return this.dataSeriesList.length === 0 ? 0 : this.maxRecordedTime;
+    getMaxRecordedValue() {
+      return this.dataSeriesList.length === 0 ? 0 : this.maxRecordedValue;
     }
 
     // TODO: Again,  need to inspect the series attached to this plot to determine if any data exists
@@ -218,14 +214,13 @@ define( require => {
         },
         drag: ( event, listener ) => {
           const parentX = listener.parentPoint.x;
-          let newTime = this.plot.positionToTime( parentX );
+          let newValue = this.plot.positionToValue( parentX );
 
           // limit cursor to 
-          newTime = Util.clamp( newTime, plot.getMinRecordedTime(), plot.getMaxRecordedTime() );
-
-          this.plot.setCursorTime( newTime );
+          newValue = Util.clamp( newValue, plot.getMinRecordedValue(), plot.getMaxRecordedValue() );
+          this.plot.setCursorValue( newValue );
         },
-        end: ( event, liistener ) => {
+        end: ( event, listener ) => {
           options.endDrag();
         },
         tandem: options.tandem.createTandem( 'dragListener' )
@@ -262,5 +257,5 @@ define( require => {
     }
   }
 
-  return griddle.register( 'XYTimePlot', XYTimePlot );
+  return griddle.register( 'XYCursorPlot', XYCursorPlot );
 } );

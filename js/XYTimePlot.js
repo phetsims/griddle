@@ -15,6 +15,7 @@ define( require => {
   const DragListener = require( 'SCENERY/listeners/DragListener' );
   const griddle = require( 'GRIDDLE/griddle' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  const Tandem = require( 'TANDEM/Tandem' );
   const Util = require( 'DOT/Util' );
   const XYPlot = require( 'GRIDDLE/XYPlot' );
 
@@ -30,7 +31,10 @@ define( require => {
       options = _.extend( {
 
         // options passed on to the chart cursor, see ChartCursor
-        cursorOptions: null
+        cursorOptions: null,
+
+        // phet-io
+        tandem: Tandem.optional
       }, options );
 
       super( options );
@@ -174,7 +178,10 @@ define( require => {
 
       options = _.extend( {
         startDrag: () => {},
-        endDrag: () => {}
+        endDrag: () => {},
+
+        // phet-io
+        tandem: Tandem.optional
       }, options );
 
       // Set the shape. Origin is at the center top of the rectangle.
@@ -220,7 +227,8 @@ define( require => {
         },
         end: ( event, liistener ) => {
           options.endDrag();
-        }
+        },
+        tandem: options.tandem.createTandem( 'dragListener' )
       } );
       this.addInputListener( dragListener );
     }

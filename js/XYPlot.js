@@ -19,6 +19,7 @@ define( function( require ) {
   var Range = require( 'DOT/Range' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Shape = require( 'KITE/Shape' );
+  var Tandem = require( 'TANDEM/Tandem' );
   var Text = require( 'SCENERY/nodes/Text' );
   var XYDataSeriesNode = require( 'GRIDDLE/XYDataSeriesNode' );
 
@@ -48,7 +49,10 @@ define( function( require ) {
       showYAxisTickMarkLabels: true,
       tickLabelFont: new PhetFont( 16 ),
       lineDash: [],
-      showAxis: true
+      showAxis: true,
+
+      // phet-io
+      tandem: Tandem.optional
     }, options );
 
     Node.call( this );

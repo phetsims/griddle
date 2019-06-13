@@ -119,17 +119,17 @@ define( function( require ) {
     removePoints: function( startIndex, endIndex ) {
       assert && assert( startIndex < this.xPoints.length, 'startIndex larger than xPoints length' );
       assert && assert( startIndex < this.yPoints.length, 'startIndex larger than yPoints length' );
-      assert && assert( endIndex < this.xPoints.length, 'endIndex larger than xPoints length' );
-      assert && assert( endIndex < this.yPoints.length, 'endIndex larger than yPoints length' );
+      assert && assert( endIndex <= this.xPoints.length, 'endIndex larger than xPoints length' );
+      assert && assert( endIndex <= this.yPoints.length, 'endIndex larger than yPoints length' );
       assert && assert( endIndex > startIndex, 'startIndex larger than end index' );
 
       // just used for sanity checks
       const lengthBeforeRemoval = this.xPoints.length;
 
-      this.xPoints = this.xPoints.concat( this.xPoints.splice( startIndex, endIndex ) );
-      this.yPoints = this.yPoints.concat( this.yPoints.splice( startIndex, endIndex ) );
-
       const numberToRemove = endIndex - startIndex;
+      this.xPoints = this.xPoints.concat( this.xPoints.splice( startIndex, numberToRemove ) );
+      this.yPoints = this.yPoints.concat( this.yPoints.splice( startIndex, numberToRemove ) );
+
       this.dataSeriesLength -= numberToRemove;
 
       // sanity checks

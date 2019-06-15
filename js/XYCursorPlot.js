@@ -1,7 +1,7 @@
 // Copyright 2019, University of Colorado Boulder
 
 /**
- * An XYPlot that includes as draggable cursor is included that allows the user to scrub or play back through the data.
+ * An XYPlot that includes a draggable cursor that allows the user to scrub or play back through the data.
  * 
  * @author Jesse Greenberg
  */
@@ -51,7 +51,7 @@ define( require => {
       this.valueSeriesListenerMap = {};
 
       // @private
-      this.chartCursor = new ChartCursor( this, this.plotPath.width * WIDTH_PROPORTION, this.plotPath.height, options.cursorOptions );
+      this.chartCursor = new ChartCursor( this, options.cursorOptions );
       this.addChild( this.chartCursor );
 
       // initialize position and visibility of the cursor
@@ -59,6 +59,8 @@ define( require => {
     }
 
     /**
+     * Add a series to the plot, first adding a listener that keeps track of minimum and maximum data values.
+     * 
      * @param {XYDataSeries} series
      * @param {number} scaleFactor
      */
@@ -102,16 +104,31 @@ define( require => {
       super.removeSeries( series );
     }
 
+    /**
+     * Set the cursor value.
+     * @public
+     *
+     * @param {number} value
+     */
     setCursorValue( value ) {
       this.cursorValue = value;
       this.updateChartCursor();
     }
 
+    /**
+     * Get the value currently under the cursor.
+     * @public
+     * 
+     * @returns {number}
+     */
     getCursorValue() {
       return this.cursorValue;
     }
 
-    // @private - update the position of the chart cursor
+    /**
+     * Update the chart cursor visibility and position.
+     * @private
+     */
     updateChartCursor() {
       this.updateChartCursorVisibility();
       if ( this.chartCursor.isVisible() ) {
@@ -119,17 +136,23 @@ define( require => {
       }
     }
 
+    /**
+     * Update the chart cursor position.
+     * @private
+     */
     updateChartCursorPos() {
       const recordingStartValue = this.getMinRecordedValue();
       const recordingCurrentValue = this.cursorValue;
       this.moveChartCursorToValue( ( recordingCurrentValue - recordingStartValue ) );
     }
 
+    /**
+     * Update the chart cursor visibility. The chart cursor should be visible any time the cursor value is within
+     * the recorded value range.
+     * 
+     * @private
+     */
     updateChartCursorVisibility() {
-
-      // Deciding whether or not the chart cursor should be visible is a little tricky, so I've tried to make the logic
-      // very explicit for easier maintenance.  Basically, any time we are in playback mode and we are somewhere on the
-      // chart, or when stepping and recording, the cursor should be seen.
       const valueOnChart = ( this.cursorValue - this.getMinRecordedValue() );
       const isCurrentValueOnChart = ( valueOnChart >= 0 ) && ( valueOnChart <= this.maxX );
       const dataExists = this.getDataExists();
@@ -137,14 +160,34 @@ define( require => {
       this.chartCursor.setVisible( chartCursorVisible );
     }
 
+    /**
+     * Get the chart value for the given position in view coordinates, relative tot the parent coordinate frame.
+     * @private
+     * 
+     * @param {number} position
+     * @returns {number}
+     */
     positionToValue( position ) {
       return position * ( this.maxX - this.minX ) / this.plotPath.width;
     }
 
+    /**
+     * Get the position on the chart from the provided value.
+     * @private
+     *
+     * @param {number} value
+     * @returns {number}
+     */
     valueToPosition( value ) {
       return value * this.plotPath.width / ( this.maxX - this.minX );
     }
 
+    /**
+     * Move the chart cursor to the specified value.
+     * @private
+     *
+     * @param {number} value
+     */
     moveChartCursorToValue( value ) {
 
       // origin of cursor is at center top
@@ -153,24 +196,47 @@ define( require => {
       this.chartCursor.y = this.plotPath.top;
     }
 
+    /**
+     * Get the minimum data value in the data series lists. Returns zero if no data has been added yet. This value
+     * is updated whenever data is added to the list.
+     *
+     * @returns {number}
+     */
     getMinRecordedValue() {
       return this.dataSeriesList.length === 0 ? 0 : this.minRecordedValue;
     }
 
+    /**
+     * Get the maximum data value in the data series lists. Returns zero if no data has been added yet.  This value
+     * is updated whenever data is added to the data series list.
+     *
+     * @returns {number} 
+     */
     getMaxRecordedValue() {
       return this.dataSeriesList.length === 0 ? 0 : this.maxRecordedValue;
     }
 
-    // TODO: Again,  need to inspect the series attached to this plot to determine if any data exists
+    /**
+     * Returns true if any data is attached to this plot.
+     * @private
+     *
+     * @returns {boolean}
+     */
     getDataExists() {
-      return true;
-      // this.dataSeries.getLength() > 0
+      return this.dataSeriesList.length > 0;
     }
-
   }
 
+  /**
+   * Rectangular cursor that indicates a current or selected value on the chart.
+   */
   class ChartCursor extends Rectangle {
-    constructor( plot, width, height, options ) {
+
+    /**
+     * @param {XYPlot} plot
+     * @param {number} options
+     */
+    constructor( plot, options ) {
 
       options = _.extend( {
         startDrag: () => {},
@@ -180,8 +246,10 @@ define( require => {
         tandem: Tandem.optional
       }, options );
 
-      // Set the shape. Origin is at the center top of the rectangle.
+      const width = plot.plotPath.width * WIDTH_PROPORTION;
+      const height = plot.plotPath.height;
 
+      // Set the shape. Origin is at the center top of the rectangle.
       super( -width / 2, 0, width, height, 0, 0, {
         cursor: 'e-resize',
         fill: CURSOR_FILL_COLOR,
@@ -235,6 +303,12 @@ define( require => {
    * grab.  This is meant to look somewhat 3D, much like etched borders do.
    */
   class GrippyIndentNode extends Circle {
+
+    /**
+     * @param {number} diameter
+     * @param {Color} baseColor
+     * @param {object} options
+     */
     constructor( diameter, baseColor, options ) {
 
       options =  _.extend( {

@@ -13,6 +13,7 @@ define( require => {
   const Color = require( 'SCENERY/util/Color' );
   const DragListener = require( 'SCENERY/listeners/DragListener' );
   const griddle = require( 'GRIDDLE/griddle' );
+  const Node = require( 'SCENERY/nodes/Node' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Tandem = require( 'TANDEM/Tandem' );
   const Util = require( 'DOT/Util' );
@@ -190,10 +191,10 @@ define( require => {
      */
     moveChartCursorToValue( value ) {
 
-      // origin of cursor is at center top
+      // origin of cursor is at the center
       const xPosition = value * this.plotPath.width / ( this.maxX - this.minX );
-      this.chartCursor.x = Util.clamp( xPosition, 0, this.plotPath.width );
-      this.chartCursor.y = this.plotPath.top;
+      this.chartCursor.centerX = Util.clamp( xPosition, 0, this.plotPath.width );
+      this.chartCursor.centerY = this.plotPath.centerY;
     }
 
     /**
@@ -250,7 +251,7 @@ define( require => {
       const height = plot.plotPath.height;
 
       // Set the shape. Origin is at the center top of the rectangle.
-      super( -width / 2, 0, width, height, 0, 0, {
+      super( 0, -height, width, height, 0, 0, {
         cursor: 'e-resize',
         fill: CURSOR_FILL_COLOR,
         stroke: CURSOR_STROKE_COLOR,
@@ -265,16 +266,15 @@ define( require => {
       this.touchArea = this.localBounds.dilatedX( 12 );
 
       // Add the indentations that are intended to convey the idea of "gripability".
-      const indentSpacing = 0.05 * height;
-      const grippyIndent1 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
-      grippyIndent1.translate( 0, height / 2 - indentSpacing );
-      this.addChild( grippyIndent1 );
-      const grippyIndent2 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
-      grippyIndent2.translate( 0, height / 2 );
-      this.addChild( grippyIndent2 );
-      const grippyIndent3 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
-      grippyIndent3.translate( 0, height / 2 + indentSpacing );
-      this.addChild( grippyIndent3 );
+      const grippyNode = new Node();
+      const indentSpacing = height * 0.05;
+      for ( let i = 0; i < 3; i++ ) {
+        const indentNode = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
+        indentNode.top = i * ( indentNode.height + indentSpacing );
+        grippyNode.addChild( indentNode );
+      }
+      grippyNode.center = this.center;
+      this.addChild( grippyNode );
 
       const dragListener = new DragListener( {
         start: ( event, listener ) => {

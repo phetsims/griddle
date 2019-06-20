@@ -242,6 +242,7 @@ define( require => {
       options = _.extend( {
         startDrag: () => {},
         endDrag: () => {},
+        drag: () => {},
 
         // phet-io
         tandem: Tandem.optional
@@ -284,9 +285,11 @@ define( require => {
           const parentX = listener.parentPoint.x;
           let newValue = this.plot.positionToValue( parentX );
 
-          // limit cursor to 
+          // limit cursor to the domain of recorded values
           newValue = Util.clamp( newValue, plot.getMinRecordedValue(), plot.getMaxRecordedValue() );
           this.plot.setCursorValue( newValue );
+
+          options.drag();
         },
         end: ( event, listener ) => {
           options.endDrag();

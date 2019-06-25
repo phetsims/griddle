@@ -64,105 +64,45 @@ define( function( require ) {
     } );
     content.addChild( this.rectangle );
 
-    var plotShape = new Shape();
+    // all labels will be attached to this node
+    this.labelsNode = new Node();
+    this.addChild( this.labelsNode );
 
-    //vertical grid lines
-    // if minX and maxX is not a multiple of step function convert them to multiples
+    // @public (read-only) {number} - range and domain for the graph and step sizes to define where grid lines will be drawn
     this.minX = options.minX;
-    if ( this.minX % options.stepX !== 0 ) {
-      this.minX = Math.floor( this.minX / options.stepX ) * options.stepX;
-    }
     this.maxX = options.maxX;
-    if ( this.maxX % options.stepX !== 0 ) {
-      this.maxX = Math.ceil( this.maxX / options.stepX ) * options.stepX;
-    }
-    var numVerticalGridLines = this.maxX - this.minX;
-    this.xScaleFactor = options.width / numVerticalGridLines;
-    for ( var i = 1; i < numVerticalGridLines; i++ ) {
-      var xPosition = i * options.width / numVerticalGridLines;
-      if ( i % options.stepX === 0 || options.showVerticalIntermediateLines ) {
-        plotShape.moveTo( xPosition, 0 );
-        plotShape.lineTo( xPosition, -options.height );
-      }
-
-      if ( i % options.stepX === 0 && options.showXAxisTickMarkLabels ) {
-        content.addChild( new Text( i + this.minX, {
-          font: options.tickLabelFont,
-          centerX: xPosition - LINE_WIDTH / 2,
-          top: LABEL_OFFSET
-        } ) );
-      }
-    }
-
-    // labels for the edges
-    if ( options.showXAxisTickMarkLabels ) {
-      content.addChild( new Text( 0 + this.minX, {
-        font: options.tickLabelFont,
-        centerX: -LINE_WIDTH / 2,
-        top: LABEL_OFFSET
-      } ) );
-
-      content.addChild( new Text( i + this.minX, {
-        font: options.tickLabelFont,
-        centerX: i * options.width / numVerticalGridLines - LINE_WIDTH / 2,
-        top: LABEL_OFFSET
-      } ) );
-    }
-
-    // horizontal grid lines
-    // if minY and maxY is not a multiple of step function convert them to multiples
     this.minY = options.minY;
-    if ( this.minY % options.stepY !== 0 ) {
-      this.minY = Math.floor( this.minY / options.stepY ) * options.stepY;
-    }
     this.maxY = options.maxY;
-    if ( this.maxY % options.stepY !== 0 ) {
-      this.maxY = Math.ceil( this.maxY / options.stepY ) * options.stepY;
-    }
-    var numHorizontalGridLines = this.maxY - this.minY;
-    this.yScaleFactor = options.height / numHorizontalGridLines;
-    for ( i = 1; i < numHorizontalGridLines; i++ ) {
-      var yPosition = -i * options.height / numHorizontalGridLines;
-      if ( i % options.stepY === 0 || options.showHorizontalIntermediateLines ) {
-        plotShape.moveTo( 0, yPosition );
-        plotShape.lineTo( options.width, -i * options.height / numHorizontalGridLines );
-      }
-      if ( i % options.stepY === 0 && options.showYAxisTickMarkLabels ) {
-        content.addChild( new Text( i + this.minY, {
-          font: options.tickLabelFont,
-          centerY: yPosition + LINE_WIDTH / 2,
-          right: -LABEL_OFFSET
-        } ) );
-      }
-    }
+    this.stepY = options.stepY;
+    this.stepX = options.stepX;
 
-    // labels for the edges
-    if ( options.showYAxisTickMarkLabels ) {
-      content.addChild( new Text( 0 + this.minY, {
-        font: options.tickLabelFont,
-        centerY: LINE_WIDTH / 2,
-        right: -LABEL_OFFSET
-      } ) );
+    // @private {number} - dimensions for the plot and grid, excluding labels
+    this.plotWidth = options.width;
+    this.plotHeight = options.height;
 
-      content.addChild( new Text( i + this.minY, {
-        font: options.tickLabelFont,
-        centerY: -i * options.height / numHorizontalGridLines + LINE_WIDTH / 2,
-        right: -LABEL_OFFSET
-      } ) );
-    }
+    // @private - font for the tick labels for grid lines
+    this.tickLabelFont = options.tickLabelFont;
 
-    if ( options.showAxis ) {
-      content.addChild( new ArrowNode( 0, 0, 0, -options.height, {} ) );
-      content.addChild( new ArrowNode( 0, 0, options.width, 0, {} ) );
-    }
+    // @private {boolean} - whether lines and tick marks should be shown
+    this.showHorizontalIntermediateLines = options.showHorizontalIntermediateLines;
+    this.showVerticalIntermediateLines = options.showVerticalIntermediateLines;
+    this.showXAxisTickMarkLabels = options.showXAxisTickMarkLabels;
+    this.showYAxisTickMarkLabels = options.showYAxisTickMarkLabels;
 
     // @protected - for decoration and layout of sub classes
-    this.plotPath = new Path( plotShape, {
+    this.plotPath = new Path( null, {
       stroke: STROKE_COLOR,
       lineWidth: LINE_WIDTH,
       lineDash: options.lineDash
     } );
     content.addChild( this.plotPath );
+
+    this.redrawGrid();
+
+    if ( options.showAxis ) {
+      content.addChild( new ArrowNode( 0, 0, 0, -options.height, {} ) );
+      content.addChild( new ArrowNode( 0, 0, options.width, 0, {} ) );
+    }
 
     this.addChild( content );
 
@@ -216,6 +156,162 @@ define( function( require ) {
       this.content.removeChild( view );
       view.dispose();
       delete this.seriesViewMap[ series.uniqueId ];
+    },
+
+    /**
+     * Set the minimum X for graph and redraw the plot grid.
+     *
+     * @param {number} minX
+     */
+    setMinX( minX ) {
+      this.minX = minX;
+      this.redrawGrid();
+    },
+
+    /**
+     * Set the maximum X for the graph and redraw the plot grid.
+     *
+     * @param {number} maxX
+     */
+    setMaxX( maxX ) {
+      this.maxX = maxX;
+      this.redrawGrid();
+    },
+
+    /**
+     * Set the minimum Y for the graph and redraw the plot grid.
+     *
+     * @param {} minY
+     */
+    setMinY( minY ) {
+      this.minY = minY;
+      this.redrawGrid();
+    },
+
+    /**
+     * Set the maximum Y for the graph and redraw the plot grid.
+     *
+     * @param {} maxY
+     */
+    setMaxY( maxY ) {
+      this.maxY = maxY;
+      this.redrawGrid();
+    },
+
+    /**
+     * Set the x step for the grid lines and labels and redraw the grid and labels.
+     *
+     * @param {number} stepX
+     */
+    setStepX( stepX ) {
+      this.stepX = stepX;
+      this.redrawGrid();
+    },
+
+    /**
+     * Set the stepY for the graph and labels and redraw the grid and labels.
+     *
+     * @param {number} stepY
+     */
+    setStepY( stepY ) {
+      this.stepY = stepY;
+      this.redrawGrid();
+    },
+
+    /**
+     * Redraw the grid and all labels. Removes all label text and then adds it back as new text. Also creates
+     * a new shape for the grid path depending on minimum, maximum, and step values for the x and y dimensions.
+     * So this is an expensive function.
+     */
+    redrawGrid() {
+      this.labelsNode.removeAllChildren();
+      const newPlotShape = new Shape();
+
+      //vertical grid lines
+      // if minX and maxX is not a multiple of step function convert them to multiples
+      if ( this.minX % this.stepX !== 0 ) {
+        this.minX = Math.floor( this.minX / this.stepX ) * this.stepX;
+      }
+      if ( this.maxX % this.stepX !== 0 ) {
+        this.maxX = Math.ceil( this.maxX / this.stepX ) * this.stepX;
+      }
+      var numVerticalGridLines = this.maxX - this.minX;
+      this.xScaleFactor = this.plotWidth / numVerticalGridLines;
+
+      let i = 1;
+      for ( i = 1; i < numVerticalGridLines; i++ ) {
+        var xPosition = i * this.plotWidth / numVerticalGridLines;
+        if ( i % this.stepX === 0 || this.showVerticalIntermediateLines ) {
+          newPlotShape.moveTo( xPosition, 0 );
+          newPlotShape.lineTo( xPosition, -this.plotHeight );
+        }
+
+        if ( i % this.stepX === 0 && this.showXAxisTickMarkLabels ) {
+          this.labelsNode.addChild( new Text( i + this.minX, {
+            font: this.tickLabelFont,
+            centerX: xPosition - LINE_WIDTH / 2,
+            top: LABEL_OFFSET
+          } ) );
+        }
+      }
+
+      // labels for the edges
+      if ( this.showXAxisTickMarkLabels ) {
+        this.labelsNode.addChild( new Text( 0 + this.minX, {
+          font: this.tickLabelFont,
+          centerX: -LINE_WIDTH / 2,
+          top: LABEL_OFFSET
+        } ) );
+
+        this.labelsNode.addChild( new Text( i + this.minX, {
+          font: this.tickLabelFont,
+          centerX: i * this.plotWidth / numVerticalGridLines - LINE_WIDTH / 2,
+          top: LABEL_OFFSET
+        } ) );
+      }
+
+      // horizontal grid lines
+      // if minY and maxY is not a multiple of step function convert them to multiples
+      if ( this.minY % this.stepY !== 0 ) {
+        this.minY = Math.floor( this.minY / this.stepY ) * this.stepY;
+      }
+      if ( this.maxY % this.stepY !== 0 ) {
+        this.maxY = Math.ceil( this.maxY / this.stepY ) * this.stepY;
+      }
+      var numHorizontalGridLines = this.maxY - this.minY;
+      this.yScaleFactor = this.plotHeight / numHorizontalGridLines;
+
+      for ( i = 1; i < numHorizontalGridLines; i++ ) {
+        var yPosition = -i * this.plotHeight / numHorizontalGridLines;
+        if ( i % this.stepY === 0 || this.showHorizontalIntermediateLines ) {
+          newPlotShape.moveTo( 0, yPosition );
+          newPlotShape.lineTo( this.plotWidth, -i * this.plotHeight / numHorizontalGridLines );
+        }
+        if ( i % this.stepY === 0 && this.showYAxisTickMarkLabels ) {
+          this.labelsNode.addChild( new Text( i + this.minY, {
+            font: this.tickLabelFont,
+            centerY: yPosition + LINE_WIDTH / 2,
+            right: -LABEL_OFFSET
+          } ) );
+        }
+      }
+
+      this.plotPath.setShape( newPlotShape );
+
+      // labels for the edges
+      if ( this.showYAxisTickMarkLabels ) {
+        this.labelsNode.addChild( new Text( 0 + this.minY, {
+          font: this.tickLabelFont,
+          centerY: LINE_WIDTH / 2,
+          right: -LABEL_OFFSET
+        } ) );
+
+        this.labelsNode.addChild( new Text( i + this.minY, {
+          font: this.tickLabelFont,
+          centerY: -i * this.plotHeight / numHorizontalGridLines + LINE_WIDTH / 2,
+          right: -LABEL_OFFSET
+        } ) );
+      }
     }
   } );
 } );

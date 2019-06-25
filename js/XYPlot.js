@@ -51,9 +51,15 @@ define( function( require ) {
       lineDash: [],
       showAxis: true,
 
+      // {string} - one of PlotStyle, 'line' will display data as a continuous line while 'scatter' will display
+      // data as discrete points
+      plotStyle: XYDataSeriesNode.PlotStyle.LINE,
+
       // phet-io
       tandem: Tandem.optional
     }, options );
+
+    assert && assert( XYDataSeriesNode.PlotStyle.includes( options.plotStyle ), 'plotStyle must be one of PlotStyle' );
 
     Node.call( this );
 
@@ -88,6 +94,9 @@ define( function( require ) {
     this.showVerticalIntermediateLines = options.showVerticalIntermediateLines;
     this.showXAxisTickMarkLabels = options.showXAxisTickMarkLabels;
     this.showYAxisTickMarkLabels = options.showYAxisTickMarkLabels;
+
+    // @private {Enumeration} - see options for documentation
+    this.plotStyle = options.plotStyle;
 
     // @protected - for decoration and layout of sub classes
     this.plotPath = new Path( null, {
@@ -138,7 +147,8 @@ define( function( require ) {
       this.dataSeriesList.push( series );
       this.seriesViewMap[ series.uniqueId ] = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
         xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
-        yScaleFactor: scaleFactor ? -this.yScaleFactor : 1
+        yScaleFactor: scaleFactor ? -this.yScaleFactor : 1,
+        plotStyle: this.plotStyle
       } );
       this.content.addChild( this.seriesViewMap[ series.uniqueId ] );
     },
@@ -313,5 +323,9 @@ define( function( require ) {
         } ) );
       }
     }
+  }, {
+
+    // @public static, so clients don't have to require XYDataSeriesNode
+    PlotStyle: XYDataSeriesNode.PlotStyle
   } );
 } );

@@ -39,6 +39,9 @@ define( require => {
 
       super( options );
 
+      // @private {boolean|null} - if set with setCursorVisible, then this will indicate visibility of the cursor
+      this._cursorVisibleOverride = null;
+
       // {number} - value for the cursor, determines cursor positioning
       this.cursorValue = 0;
 
@@ -127,6 +130,17 @@ define( require => {
     }
 
     /**
+     * Override the default behavior for setting cursor visibility. If set to null, cursor visibility will behave as
+     * described in updateChartCursorVisibility. Otherwise, visibility will equal the boolean value set here.
+     * @param {boolean|null} visible
+     */
+    setCursorVisibleOverride( visible ) {
+      assert && assert( typeof visible === 'boolean' || visible === null, '' );
+      this._cursorVisibleOverride = visible;
+      this.updateChartCursorVisibility();
+    }
+
+    /**
      * Update the chart cursor visibility and position.
      * @private
      */
@@ -154,11 +168,16 @@ define( require => {
      * @private
      */
     updateChartCursorVisibility() {
-      const valueOnChart = ( this.cursorValue - this.getMinRecordedValue() );
-      const isCurrentValueOnChart = ( valueOnChart >= 0 ) && ( valueOnChart <= this.maxX );
-      const dataExists = this.getDataExists();
-      const chartCursorVisible = isCurrentValueOnChart && dataExists;
-      this.chartCursor.setVisible( chartCursorVisible );
+      if ( typeof this._cursorVisibleOverride === 'boolean' ) {
+        this.chartCursor.setVisible( this._cursorVisibleOverride );
+      }
+      else {
+        const valueOnChart = ( this.cursorValue - this.getMinRecordedValue() );
+        const isCurrentValueOnChart = ( valueOnChart >= 0 ) && ( valueOnChart <= this.maxX );
+        const dataExists = this.getDataExists();
+        const chartCursorVisible = isCurrentValueOnChart && dataExists;
+        this.chartCursor.setVisible( chartCursorVisible );
+      }
     }
 
     /**

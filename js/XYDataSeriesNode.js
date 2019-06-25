@@ -121,6 +121,16 @@ define( function( require ) {
     },
 
     /**
+     *
+     * @param {*} plotStyle - value from of PlotStyle
+     */
+    setPlotStyle( plotStyle ) {
+      assert && assert( PlotStyle.includes( plotStyle ) );
+      this.plotStyle = plotStyle;
+      this.invalidatePaint();
+    },
+
+    /**
      * make eligible for garbage collection
      */
     dispose: function() {

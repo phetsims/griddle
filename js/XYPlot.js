@@ -174,6 +174,20 @@ define( function( require ) {
     },
 
     /**
+     * Set the plot style for the graph, to be drawn as a line graph or a scatter plot.
+     * 
+     * @param {*} plotStyle - one of plotStyle
+     */
+    setPlotStyle( plotStyle ) {
+      this.plotStyle = plotStyle;
+
+      for ( const uniqueId in this.seriesViewMap ) {
+        const dataSeriesNode = this.seriesViewMap[ uniqueId ];
+        dataSeriesNode.setPlotStyle( plotStyle );
+      }
+    },
+
+    /**
      * Set the minimum X for graph and redraw the plot grid.
      *
      * @param {number} minX

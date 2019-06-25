@@ -34,8 +34,12 @@ define( function( require ) {
 
     var self = this;
     options = _.extend( {
-      xScaleFactor: 1,
-      yScaleFactor: 1,
+
+      // If true, XYDataSeries values will be scaled by xScaleFactor and yScaleFactor before drawing to the view. this
+      // is generally used if the XYDataSeries is in the coordinate plot domain and range specified by XYPlot minX,
+      // maxX, minY, maxY. But if your data is relative another coordinate frame (like view coordinates), this can
+      // be set to false
+      useScaleFactors: true,
 
       // {string} - one of PlotStyle, 'line' will display data as a continuous line while 'scatter' will display
       // data as discrete points
@@ -44,10 +48,19 @@ define( function( require ) {
 
     assert && assert( PlotStyle.includes( options.plotStyle ), 'plotStyle must be one of STYLE_OPTIONS' );
 
+    // @private {XYDataSeries} - the data for this node to be plotted
     this.xyDataSeries = xyDataSeries;
-    this.bound = plotBounds;
-    this.xScaleFactor = options.xScaleFactor;
-    this.yScaleFactor = options.yScaleFactor;
+
+    // @private {Bounds2} - the bounds for the plot for positioning drawn data points, excludes labels
+    this.plotBounds = plotBounds;
+
+    // @private {boolean} - see options.useScaleFactors for when this may be set to false
+    this.useScaleFactors = options.useScaleFactors;
+
+    // @private {number} - scale factors to assist in determining where points should be positioned relative to
+    // plotBounds
+    this.xScaleFactor = 1;
+    this.yScaleFactor = 1;
 
     // @private {string} - one of STYLE_OPTIONS, see options for documentation
     this.plotStyle = options.plotStyle;
@@ -86,6 +99,26 @@ define( function( require ) {
   griddle.register( 'XYDataSeriesNode', XYDataSeriesNode );
 
   return inherit( CanvasNode, XYDataSeriesNode, {
+
+    /**
+     * Set the scale factor for the x coordinates - before drawing, x points in the XYDataSeries will be multiplied by
+     * this factor.
+     * 
+     * @param {number} scaleFactor
+     */
+    setXScaleFactor( scaleFactor ) {
+      this.xScaleFactor = scaleFactor;
+    },
+
+    /**
+     * Set the scale factor for the y coordinates - before drawing, y points in the XYDataSeries will by multiplied
+     * by this factor.
+     * 
+     * @param {} scaleFactor
+     */
+    setYScaleFactor( scaleFactor ) {
+      this.yScaleFactor = scaleFactor;
+    },
 
     /**
      * make eligible for garbage collection
@@ -134,12 +167,14 @@ define( function( require ) {
 
       // draw the line by connecting all of the points in the data set
       for ( var i = 0; i < dataPointsLength; i++ ) {
+        const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
+        const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
 
-        var xPos = xPoints[ i ] * this.xScaleFactor;
-        var yPos = yPoints[ i ] * this.yScaleFactor - this.yPointOffset;
+        const xPos = xPoints[ i ] * xScaleFactor;
+        const yPos = yPoints[ i ] * yScaleFactor - this.yPointOffset;
 
         // only render points that are on the graph
-        if ( this.bound.containsCoordinates( xPos, yPos ) ) {
+        if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
           if ( previousPointOnGraph ) {
             context.lineTo( xPos, yPos );
           }
@@ -173,12 +208,14 @@ define( function( require ) {
       context.fillStyle = this.xyDataSeries.color.computeCSS();
 
       for ( var i = 0; i < dataPointsLength; i++ ) {
+        const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
+        const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
 
-        var xPos = xPoints[ i ] * this.xScaleFactor;
-        var yPos = yPoints[ i ] * this.yScaleFactor - this.yPointOffset;
+        const xPos = xPoints[ i ] * xScaleFactor;
+        const yPos = yPoints[ i ] * yScaleFactor - this.yPointOffset;
 
         // only render points that are on the graph
-        if ( this.bound.containsCoordinates( xPos, yPos ) ) {
+        if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
           context.beginPath();
           context.arc( xPos, yPos, 2, 0, 2 * Math.PI, false);
           context.fill();

@@ -138,19 +138,24 @@ define( function( require ) {
   return inherit( Node, XYPlot, {
 
     /**
-     *
      * @param {XYDataSeries} series
-     * @param {boolean} scaleFactor
+     * @param {boolean} useScaleFactors - if the XYDataSeries is defined in the domain and range of this XYPlot
+     *                                  (specified by minX, maxX, minY, maxY) then this should be set to true. But there
+     *                                  are cases where this isn't true (like if XYDataSeries is in view coordinates)
      */
-    addSeries: function( series, scaleFactor ) {
+    addSeries: function( series, useScaleFactors ) {
       assert && assert( this.dataSeriesList.indexOf( series ) < 0, 'XYDataSeries already added to XYPlot' );
       this.dataSeriesList.push( series );
-      this.seriesViewMap[ series.uniqueId ] = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
-        xScaleFactor: scaleFactor ? this.xScaleFactor : 1,
-        yScaleFactor: scaleFactor ? -this.yScaleFactor : 1,
+      const dataSeriesNode = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
+        useScaleFactors: useScaleFactors,
         plotStyle: this.plotStyle
       } );
-      this.content.addChild( this.seriesViewMap[ series.uniqueId ] );
+      this.seriesViewMap[ series.uniqueId ] = dataSeriesNode;
+
+      dataSeriesNode.setXScaleFactor( this.xScaleFactor );
+      dataSeriesNode.setYScaleFactor( this.yScaleFactor );
+
+      this.content.addChild( dataSeriesNode );
     },
 
     /**
@@ -282,14 +287,14 @@ define( function( require ) {
 
       // horizontal grid lines
       // if minY and maxY is not a multiple of step function convert them to multiples
-      if ( this.minY % this.stepY !== 0 ) {
-        this.minY = Math.floor( this.minY / this.stepY ) * this.stepY;
-      }
-      if ( this.maxY % this.stepY !== 0 ) {
-        this.maxY = Math.ceil( this.maxY / this.stepY ) * this.stepY;
-      }
+      // if ( this.minY % this.stepY !== 0 ) {
+      //   this.minY = Math.floor( this.minY / this.stepY ) * this.stepY;
+      // }
+      // if ( this.maxY % this.stepY !== 0 ) {
+      //   this.maxY = Math.ceil( this.maxY / this.stepY ) * this.stepY;
+      // }
       var numHorizontalGridLines = this.maxY - this.minY;
-      this.yScaleFactor = this.plotHeight / numHorizontalGridLines;
+      this.yScaleFactor = -this.plotHeight / numHorizontalGridLines;
 
       for ( i = 1; i < numHorizontalGridLines; i++ ) {
         var yPosition = -i * this.plotHeight / numHorizontalGridLines;
@@ -321,6 +326,15 @@ define( function( require ) {
           centerY: -i * this.plotHeight / numHorizontalGridLines + LINE_WIDTH / 2,
           right: -LABEL_OFFSET
         } ) );
+      }
+
+      // after redrawing the grid, make sure that XYDataSeriesNodes have the correct scale factors and are redrawn
+      for ( const uniqueId in this.seriesViewMap ) {
+        const dataSeriesNode = this.seriesViewMap[ uniqueId ];
+        dataSeriesNode.setXScaleFactor( this.xScaleFactor );
+        dataSeriesNode.setYScaleFactor( this.yScaleFactor );
+
+        dataSeriesNode.invalidatePaint();
       }
     }
   }, {

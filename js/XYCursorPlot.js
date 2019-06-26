@@ -243,7 +243,9 @@ define( require => {
      * @returns {boolean}
      */
     getDataExists() {
-      return this.dataSeriesList.length > 0;
+
+      // this.dataSeriesList.length is always greater than zero (pre-allocated for performance)
+      return this.dataSeriesLength > 0;
     }
   }
 

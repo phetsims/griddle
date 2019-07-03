@@ -21,8 +21,18 @@ define( require => {
 
       options = _.extend( {
 
-        // {number}
-        opacity: 1,
+        // {number|null}
+        opacity: null,
+
+        // {boolean} - if false, this point won't be drawn
+        visible: true,
+
+        // {Color|null} - if specified, the data point will be stroked with this Color, which must be a Color instance
+        // so we can determine the CSS strokeStyle
+        strokeStyle: null,
+
+        // {number} - lineWidth for the stroke, only relevant if strokeStyle is provided
+        lineWidth: 1,
 
         // {number|null} - radius of the data point, if null the radius will be determined by XYDataSeriesNode
         radius: null
@@ -31,6 +41,9 @@ define( require => {
       // @public - see options for documentation
       this.opacity = options.opacity;
       this.radius = options.radius;
+      this.visible = options.visible;
+      this.lineWidth = options.lineWidth;
+      this.strokeStyle = options.strokeStyle;
     }
   }
 

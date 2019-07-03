@@ -237,22 +237,33 @@ define( function( require ) {
         if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
           scratchColor.set( this.xyDataSeries.color );
 
+          const opacity = 1;
           let radius = this.xyDataSeries.radius;
+          let visible = true;
+          let lineWidth = this.xyDataSeries.lineWidth;
+          let strokeStyle = null;
 
           const pointStyle = pointStyles[ i ];
           if ( pointStyle ) {
-            if ( pointStyle.opacity ) {
-              scratchColor.alpha = pointStyle.opacity;
-            }
-            if ( pointStyle.radius !== null ) {
-              radius = pointStyle.radius;
-            }
+            scratchColor.alpha = pointStyle.opacity || opacity;
+            radius = pointStyle.radius || radius;
+            visible = ( typeof pointStyle.visible === 'boolean' ) ? pointStyle.visible : visible;
+            lineWidth = pointStyle.lineWidth || lineWidth;
+            strokeStyle = pointStyle.strokeStyle || strokeStyle;
           }
           context.fillStyle = scratchColor.computeCSS();
 
-          context.beginPath();
-          context.arc( xPos, yPos, radius, 0, 2 * Math.PI, false);
-          context.fill();
+          if ( visible ) {
+            context.beginPath();
+            context.arc( xPos, yPos, radius, 0, 2 * Math.PI, false);
+            context.fill();
+
+            if ( strokeStyle ) {
+              context.strokeStyle = strokeStyle;
+              context.lineWidth = lineWidth;
+              context.stroke();
+            }
+          }
         }
       }
     }

@@ -15,6 +15,7 @@ define( function( require ) {
   var Emitter = require( 'AXON/Emitter' );
   var griddle = require( 'GRIDDLE/griddle' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var PointStyle = require( 'GRIDDLE/PointStyle' );
 
   // for the uniqueId, see this.uniqueId for information
   var instanceCount = 0;
@@ -41,6 +42,9 @@ define( function( require ) {
     this.xPoints = new Array( options.initialSize ); // @private
     this.yPoints = new Array( options.initialSize ); // @private
 
+    // {Array.<PointStyle>} - styles options for individual points 
+    this.pointStyles = new Array( options.initialSize ); // @private
+
     this.dataSeriesLength = 0; // @private, index to next available slot
   }
 
@@ -59,7 +63,14 @@ define( function( require ) {
       }
     },
 
-    addPoint: function( x, y ) {
+    /**
+     * Add a point to the series, and optionally specify the style of the point when plotted visually.
+     * 
+     * @param {number} x
+     * @param {number} y
+     * @param {PointStyle} [pointStyle] - optional
+     */
+    addPoint: function( x, y, pointStyle ) {
 
       var index = this.dataSeriesLength;
 
@@ -69,6 +80,7 @@ define( function( require ) {
       // store the data
       this.xPoints[ index ] = x;
       this.yPoints[ index ] = y;
+      this.pointStyles[ index ] = pointStyle ? pointStyle : null;
 
       this.notifyListeners( index );
     },
@@ -104,6 +116,7 @@ define( function( require ) {
       // addPoint
       this.xPoints = this.xPoints.concat( this.xPoints.splice( index, 1 ) );
       this.yPoints = this.yPoints.concat( this.yPoints.splice( index, 1 ) );
+      this.pointStyles = this.pointStyles.concat( this.pointStyles.splice( index, 1 ) );
 
       this.notifyListeners( this.dataSeriesLength );
     },
@@ -129,6 +142,7 @@ define( function( require ) {
       const numberToRemove = endIndex - startIndex;
       this.xPoints = this.xPoints.concat( this.xPoints.splice( startIndex, numberToRemove ) );
       this.yPoints = this.yPoints.concat( this.yPoints.splice( startIndex, numberToRemove ) );
+      this.pointStyles = this.pointStyles.concat( this.pointStyles.splice( startIndex, numberToRemove ) );
 
       this.dataSeriesLength -= numberToRemove;
 
@@ -159,6 +173,36 @@ define( function( require ) {
     },
 
     /**
+     * Get the point style for an individual data point. PointStyle fields are public and mutable so you can set
+     * PointStyle properties without creating a new PointStyle. Setting a PointStyle field will trigger any redraw.
+     * 
+     * @param {number} index
+     * @returns {PointStyle}
+     */
+    getPointStyle: function( index ) {
+      if ( index > this.dataSeriesLength - 1 ) {
+        throw new Error( 'No Data Point Exist at this index ' + index );
+      }
+      return this.pointStyles[ index ];
+    },
+
+    /**
+     * Set the style for an individual point. This DOES NOT trigger a redraw of the XYDataSeriesNode, so this won't
+     * show up until next redraw.
+     * 
+     * @param {number} index
+     * @param {PointStyle|null} pointStyle
+     */
+    setPointStyle: function( index, pointStyle ) {
+      assert && assert( pointStyle instanceof PointStyle, 'must use PointStyle' );
+      if ( index > this.dataSeriesLength - 1 ) {
+        throw new Error( 'No Data Point Exist at this index ' + index );
+      }
+
+      this.pointStyles[ index ] = pointStyle;
+    },
+
+    /**
      * @public - getter for the length.  DON'T CHANGE THIS TO AN ES5 GETTER.  That's what is was originally, and it
      * caused poor performance on iPad, see https://github.com/phetsims/neuron/issues/55.
      */
@@ -178,6 +222,16 @@ define( function( require ) {
      */
     getYPoints: function() {
       return this.yPoints;
+    },
+
+    /**
+     * Get the list of point styles
+     * @public
+     * 
+     * @returns {Array.<PointStyle>}
+     */
+    getPointStyles: function() {
+      return this.pointStyles;
     }
 
   } );

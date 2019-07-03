@@ -13,6 +13,7 @@ define( function( require ) {
 
   // modules
   const CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  const Color = require( 'SCENERY/util/Color' );
   const Enumeration = require( 'PHET_CORE/Enumeration' );
   const griddle = require( 'GRIDDLE/griddle' );
   const inherit = require( 'PHET_CORE/inherit' );
@@ -21,9 +22,10 @@ define( function( require ) {
   // constants
   const PlotStyle = new Enumeration( [ 'SCATTER', 'LINE' ] );
 
+  // to avoid instantiating numerous Colors
+  const scratchColor = new Color( 'black' );
+
   /**
-   * 
-   * 
    * @param {XYDataSeries} xyDataSeries
    * @param {Bounds2} plotBounds
    * @param {Range} yRange - in "model" coordinates for the plotted data
@@ -139,6 +141,14 @@ define( function( require ) {
     },
 
     /**
+     * Redraw the node, calling invalidatePaint to ensure that Scenery will redraw the canvas when it can.
+     * @public
+     */
+    redraw: function() {
+      this.invalidatePaint();
+    },
+
+    /**
      * paint the data series on the canvas, generally only called from the Scenery framework
      * @param {CanvasRenderingContext2D} context
      * @public
@@ -147,15 +157,15 @@ define( function( require ) {
 
       var xPoints = this.xyDataSeries.getXPoints();
       var yPoints = this.xyDataSeries.getYPoints();
+      var pointStyles = this.xyDataSeries.getPointStyles();
       var dataPointsLength = this.xyDataSeries.getLength();
 
       if ( dataPointsLength > 0 ) {
-
         if ( this.plotStyle === PlotStyle.LINE ) {
           this.drawDataLine( context, xPoints, yPoints, dataPointsLength ); 
         }
         else if ( this.plotStyle === PlotStyle.SCATTER ) {
-          this.drawDataScatter( context, xPoints, yPoints, dataPointsLength );
+          this.drawDataScatter( context, xPoints, yPoints, pointStyles, dataPointsLength );
         }
         else if ( assert ) {
           throw new Error( 'Cannot draw plot for ' + this.plotStyle + 'plot style' );
@@ -212,11 +222,10 @@ define( function( require ) {
      * @param {CanvasRenderingContext2D}
      * @param {Array.<number>} xPoints
      * @param {Array.<number>} yPoints
+     * @param {Array.<PointStyle|null>} pointStyles [description]
      * @param {number} dataPointsLength
      */
-    drawDataScatter( context, xPoints, yPoints, dataPointsLength ) {
-      context.fillStyle = this.xyDataSeries.color.computeCSS();
-
+    drawDataScatter( context, xPoints, yPoints, pointStyles, dataPointsLength ) {
       for ( var i = 0; i < dataPointsLength; i++ ) {
         const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
         const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
@@ -226,6 +235,16 @@ define( function( require ) {
 
         // only render points that are on the graph
         if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
+          scratchColor.set( this.xyDataSeries.color );
+
+          const pointStyle = pointStyles[ i ];
+          if ( pointStyle && pointStyle.opacity ) {
+
+            // modify scratchColor so we don't have to create numerous Color instances
+            scratchColor.alpha = pointStyle.opacity;
+          }
+          context.fillStyle = scratchColor.computeCSS();
+
           context.beginPath();
           context.arc( xPos, yPos, 2, 0, 2 * Math.PI, false);
           context.fill();

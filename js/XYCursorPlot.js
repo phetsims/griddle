@@ -243,9 +243,17 @@ define( require => {
      * @returns {boolean}
      */
     getDataExists() {
+      let dataExists = false;
+      for ( let i = 0; i < this.dataSeriesList.length; i++ ) {
 
-      // this.dataSeriesList.length is always greater than zero (pre-allocated for performance)
-      return this.dataSeriesLength > 0;
+        // dataSeriesList[ i ].length is always greater than zero (pre-allocated for performance), check tracked value
+        if ( this.dataSeriesList[ i ].dataSeriesLength > 0 ) {
+          dataExists = true;
+          break;
+        }
+      }
+
+      return dataExists;
     }
   }
 

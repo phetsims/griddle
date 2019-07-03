@@ -237,16 +237,21 @@ define( function( require ) {
         if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
           scratchColor.set( this.xyDataSeries.color );
 
-          const pointStyle = pointStyles[ i ];
-          if ( pointStyle && pointStyle.opacity ) {
+          let radius = this.xyDataSeries.radius;
 
-            // modify scratchColor so we don't have to create numerous Color instances
-            scratchColor.alpha = pointStyle.opacity;
+          const pointStyle = pointStyles[ i ];
+          if ( pointStyle ) {
+            if ( pointStyle.opacity ) {
+              scratchColor.alpha = pointStyle.opacity;
+            }
+            if ( pointStyle.radius !== null ) {
+              radius = pointStyle.radius;
+            }
           }
           context.fillStyle = scratchColor.computeCSS();
 
           context.beginPath();
-          context.arc( xPos, yPos, 2, 0, 2 * Math.PI, false);
+          context.arc( xPos, yPos, radius, 0, 2 * Math.PI, false);
           context.fill();
         }
       }

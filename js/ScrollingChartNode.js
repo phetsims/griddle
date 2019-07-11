@@ -1,4 +1,4 @@
-// Copyright 2018, University of Colorado Boulder
+// Copyright 2018-2019, University of Colorado Boulder
 
 /**
  * A scrolling graph component.  Like a seismograph, it has pens on the right hand side that record data, and the paper

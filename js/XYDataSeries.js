@@ -1,4 +1,4 @@
-// Copyright 2014-2017, University of Colorado Boulder
+// Copyright 2014-2019, University of Colorado Boulder
 
 /**
  * XY Data series for a plot. When added to an XYPlot, adding points to the series will allow points to be drawn

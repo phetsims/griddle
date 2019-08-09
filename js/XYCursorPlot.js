@@ -2,7 +2,7 @@
 
 /**
  * An XYPlot that includes a draggable cursor that allows the user to scrub or play back through the data.
- * 
+ *
  * @author Jesse Greenberg
  */
 define( require => {
@@ -64,7 +64,7 @@ define( require => {
 
     /**
      * Add a series to the plot, first adding a listener that keeps track of minimum and maximum data values.
-     * 
+     *
      * @param {XYDataSeries} series
      * @param {number} scaleFactor
      */
@@ -122,7 +122,7 @@ define( require => {
     /**
      * Get the value currently under the cursor.
      * @public
-     * 
+     *
      * @returns {number}
      */
     getCursorValue() {
@@ -164,7 +164,7 @@ define( require => {
     /**
      * Update the chart cursor visibility. The chart cursor should be visible any time the cursor value is within
      * the recorded value range.
-     * 
+     *
      * @private
      */
     updateChartCursorVisibility() {
@@ -183,7 +183,7 @@ define( require => {
     /**
      * Get the chart value for the given position in view coordinates, relative tot the parent coordinate frame.
      * @private
-     * 
+     *
      * @param {number} position
      * @returns {number}
      */
@@ -230,7 +230,7 @@ define( require => {
      * Get the maximum data value in the data series lists. Returns zero if no data has been added yet.  This value
      * is updated whenever data is added to the data series list.
      *
-     * @returns {number} 
+     * @returns {number}
      */
     getMaxRecordedValue() {
       return this.dataSeriesList.length === 0 ? 0 : this.maxRecordedValue;

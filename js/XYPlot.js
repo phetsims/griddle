@@ -175,7 +175,7 @@ define( function( require ) {
 
     /**
      * Set the plot style for the graph, to be drawn as a line graph or a scatter plot.
-     * 
+     *
      * @param {*} plotStyle - one of plotStyle
      */
     setPlotStyle( plotStyle ) {

@@ -46,7 +46,7 @@ define( function( require ) {
     this.xPoints = new Array( options.initialSize ); // @private
     this.yPoints = new Array( options.initialSize ); // @private
 
-    // {Array.<PointStyle>} - styles options for individual points 
+    // {Array.<PointStyle>} - styles options for individual points
     this.pointStyles = new Array( options.initialSize ); // @private
 
     this.dataSeriesLength = 0; // @private, index to next available slot
@@ -69,7 +69,7 @@ define( function( require ) {
 
     /**
      * Add a point to the series, and optionally specify the style of the point when plotted visually.
-     * 
+     *
      * @param {number} x
      * @param {number} y
      * @param {PointStyle} [pointStyle] - optional
@@ -85,6 +85,9 @@ define( function( require ) {
       this.xPoints[ index ] = x;
       this.yPoints[ index ] = y;
       this.pointStyles[ index ] = pointStyle ? pointStyle : null;
+
+      // sanity check
+      assert && assert( this.dataSeriesLength >= 0, 'length should never be less than zero' );
 
       this.notifyListeners( index );
     },
@@ -122,6 +125,9 @@ define( function( require ) {
       this.yPoints = this.yPoints.concat( this.yPoints.splice( index, 1 ) );
       this.pointStyles = this.pointStyles.concat( this.pointStyles.splice( index, 1 ) );
 
+      // sanity check
+      assert && assert( this.dataSeriesLength >= 0, 'dataSeriesLength should never be below zero' );
+
       this.notifyListeners( this.dataSeriesLength );
     },
 
@@ -153,6 +159,7 @@ define( function( require ) {
       // sanity checks
       assert && assert( this.xPoints.length === this.yPoints.length, 'x and y data should be of the same length' );
       assert && assert( this.xPoints.length === lengthBeforeRemoval, 'data arrays should not change size during point removal' );
+      assert && assert( this.dataSeriesLength >= 0, 'length should never be non-zero' );
 
       this.notifyListeners( this.dataSeriesLength );
     },
@@ -179,7 +186,7 @@ define( function( require ) {
     /**
      * Get the point style for an individual data point. PointStyle fields are public and mutable so you can set
      * PointStyle properties without creating a new PointStyle. Setting a PointStyle field will trigger any redraw.
-     * 
+     *
      * @param {number} index
      * @returns {PointStyle}
      */
@@ -193,7 +200,7 @@ define( function( require ) {
     /**
      * Set the style for an individual point. This DOES NOT trigger a redraw of the XYDataSeriesNode, so this won't
      * show up until next redraw.
-     * 
+     *
      * @param {number} index
      * @param {PointStyle|null} pointStyle
      */
@@ -231,7 +238,7 @@ define( function( require ) {
     /**
      * Get the list of point styles
      * @public
-     * 
+     *
      * @returns {Array.<PointStyle>}
      */
     getPointStyles: function() {

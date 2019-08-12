@@ -71,23 +71,14 @@ define( require => {
     addSeries( series, scaleFactor ) {
       super.addSeries( series, scaleFactor );
 
-      // find the min and max recorded values for limiting the cursor
-      // TODO: more efficient approach? Perhaps just do this on drag instead of on addition of data point?
+      // when a point is added, update the min and max recorded values
       const seriesListener = ( x, y, previousX, previousY ) => {
-        let minRecordedValue = Number.POSITIVE_INFINITY;
-        let maxRecordedValue = Number.NEGATIVE_INFINITY;
-        for ( let i = 0; i < series.dataSeriesLength; i++ ) {
-          const seriesX = series.getX( i );
-          if ( seriesX > maxRecordedValue ) {
-            maxRecordedValue = seriesX;
-          }
-          if ( seriesX < minRecordedValue ) {
-            minRecordedValue = seriesX;
-          }
-        }
 
-        this.maxRecordedValue = maxRecordedValue;
-        this.minRecordedValue = minRecordedValue;
+        // update min/max domain of the plotted data
+        this.updateMinMaxXValues();
+
+        // if all data has been removed from the plot, update cursor visibility
+        this.updateChartCursor();
       };
 
       // save to map so that listener can be found again for disposal
@@ -217,7 +208,7 @@ define( require => {
     }
 
     /**
-     * Get the minimum data value in the data series lists. Returns zero if no data has been added yet. This value
+     * Get the minimum X data value in the data series lists. Returns zero if no data has been added yet. This value
      * is updated whenever data is added to the list.
      *
      * @returns {number}
@@ -227,7 +218,7 @@ define( require => {
     }
 
     /**
-     * Get the maximum data value in the data series lists. Returns zero if no data has been added yet.  This value
+     * Get the maximum X data value in the data series lists. Returns zero if no data has been added yet.  This value
      * is updated whenever data is added to the data series list.
      *
      * @returns {number}
@@ -238,7 +229,7 @@ define( require => {
 
     /**
      * Returns true if any data is attached to this plot.
-     * @private
+     * @public
      *
      * @returns {boolean}
      */
@@ -254,6 +245,31 @@ define( require => {
       }
 
       return dataExists;
+    }
+
+    /**
+     * Update the minimum/maximum plotted domain of the data recorded on this plot. This information is used
+     * to determine selected cursor values. If no data is associated with this plot, extrema are represented by
+     * min = infinity, max = negative infinity.
+     *
+     * @private
+     */
+    updateMinMaxXValues() {
+      this.minRecordedValue = Number.POSITIVE_INFINITY;
+      this.maxRecordedValue = Number.NEGATIVE_INFINITY;
+      for ( let i = 0; i < this.dataSeriesList.length; i++ ) {
+        const dataSeries = this.dataSeriesList[ i ];
+        for ( let j = 0; j < this.dataSeriesList[ i ].dataSeriesLength; j++ ) {
+          const xValue = dataSeries.getX( j );
+
+          if ( xValue > this.maxRecordedValue ) {
+            this.maxRecordedValue = xValue;
+          }
+          if ( xValue < this.minRecordedValue ) {
+            this.minRecordedValue = xValue;
+          }
+        }
+      }
     }
   }
 
@@ -308,6 +324,7 @@ define( require => {
 
       const dragListener = new DragListener( {
         start: ( event, listener ) => {
+          assert && assert( this.plot.getDataExists(), 'data should exist for the cursor to be draggable' );
           options.startDrag();
         },
         drag: ( event, listener ) => {

@@ -223,7 +223,7 @@ define( require => {
      * @returns {number}
      */
     getMinRecordedValue() {
-      return this.dataSeriesList.length === 0 ? 0 : this.minRecordedValue;
+      return this.getDataExists() ? 0 : this.minRecordedValue;
     }
 
     /**
@@ -233,7 +233,7 @@ define( require => {
      * @returns {number}
      */
     getMaxRecordedValue() {
-      return this.dataSeriesList.length === 0 ? 0 : this.maxRecordedValue;
+      return this.getDataExists() ? 0 : this.maxRecordedValue;
     }
 
     /**

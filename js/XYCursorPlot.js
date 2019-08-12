@@ -214,7 +214,7 @@ define( require => {
      * @returns {number}
      */
     getMinRecordedValue() {
-      return this.getDataExists() ? 0 : this.minRecordedValue;
+      return !this.getDataExists() ? 0 : this.minRecordedValue;
     }
 
     /**
@@ -224,7 +224,7 @@ define( require => {
      * @returns {number}
      */
     getMaxRecordedValue() {
-      return this.getDataExists() ? 0 : this.maxRecordedValue;
+      return !this.getDataExists() ? 0 : this.maxRecordedValue;
     }
 
     /**
@@ -259,7 +259,7 @@ define( require => {
       this.maxRecordedValue = Number.NEGATIVE_INFINITY;
       for ( let i = 0; i < this.dataSeriesList.length; i++ ) {
         const dataSeries = this.dataSeriesList[ i ];
-        for ( let j = 0; j < this.dataSeriesList[ i ].dataSeriesLength; j++ ) {
+        for ( let j = 0; j < dataSeries.dataSeriesLength; j++ ) {
           const xValue = dataSeries.getX( j );
 
           if ( xValue > this.maxRecordedValue ) {

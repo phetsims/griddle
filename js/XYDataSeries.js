@@ -164,6 +164,34 @@ define( function( require ) {
       this.notifyListeners( this.dataSeriesLength );
     },
 
+    /**
+     * Remove a point in the data series with the provided x value. Does not remove duplicates, only the first
+     * occurrence of the value starting at the beginning of the xPoints list.
+     * @public
+     *
+     * @param {number} xValue
+     */
+    removePointAtX: function( xValue ) {
+      const indexOfValue = this.xPoints.indexOf( xValue );
+      assert && assert( indexOfValue >= 0, 'value is not plotted and cannot be removed' );
+
+      // just used for sanity checks
+      const lengthBeforeRemoval = this.xPoints.length;
+
+      this.xPoints = this.xPoints.concat( this.xPoints.splice( indexOfValue, 1 ) );
+      this.yPoints = this.yPoints.concat( this.yPoints.splice( indexOfValue, 1 ) );
+      this.pointStyles = this.pointStyles.concat( this.pointStyles.splice( indexOfValue, 1 ) );
+
+      this.dataSeriesLength--;
+
+      // sanity checks
+      assert && assert( this.xPoints.length === this.yPoints.length, 'x and y data should be of the same length' );
+      assert && assert( this.xPoints.length === lengthBeforeRemoval, 'data arrays should not change size during point removal' );
+      assert && assert( this.dataSeriesLength >= 0, 'length should never be non-zero' );
+
+      this.notifyListeners( this.dataSeriesLength );
+    },
+
     clear: function() {
       this.dataSeriesLength = 0;
       this.cleared.emit();

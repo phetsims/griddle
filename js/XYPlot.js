@@ -26,12 +26,12 @@ define( require => {
   // constants
   // currently for performance reasons whole plot is drawn as a single path node and therefore all lines
   // whether intermediate or not have same width, but this can be changed in future
-  var LINE_WIDTH = 0.8; // Empirically determined
-  var STROKE_COLOR = 'gray';
-  var LABEL_OFFSET = 6;
+  const LINE_WIDTH = 0.8; // Empirically determined
+  const STROKE_COLOR = 'gray';
+  const LABEL_OFFSET = 6;
 
   function XYPlot( options ) {
-    var content = new Node();
+    const content = new Node();
 
     options = _.extend( {
       width: 400,
@@ -167,7 +167,7 @@ define( require => {
       assert && assert( seriesIndex >= 0, 'XYDataSeries not attached to XYPlot' );
       this.dataSeriesList.splice( seriesIndex, 1 );
 
-      var view = this.seriesViewMap[ series.uniqueId ];
+      const view = this.seriesViewMap[ series.uniqueId ];
       this.content.removeChild( view );
       view.dispose();
       delete this.seriesViewMap[ series.uniqueId ];
@@ -264,12 +264,12 @@ define( require => {
       if ( this.maxX % this.stepX !== 0 ) {
         this.maxX = Math.ceil( this.maxX / this.stepX ) * this.stepX;
       }
-      var numVerticalGridLines = this.maxX - this.minX;
+      const numVerticalGridLines = this.maxX - this.minX;
       this.xScaleFactor = this.plotWidth / numVerticalGridLines;
 
       let i = 1;
       for ( i = 1; i < numVerticalGridLines; i++ ) {
-        var xPosition = i * this.plotWidth / numVerticalGridLines;
+        const xPosition = i * this.plotWidth / numVerticalGridLines;
         if ( i % this.stepX === 0 || this.showVerticalIntermediateLines ) {
           newPlotShape.moveTo( xPosition, 0 );
           newPlotShape.lineTo( xPosition, -this.plotHeight );
@@ -307,11 +307,11 @@ define( require => {
       // if ( this.maxY % this.stepY !== 0 ) {
       //   this.maxY = Math.ceil( this.maxY / this.stepY ) * this.stepY;
       // }
-      var numHorizontalGridLines = this.maxY - this.minY;
+      const numHorizontalGridLines = this.maxY - this.minY;
       this.yScaleFactor = -this.plotHeight / numHorizontalGridLines;
 
       for ( i = 1; i < numHorizontalGridLines; i++ ) {
-        var yPosition = -i * this.plotHeight / numHorizontalGridLines;
+        const yPosition = -i * this.plotHeight / numHorizontalGridLines;
         if ( i % this.stepY === 0 || this.showHorizontalIntermediateLines ) {
           newPlotShape.moveTo( 0, yPosition );
           newPlotShape.lineTo( this.plotWidth, -i * this.plotHeight / numHorizontalGridLines );

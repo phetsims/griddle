@@ -114,7 +114,7 @@ define( require => {
       centerX: 0
     } );
 
-    var children = [ this.borderRectangle ].concat( this.bars );
+    const children = [ this.borderRectangle ].concat( this.bars );
     if ( options.showOffScaleArrow ) {
       children.push( this.offScaleArrow );
     }
@@ -145,15 +145,15 @@ define( require => {
      * @public
      */
     update: function() {
-      var i;
-      var scale = this.scaleProperty.value;
+      let i;
+      const scale = this.scaleProperty.value;
 
       // How much of our "range" we need to take away, to be able to show an out-of-scale arrow.
-      var arrowPadding = this.offScaleArrow.height + this.offScaleArrowOffset;
+      const arrowPadding = this.offScaleArrow.height + this.offScaleArrowOffset;
 
       // How far our actual bar rectangles can go (minimum and maximum). If our bars reach this limit (on either side),
       // an off-scale arrow will be shown.
-      var effectiveRange = this.totalRangeProperty.value;
+      let effectiveRange = this.totalRangeProperty.value;
 
       // Reduce the effective range to compensate with the borderWidth, so we don't overshoot the range.
       effectiveRange = new Range( effectiveRange.min < 0 ? effectiveRange.min + this.borderWidth : effectiveRange.min, effectiveRange.max - this.borderWidth );
@@ -163,14 +163,14 @@ define( require => {
       }
 
       // Total (scaled) sum of values for all bars
-      var total = 0;
+      let total = 0;
 
       // Whether we have any negative-value bars
-      var hasNegative = false;
+      let hasNegative = false;
 
       // Check for whether we have an "invalid bar" case with the total and hasNegative
       for ( i = 0; i < this.barEntries.length; i++ ) {
-        var value = this.barEntries[ i ].property.value * scale;
+        const value = this.barEntries[ i ].property.value * scale;
         if ( value < 0 ) {
           hasNegative = true;
         }
@@ -178,7 +178,7 @@ define( require => {
       }
 
       // Start with the first bar at the origin.
-      var currentY = 0;
+      let currentY = 0;
 
       // Composite bars are represented by one bar with multiple entries stacked on top of each other.
       // If a composite bar contains an entry with a negative value, only the first entry is used to display the effective
@@ -193,7 +193,7 @@ define( require => {
 
         // Use only the first entry to display the effective range
         currentY = effectiveRange.constrainValue( total );
-        var firstBar = this.bars[ 0 ];
+        const firstBar = this.bars[ 0 ];
 
         // Change the color of the displayed bar.
         firstBar.fill = this.invalidBarColor;
@@ -207,10 +207,10 @@ define( require => {
       }
       else {
         for ( i = 0; i < this.barEntries.length; i++ ) {
-          var barEntry = this.barEntries[ i ];
-          var bar = this.bars[ i ];
+          const barEntry = this.barEntries[ i ];
+          const bar = this.bars[ i ];
           bar.fill = barEntry.color;
-          var barValue = barEntry.property.value * scale;
+          let barValue = barEntry.property.value * scale;
 
           // optionally further modify the bar height
           if ( barEntry.modifyBarHeight ) {
@@ -218,7 +218,7 @@ define( require => {
           }
 
           // The bar would be displayed between currentY and nextY
-          var nextY = effectiveRange.constrainValue( currentY + barValue );
+          const nextY = effectiveRange.constrainValue( currentY + barValue );
 
           // Set the bar to the next stacked position
           if ( nextY !== currentY ) {

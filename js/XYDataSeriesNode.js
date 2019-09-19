@@ -34,7 +34,7 @@ define( require => {
    */
   function XYDataSeriesNode( xyDataSeries, plotBounds, yRange, options ) {
 
-    var self = this;
+    const self = this;
     options = _.extend( {
 
       // If true, XYDataSeries values will be scaled by xScaleFactor and yScaleFactor before drawing to the view. this
@@ -75,11 +75,11 @@ define( require => {
 
     self.setCanvasBounds( plotBounds );
 
-    var listener = function() {
+    const listener = function() {
       self.invalidatePaint();
     };
 
-    var clearListener = function() {
+    const clearListener = function() {
       self.invalidatePaint();
     };
     xyDataSeries.addDataSeriesListener( listener );
@@ -155,10 +155,10 @@ define( require => {
      */
     paintCanvas: function( context ) {
 
-      var xPoints = this.xyDataSeries.getXPoints();
-      var yPoints = this.xyDataSeries.getYPoints();
-      var pointStyles = this.xyDataSeries.getPointStyles();
-      var dataPointsLength = this.xyDataSeries.getLength();
+      const xPoints = this.xyDataSeries.getXPoints();
+      const yPoints = this.xyDataSeries.getYPoints();
+      const pointStyles = this.xyDataSeries.getPointStyles();
+      const dataPointsLength = this.xyDataSeries.getLength();
 
       if ( dataPointsLength > 0 ) {
         if ( this.plotStyle === PlotStyle.LINE ) {
@@ -182,11 +182,11 @@ define( require => {
      * @param {number} dataPointsLength
      */
     drawDataLine( context, xPoints, yPoints, dataPointsLength ) {
-      var previousPointOnGraph = false;
+      let previousPointOnGraph = false;
       context.beginPath();
 
       // draw the line by connecting all of the points in the data set
-      for ( var i = 0; i < dataPointsLength; i++ ) {
+      for ( let i = 0; i < dataPointsLength; i++ ) {
         const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
         const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
 
@@ -226,7 +226,7 @@ define( require => {
      * @param {number} dataPointsLength
      */
     drawDataScatter( context, xPoints, yPoints, pointStyles, dataPointsLength ) {
-      for ( var i = 0; i < dataPointsLength; i++ ) {
+      for ( let i = 0; i < dataPointsLength; i++ ) {
         const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
         const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
 

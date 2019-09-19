@@ -15,7 +15,7 @@ define( require => {
   // strings
   const griddleTitleString = require( 'string!GRIDDLE/griddle.title' );
 
-  var simOptions = {
+  const simOptions = {
     credits: {
       leadDesign: 'PhET'
     }

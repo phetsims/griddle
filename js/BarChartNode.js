@@ -45,7 +45,7 @@ define( require => {
   function BarChartNode( bars, rangeProperty, options ) {
     Node.call( this );
 
-    var self = this;
+    const self = this;
 
     options = _.extend( {
       // {number} - Space in-between each bar
@@ -95,7 +95,7 @@ define( require => {
     // @private {Array.<BarNode>} Initializing barNodes.
     this.barNodes = bars.map( function( bar ) {
       assert && assert( bar.entries && Array.isArray( bar.entries ) );
-      var barOptions = _.extend( {
+      const barOptions = _.extend( {
         offScaleArrowFill: bar.offScaleArrowFill === undefined ? ( bar.entries.length > 1 ? '#bbb' : bar.entries[ 0 ].color ) : bar.offScaleArrowFill
       }, options.barOptions );
       return new BarNode( bar.entries, rangeProperty, barOptions );
@@ -103,15 +103,15 @@ define( require => {
 
     // @private {Array.<Node>}
     this.barLabelNodes = bars.map( function( bar ) {
-      var barLabelVBox = new VBox( { spacing: 4 } );
+      const barLabelVBox = new VBox( { spacing: 4 } );
       if ( bar.labelString ) {
 
-        var labelText = new RichText( bar.labelString, _.extend( {}, options.barLabelOptions, {
+        const labelText = new RichText( bar.labelString, _.extend( {}, options.barLabelOptions, {
           fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
         } ) );
 
         // The valuePanel is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
-        var valuePanel = new Panel( labelText, {
+        const valuePanel = new Panel( labelText, {
           stroke: null,
           fill: options.labelBackgroundColor, // put transparency in the color so that the children aren't transparent
           cornerRadius: 3,
@@ -127,19 +127,19 @@ define( require => {
     } );
 
     // Adding barNodes into HBox
-    var barBox = new HBox( {
+    const barBox = new HBox( {
       spacing: options.barSpacing,
       align: 'origin',
       children: this.barNodes
     } );
 
     // Adding barNode labels into Node.
-    var labelBox = new Node( {
+    const labelBox = new Node( {
       children: this.barLabelNodes
     } );
 
     // Manual positioning of labels to match position of barNodes in HBox.
-    for ( var i = 0; i < bars.length; i++ ) {
+    for ( let i = 0; i < bars.length; i++ ) {
       // Checks if the labelBox's VBox has any children.
       if ( typeof( labelBox.children[ i ].children[ 0 ] ) !== 'undefined' ) {
         labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;
@@ -150,11 +150,11 @@ define( require => {
     this.addChild( labelBox );
 
     // Initializing xAxis
-    var xAxis = new Line( -options.xAxisOptions.minPadding, 0, barBox.width + options.xAxisOptions.maxExtension, 0, options.xAxisOptions );
+    const xAxis = new Line( -options.xAxisOptions.minPadding, 0, barBox.width + options.xAxisOptions.maxExtension, 0, options.xAxisOptions );
     this.addChild( xAxis );
 
     // Initializing yAxis
-    var yAxis = new ArrowNode( 0, 0, 0, -rangeProperty.value.max, {
+    const yAxis = new ArrowNode( 0, 0, 0, -rangeProperty.value.max, {
       tailWidth: 0.5,
       headHeight: 9,
       headWidth: 8
@@ -182,7 +182,7 @@ define( require => {
      * @public
      */
     update: function() {
-      for ( var i = 0; i < this.barNodes.length; i++ ) {
+      for ( let i = 0; i < this.barNodes.length; i++ ) {
         this.barNodes[ i ].update();
       }
     }

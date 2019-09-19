@@ -18,7 +18,7 @@ define( require => {
   const PointStyle = require( 'GRIDDLE/PointStyle' );
 
   // for the uniqueId, see this.uniqueId for information
-  var instanceCount = 0;
+  let instanceCount = 0;
 
   function XYDataSeries( options ) {
 
@@ -61,7 +61,7 @@ define( require => {
     },
 
     removeDataSeriesListener: function( listener ) {
-      var index = this.listeners.indexOf( listener );
+      const index = this.listeners.indexOf( listener );
       if ( index !== -1 ) {
         this.listeners.splice( index, 1 );
       }
@@ -76,7 +76,7 @@ define( require => {
      */
     addPoint: function( x, y, pointStyle ) {
 
-      var index = this.dataSeriesLength;
+      const index = this.dataSeriesLength;
 
       // point to the next slot
       this.dataSeriesLength++;
@@ -102,7 +102,7 @@ define( require => {
       const pointBeforeLastY = this.yPoints[ lastIndex - 2 ];
 
       // notify listeners - note that the previous data series values can be undefined in the notification
-      for ( var i = 0; i < this.listeners.length; i++ ) {
+      for ( let i = 0; i < this.listeners.length; i++ ) {
         this.listeners[ i ]( lastX, lastY, pointBeforeLastX, pointBeforeLastY );
       }
     },

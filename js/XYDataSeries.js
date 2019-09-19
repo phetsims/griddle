@@ -8,14 +8,14 @@
  * @author Aadish Gupta
  * @author Jesse Greenberg
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Emitter = require( 'AXON/Emitter' );
-  var griddle = require( 'GRIDDLE/griddle' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var PointStyle = require( 'GRIDDLE/PointStyle' );
+  const Emitter = require( 'AXON/Emitter' );
+  const griddle = require( 'GRIDDLE/griddle' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const PointStyle = require( 'GRIDDLE/PointStyle' );
 
   // for the uniqueId, see this.uniqueId for information
   var instanceCount = 0;

@@ -3,17 +3,17 @@
 /**
  * Main file for the Griddle library demo.
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var GriddleDemoScreenView = require( 'GRIDDLE/demo/GriddleDemoScreenView' );
-  var Screen = require( 'JOIST/Screen' );
-  var Sim = require( 'JOIST/Sim' );
-  var SimLauncher = require( 'JOIST/SimLauncher' );
+  const GriddleDemoScreenView = require( 'GRIDDLE/demo/GriddleDemoScreenView' );
+  const Screen = require( 'JOIST/Screen' );
+  const Sim = require( 'JOIST/Sim' );
+  const SimLauncher = require( 'JOIST/SimLauncher' );
 
   // strings
-  var griddleTitleString = require( 'string!GRIDDLE/griddle.title' );
+  const griddleTitleString = require( 'string!GRIDDLE/griddle.title' );
 
   var simOptions = {
     credits: {

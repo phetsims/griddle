@@ -9,22 +9,22 @@
  * @author Denzell Barnett (PhET Interactive Simulations)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
-  var BarNode = require( 'GRIDDLE/BarNode' );
-  var Color = require( 'SCENERY/util/Color' );
-  var griddle = require( 'GRIDDLE/griddle' );
-  var HBox = require( 'SCENERY/nodes/HBox' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Line = require( 'SCENERY/nodes/Line' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var Panel = require( 'SUN/Panel' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var RichText = require( 'SCENERY/nodes/RichText' );
-  var VBox = require( 'SCENERY/nodes/VBox' );
+  const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
+  const BarNode = require( 'GRIDDLE/BarNode' );
+  const Color = require( 'SCENERY/util/Color' );
+  const griddle = require( 'GRIDDLE/griddle' );
+  const HBox = require( 'SCENERY/nodes/HBox' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const Line = require( 'SCENERY/nodes/Line' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const Panel = require( 'SUN/Panel' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const RichText = require( 'SCENERY/nodes/RichText' );
+  const VBox = require( 'SCENERY/nodes/VBox' );
 
   /**
    * @constructor

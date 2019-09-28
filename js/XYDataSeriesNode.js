@@ -3,7 +3,7 @@
 /**
  * Node that depicts an XYDataSeries as a line on a canvas. There is no reason to create this outside of griddle,
  * it is created internally by XYPlot.
- * 
+ *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author Aadish Gupta
@@ -105,7 +105,7 @@ define( require => {
     /**
      * Set the scale factor for the x coordinates - before drawing, x points in the XYDataSeries will be multiplied by
      * this factor.
-     * 
+     *
      * @param {number} scaleFactor
      */
     setXScaleFactor( scaleFactor ) {
@@ -115,7 +115,7 @@ define( require => {
     /**
      * Set the scale factor for the y coordinates - before drawing, y points in the XYDataSeries will by multiplied
      * by this factor.
-     * 
+     *
      * @param {} scaleFactor
      */
     setYScaleFactor( scaleFactor ) {
@@ -162,7 +162,7 @@ define( require => {
 
       if ( dataPointsLength > 0 ) {
         if ( this.plotStyle === PlotStyle.LINE ) {
-          this.drawDataLine( context, xPoints, yPoints, dataPointsLength ); 
+          this.drawDataLine( context, xPoints, yPoints, dataPointsLength );
         }
         else if ( this.plotStyle === PlotStyle.SCATTER ) {
           this.drawDataScatter( context, xPoints, yPoints, pointStyles, dataPointsLength );
@@ -175,7 +175,7 @@ define( require => {
 
     /**
      * Draw the data as a continuous line over all points in the XYDataSeries.
-     * 
+     *
      * @param {CanvasRenderingContext2D}
      * @param {Array.<number>} xPoints
      * @param {Array.<number>} yPoints
@@ -255,7 +255,7 @@ define( require => {
 
           if ( visible ) {
             context.beginPath();
-            context.arc( xPos, yPos, radius, 0, 2 * Math.PI, false);
+            context.arc( xPos, yPos, radius, 0, 2 * Math.PI, false );
             context.fill();
 
             if ( strokeStyle ) {

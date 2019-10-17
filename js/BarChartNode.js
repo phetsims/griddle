@@ -20,6 +20,7 @@ define( require => {
   const HBox = require( 'SCENERY/nodes/HBox' );
   const inherit = require( 'PHET_CORE/inherit' );
   const Line = require( 'SCENERY/nodes/Line' );
+  const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Panel = require( 'SUN/Panel' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -47,7 +48,7 @@ define( require => {
 
     const self = this;
 
-    options = _.extend( {
+    options = merge( {
       // {number} - Space in-between each bar
       barSpacing: 12,
 
@@ -75,12 +76,12 @@ define( require => {
     this.bars = bars;
 
     // For vertical orientation
-    options.barOptions = _.extend( {}, options.barOptions, {
+    options.barOptions = merge( {}, options.barOptions, {
       rotation: Math.PI
     } );
 
     // passed along to the RichText
-    options.barLabelOptions = _.extend( {
+    options.barLabelOptions = merge( {
       font: new PhetFont( { size: 12, weight: 'bold' } ),
 
       // good for vertical bars that are close to each other
@@ -95,7 +96,7 @@ define( require => {
     // @private {Array.<BarNode>} Initializing barNodes.
     this.barNodes = bars.map( function( bar ) {
       assert && assert( bar.entries && Array.isArray( bar.entries ) );
-      const barOptions = _.extend( {
+      const barOptions = merge( {
         offScaleArrowFill: bar.offScaleArrowFill === undefined ? ( bar.entries.length > 1 ? '#bbb' : bar.entries[ 0 ].color ) : bar.offScaleArrowFill
       }, options.barOptions );
       return new BarNode( bar.entries, rangeProperty, barOptions );
@@ -106,7 +107,7 @@ define( require => {
       const barLabelVBox = new VBox( { spacing: 4 } );
       if ( bar.labelString ) {
 
-        const labelText = new RichText( bar.labelString, _.extend( {}, options.barLabelOptions, {
+        const labelText = new RichText( bar.labelString, merge( {}, options.barLabelOptions, {
           fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
         } ) );
 

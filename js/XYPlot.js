@@ -13,6 +13,7 @@ define( require => {
   const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   const griddle = require( 'GRIDDLE/griddle' );
   const inherit = require( 'PHET_CORE/inherit' );
+  const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Path = require( 'SCENERY/nodes/Path' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -33,7 +34,7 @@ define( require => {
   function XYPlot( options ) {
     const content = new Node();
 
-    options = _.extend( {
+    options = merge( {
       width: 400,
       height: 400,
       backgroundFill: 'white',

@@ -17,6 +17,7 @@ define( require => {
   const Enumeration = require( 'PHET_CORE/Enumeration' );
   const griddle = require( 'GRIDDLE/griddle' );
   const inherit = require( 'PHET_CORE/inherit' );
+  const merge = require( 'PHET_CORE/merge' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -35,7 +36,7 @@ define( require => {
   function XYDataSeriesNode( xyDataSeries, plotBounds, yRange, options ) {
 
     const self = this;
-    options = _.extend( {
+    options = merge( {
 
       // If true, XYDataSeries values will be scaled by xScaleFactor and yScaleFactor before drawing to the view. this
       // is generally used if the XYDataSeries is in the coordinate plot domain and range specified by XYPlot minX,

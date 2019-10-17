@@ -11,6 +11,7 @@ define( require => {
 
   // modules
   const griddle = require( 'GRIDDLE/griddle' );
+  const merge = require( 'PHET_CORE/merge' );
 
   class PointStyle {
 
@@ -19,7 +20,7 @@ define( require => {
      */
     constructor( options ) {
 
-      options = _.extend( {
+      options = merge( {
 
         // {number|null}
         opacity: null,

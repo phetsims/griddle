@@ -15,6 +15,7 @@ define( require => {
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
   const inherit = require( 'PHET_CORE/inherit' );
+  const merge = require( 'PHET_CORE/merge' );
   const PointStyle = require( 'GRIDDLE/PointStyle' );
 
   // for the uniqueId, see this.uniqueId for information
@@ -22,7 +23,7 @@ define( require => {
 
   function XYDataSeries( options ) {
 
-    options = _.extend( {
+    options = merge( {
       color: 'black',
       lineWidth: 1,
 

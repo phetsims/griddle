@@ -12,6 +12,7 @@ define( require => {
   // modules
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
+  const merge = require( 'PHET_CORE/merge' );
 
   class DynamicSeries {
 
@@ -27,7 +28,7 @@ define( require => {
       // @public {Emitter} -  sends notification when the data series changes
       this.emitter = new Emitter();
 
-      options = _.extend( {
+      options = merge( {
         color: 'black',
         lineWidth: 1
       }, options );

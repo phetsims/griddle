@@ -14,6 +14,7 @@ define( require => {
   const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   const griddle = require( 'GRIDDLE/griddle' );
   const inherit = require( 'PHET_CORE/inherit' );
+  const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const NumberProperty = require( 'AXON/NumberProperty' );
   const Range = require( 'DOT/Range' );
@@ -51,7 +52,7 @@ define( require => {
   function BarNode( barEntries, totalRangeProperty, options ) {
     assert && assert( barEntries.length > 0 );
 
-    options = _.extend( {
+    options = merge( {
       // {paint} - The color of the border (along the sides and top of the bar)
       borderColor: 'black',
 

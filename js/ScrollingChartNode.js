@@ -16,10 +16,11 @@ define( require => {
   'use strict';
 
   // modules
+  const DynamicSeriesNode = require( 'GRIDDLE/DynamicSeriesNode' );
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
-  const DynamicSeriesNode = require( 'GRIDDLE/DynamicSeriesNode' );
   const Line = require( 'SCENERY/nodes/Line' );
+  const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Shape = require( 'KITE/Shape' );
@@ -36,7 +37,7 @@ define( require => {
     constructor( timeProperty, dynamicSeriesArray, options ) {
       super();
 
-      options = _.extend( {
+      options = merge( {
         width: 190,  // dimensions
         height: 140, // dimensions
         numberHorizontalLines: 3, // Number of horizontal lines (not counting top and bottom)
@@ -56,7 +57,7 @@ define( require => {
       const { width, height, numberHorizontalLines, numberVerticalLines } = options;
 
       // default options to be passed into the graphPanel Rectangle
-      options.graphPanelOptions = _.extend( {
+      options.graphPanelOptions = merge( {
         fill: 'white',
 
         // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
@@ -68,7 +69,7 @@ define( require => {
 
       // default options for the horizontal and vertical grid lines
       const dashLength = height / options.numberVerticalDashes / 2;
-      options.gridLineOptions = _.extend( {
+      options.gridLineOptions = merge( {
         stroke: 'lightGray',
         lineDash: [ dashLength + 0.6, dashLength - 0.6 ],
         lineWidth: 0.8,
@@ -76,13 +77,13 @@ define( require => {
       }, options.gridLineOptions );
 
       // default options for the Rectangle on top (to make sure graph lines don't protrude)
-      options.graphPanelOverlayOptions = _.extend( {
+      options.graphPanelOverlayOptions = merge( {
         stroke: 'black',
         pickable: false
       }, options.graphPanelOverlayOptions );
 
       // White panel with gridlines that shows the data
-      options.graphPanelOptions = _.extend( {
+      options.graphPanelOptions = merge( {
 
         // Prevent data from being plotted outside the graph
         clipArea: Shape.rect( 0, 0, width, height )

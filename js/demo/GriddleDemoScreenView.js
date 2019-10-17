@@ -21,6 +21,7 @@ define( require => {
   const griddle = require( 'GRIDDLE/griddle' );
   const HBox = require( 'SCENERY/nodes/HBox' );
   const LabeledScrollingChartNode = require( 'GRIDDLE/LabeledScrollingChartNode' );
+  const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Panel = require( 'SUN/Panel' );
   const Property = require( 'AXON/Property' );
@@ -153,9 +154,9 @@ define( require => {
         new HBox( {
           spacing: 25,
           children: [
-            new VSlider( model.aProperty, sliderRange, _.extend( {}, sliderOptions, { trackFillEnabled: aEntry.color } ) ),
-            new VSlider( model.bProperty, sliderRange, _.extend( {}, sliderOptions, { trackFillEnabled: bEntry.color } ) ),
-            new VSlider( model.cProperty, sliderRange, _.extend( {}, sliderOptions, { trackFillEnabled: cEntry.color } ) )
+            new VSlider( model.aProperty, sliderRange, merge( {}, sliderOptions, { trackFillEnabled: aEntry.color } ) ),
+            new VSlider( model.bProperty, sliderRange, merge( {}, sliderOptions, { trackFillEnabled: bEntry.color } ) ),
+            new VSlider( model.cProperty, sliderRange, merge( {}, sliderOptions, { trackFillEnabled: cEntry.color } ) )
           ]
         } )
       ]

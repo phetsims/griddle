@@ -13,6 +13,7 @@ define( require => {
   const Color = require( 'SCENERY/util/Color' );
   const DragListener = require( 'SCENERY/listeners/DragListener' );
   const griddle = require( 'GRIDDLE/griddle' );
+  const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Tandem = require( 'TANDEM/Tandem' );
@@ -28,7 +29,7 @@ define( require => {
 
     constructor( options ) {
 
-      options = _.extend( {
+      options = merge( {
 
         // options passed on to the chart cursor, see ChartCursor
         cursorOptions: null,
@@ -284,7 +285,7 @@ define( require => {
      */
     constructor( plot, options ) {
 
-      options = _.extend( {
+      options = merge( {
         startDrag: () => {},
         endDrag: () => {},
         drag: () => {},
@@ -360,7 +361,7 @@ define( require => {
      */
     constructor( diameter, baseColor, options ) {
 
-      options =  _.extend( {
+      options =  merge( {
         lineWidth: 0.5
       }, options );
 

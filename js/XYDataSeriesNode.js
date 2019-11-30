@@ -86,7 +86,7 @@ define( require => {
     xyDataSeries.addDataSeriesListener( listener );
     xyDataSeries.cleared.addListener( clearListener );
 
-    // reusable vectors for optimal performace
+    // reusable vectors for optimal performance
     this.previousPoint = new Vector2( 0, 0 );
     this.currentPoint = new Vector2( 0, 0 );
 

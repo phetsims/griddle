@@ -48,9 +48,14 @@ define( require => {
         topMargin: 10,
         numberVerticalDashes: 12,
         rightMargin: 10,
-        graphPanelOptions: null, // filled in below
-        gridLineOptions: null, // filled in below
-        graphPanelOverlayOptions: null // filled in below
+
+        // default options for the Rectangle on top (to make sure graph lines don't protrude)
+        graphPanelOverlayOptions: {
+          stroke: 'black',
+          pickable: false
+        },
+        graphPanelOptions: null, // filled in below because some defaults are based on other options
+        gridLineOptions: null // filled in below because some defaults are based on other options
       }, options );
 
       // Promote to local variables for readability
@@ -75,12 +80,6 @@ define( require => {
         lineWidth: 0.8,
         lineDashOffset: dashLength / 2
       }, options.gridLineOptions );
-
-      // default options for the Rectangle on top (to make sure graph lines don't protrude)
-      options.graphPanelOverlayOptions = merge( {
-        stroke: 'black',
-        pickable: false
-      }, options.graphPanelOverlayOptions );
 
       // White panel with gridlines that shows the data
       options.graphPanelOptions = merge( {

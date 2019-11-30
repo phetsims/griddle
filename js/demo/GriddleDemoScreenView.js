@@ -202,7 +202,7 @@ define( require => {
       scrollingChartNode,
       new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
       new Text( '1 s', { fill: 'white' } ),
-      'time (s)'
+      new Text( 'time (s)', { fill: 'white' } )
     ), {
       fill: 'gray',
       center: layoutBounds.center

@@ -3,8 +3,7 @@
 /**
  * A scrolling graph component.  Like a seismograph, it has pens on the right hand side that record data, and the paper
  * scrolls to the left.  It is currently sized accordingly to be used in a small draggable sensor, like the ones in Wave
- * Interference, Bending Light or Circuit Construction Kit: AC. It would typically be embedded in a
- * LabeledScrollingChartNode or Panel.
+ * Interference, Bending Light or Circuit Construction Kit: AC. It would typically be embedded in a Panel.
  *
  * Please see the demo in http://localhost/griddle/griddle_en.html
  *
@@ -16,14 +15,23 @@ define( require => {
   'use strict';
 
   // modules
+  const Bounds2 = require( 'DOT/Bounds2' );
   const DynamicSeriesNode = require( 'GRIDDLE/DynamicSeriesNode' );
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
   const Line = require( 'SCENERY/nodes/Line' );
   const merge = require( 'PHET_CORE/merge' );
+  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Shape = require( 'KITE/Shape' );
+  const SpanNode = require( 'GRIDDLE/SpanNode' );
+  const Text = require( 'SCENERY/nodes/Text' );
+
+  // constants
+  const LABEL_GRAPH_MARGIN = 3;
+  const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
+  const VERTICAL_AXIS_LABEL_MARGIN = 4;
 
   class ScrollingChartNode extends Node {
 
@@ -55,7 +63,14 @@ define( require => {
           pickable: false
         },
         graphPanelOptions: null, // filled in below because some defaults are based on other options
-        gridLineOptions: null // filled in below because some defaults are based on other options
+        gridLineOptions: null, // filled in below because some defaults are based on other options
+
+        // Labels (required) // TODO: Use required pattern
+        verticalAxisLabelNode: null,
+        horizontalAxisLabelNode: null,
+        spanLabelNode: null,
+
+        showVerticalGridLabels: true
       }, options );
 
       // Promote to local variables for readability
@@ -91,17 +106,35 @@ define( require => {
         options.graphPanelOptions
       );
 
-      // Horizontal Lines
-      for ( let i = 1; i <= numberHorizontalLines; i++ ) {
+      // Map from data coordinates to chart coordinates. Note that the "x" axis is the "time" axis in most or all cases
+      const modelViewTransform = new ModelViewTransform2();
+      timeProperty.link( time => {
+        modelViewTransform.setToRectangleMapping(
+          new Bounds2( time - 4, -1, time, +1 ),
+          new Bounds2( 0, 0, width - options.rightGraphMargin, height )
+        );
+      } );
+
+      // Horizontal lines indicate increasing vertical value
+      const horizontalLabelMargin = -3;
+      for ( let i = 0; i <= numberHorizontalLines + 1; i++ ) {
         const y = height * i / ( numberHorizontalLines + 1 );
-        graphPanel.addChild( new Line( 0, y, width, y, options.gridLineOptions ) );
+        const line = new Line( 0, y, width, y, options.gridLineOptions );
+        if ( i !== 0 && i !== numberHorizontalLines + 1 ) {
+          graphPanel.addChild( line );
+        }
+
+        const b = graphPanel.localToParentBounds( line.bounds );
+        const yValue = modelViewTransform.viewToModelY( y );
+        if ( options.showVerticalGridLabels ) {
+          this.addChild( new Text( yValue, {
+            fill: 'white',
+            rightCenter: b.leftCenter.plusXY( horizontalLabelMargin, 0 )
+          } ) );
+        }
       }
 
       const plotWidth = width - options.rightGraphMargin;
-
-      // @public (read-only) {number} - the width of the area that is used for plotting, does not include the margin
-      // on the right.
-      this.plotWidth = plotWidth;
 
       // Vertical lines
       for ( let i = 1; i <= numberVerticalLines; i++ ) {
@@ -124,7 +157,8 @@ define( require => {
           plotWidth,
           graphPanel.bounds,
           numberVerticalLines,
-          timeProperty
+          timeProperty,
+          modelViewTransform
         );
         graphPanel.addChild( dynamicSeriesNode );
         this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeriesNode.dispose() );
@@ -134,9 +168,40 @@ define( require => {
 
       // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
       // This is a faster alternative to clipping.
-      graphPanel.addChild( new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius,
-        options.graphPanelOverlayOptions )
-      );
+      graphPanel.addChild( new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius, options.graphPanelOverlayOptions ) );
+
+      /* -------------------------------------------
+       * Optional decorations
+       * -------------------------------------------*/
+
+      // Position the vertical axis title node
+      options.verticalAxisLabelNode.mutate( {
+        maxHeight: graphPanel.height,
+        right: this.bounds.minX - VERTICAL_AXIS_LABEL_MARGIN, // whether or not there are vertical axis labels, position to the left
+        centerY: graphPanel.centerY
+      } );
+      this.addChild( options.verticalAxisLabelNode );
+
+      const spanNode = new SpanNode( options.spanLabelNode, plotWidth / 4, {
+        left: graphPanel.left,
+        top: graphPanel.bottom + 2
+      } );
+
+      this.addChild( spanNode );
+      this.addChild( options.horizontalAxisLabelNode );
+
+      // For i18n, “Time” will expand symmetrically L/R until it gets too close to the scale bar. Then, the string will
+      // expand to the R only, until it reaches the point it must be scaled down in size.
+      options.horizontalAxisLabelNode.maxWidth = graphPanel.right - spanNode.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
+
+      // Position the horizontal axis title node after its maxWidth is specified
+      options.horizontalAxisLabelNode.mutate( {
+        top: graphPanel.bottom + LABEL_GRAPH_MARGIN,
+        centerX: plotWidth / 2 + graphPanel.bounds.minX
+      } );
+      if ( options.horizontalAxisLabelNode.left < spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
+        options.horizontalAxisLabelNode.left = spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
+      }
 
       this.mutate( options );
     }

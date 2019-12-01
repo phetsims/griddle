@@ -20,7 +20,6 @@ define( require => {
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
   const HBox = require( 'SCENERY/nodes/HBox' );
-  const LabeledScrollingChartNode = require( 'GRIDDLE/LabeledScrollingChartNode' );
   const merge = require( 'PHET_CORE/merge' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Panel = require( 'SUN/Panel' );
@@ -50,7 +49,7 @@ define( require => {
          */
         { label: 'XYPlot', createNode: demoXYPlot },
         { label: 'BarChart', createNode: demoBarChart },
-        { label: 'LabeledScrollingChartNode', createNode: demoLabeledScrollingChartNode }
+        { label: 'ScrollingChartNode', createNode: demoScrollingChartNode }
       ], {
         selectedDemoLabel: sceneryPhetQueryParameters.component
       } );
@@ -172,10 +171,10 @@ define( require => {
   };
 
   /**
-   * Creates an example LabeledScrollingChartNode
+   * Creates an example ScrollingChartNode
    * @param layoutBounds
    */
-  const demoLabeledScrollingChartNode = function( layoutBounds ) {
+  const demoScrollingChartNode = function( layoutBounds ) {
     const timeProperty = new Property( 0 );
     const series1 = new DynamicSeries( { color: 'blue' } );
     const maxTime = 4;
@@ -196,14 +195,12 @@ define( require => {
     emitter.addListener( listener );
     const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], {
       width: 200,
-      height: 150
+      height: 150,
+      verticalAxisLabelNode: new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
+      horizontalAxisLabelNode: new Text( 'time (s)', { fill: 'white' } ),
+      spanLabelNode: new Text( '1 s', { fill: 'white' } )
     } );
-    const panel = new Panel( new LabeledScrollingChartNode(
-      scrollingChartNode,
-      new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
-      new Text( '1 s', { fill: 'white' } ),
-      new Text( 'time (s)', { fill: 'white' } )
-    ), {
+    const panel = new Panel( scrollingChartNode, {
       fill: 'gray',
       center: layoutBounds.center
     } );

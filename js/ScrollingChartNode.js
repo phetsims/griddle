@@ -71,6 +71,7 @@ define( require => {
         gridLineOptions: null, // filled in below because some defaults are based on other options
 
         showVerticalGridLabels: true,
+        verticalGridLabelNumberOfDecimalPlaces: 0,
 
         verticalRange: new Range( -1, 1 )
       }, options );
@@ -129,7 +130,7 @@ define( require => {
         const b = graphPanel.localToParentBounds( line.bounds );
         const yValue = modelViewTransform.viewToModelY( y );
         if ( options.showVerticalGridLabels ) {
-          this.addChild( new Text( Util.toFixed( yValue, 2 ), {
+          this.addChild( new Text( Util.toFixed( yValue, options.verticalGridLabelNumberOfDecimalPlaces ), {
             fill: 'white',
             rightCenter: b.leftCenter.plusXY( horizontalLabelMargin, 0 )
           } ) );

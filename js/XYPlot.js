@@ -180,7 +180,7 @@ define( require => {
     /**
      * Set the plot style for the graph, to be drawn as a line graph or a scatter plot.
      *
-     * @param {*} plotStyle - one of plotStyle
+     * @param {XYDataSeriesNode.PlotStyle} plotStyle - one of plotStyle
      * @public
      */
     setPlotStyle( plotStyle ) {
@@ -217,7 +217,7 @@ define( require => {
     /**
      * Set the minimum Y for the graph and redraw the plot grid.
      *
-     * @param {} minY
+     * @param {number} minY
      * @public
      */
     setMinY( minY ) {
@@ -228,7 +228,7 @@ define( require => {
     /**
      * Set the maximum Y for the graph and redraw the plot grid.
      *
-     * @param {} maxY
+     * @param {number} maxY
      * @public
      */
     setMaxY( maxY ) {

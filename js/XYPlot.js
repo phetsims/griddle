@@ -1,10 +1,10 @@
 // Copyright 2014-2019, University of Colorado Boulder
 
 /**
- * XY Plot
+ * Displays scatter or line data via XYDataSeries on an xy chart.
  *
- * @author Sam Reid
- * @author Aadish Gupta
+ * @author Sam Reid (PhET Interactive Simulations)
+ * @author Aadish Gupta (PhET Interactive Simulations)
  */
 define( require => {
   'use strict';
@@ -64,6 +64,7 @@ define( require => {
 
     Node.call( this );
 
+    // @private
     this.rectangle = new Rectangle( 0, -options.height, options.width, options.height, {
       fill: options.backgroundFill,
       stroke: STROKE_COLOR,
@@ -71,7 +72,7 @@ define( require => {
     } );
     content.addChild( this.rectangle );
 
-    // all labels will be attached to this node
+    // @private - all labels will be attached to this node
     this.labelsNode = new Node();
     this.addChild( this.labelsNode );
 
@@ -129,6 +130,7 @@ define( require => {
     // way, see https://github.com/phetsims/tasks/issues/992
     this.dataSeriesList = [];
 
+    // @private
     this.content = content;
 
     this.mutate( options );

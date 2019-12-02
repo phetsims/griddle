@@ -43,15 +43,15 @@ define( require => {
       // @private {boolean|null} - if set with setCursorVisible, then this will indicate visibility of the cursor
       this._cursorVisibleOverride = null;
 
-      // {number} - value for the cursor, determines cursor positioning
+      // @private {number} - value for the cursor, determines cursor positioning
       this.cursorValue = 0;
 
       // @private - minimum and maximum recorded value, required by the cursor to limit dragging
       this.minRecordedValue = 0;
       this.maxRecordedValue = 0;
 
-      // maps XYDataSeries.uniqueId to a listener required by XYCursorPlot so that it can be removed if the series
-      // is removed.
+      // @private - maps XYDataSeries.uniqueId to a listener required by XYCursorPlot so that it can be removed if the
+      // series is removed.
       // TODO: This can be replaced by an actual Map when we can use them
       this.valueSeriesListenerMap = {};
 
@@ -65,6 +65,8 @@ define( require => {
 
     /**
      * Add a series to the plot, first adding a listener that keeps track of minimum and maximum data values.
+     * @public
+     * @override
      *
      * @param {XYDataSeries} series
      * @param {number} scaleFactor
@@ -252,7 +254,6 @@ define( require => {
      * Update the minimum/maximum plotted domain of the data recorded on this plot. This information is used
      * to determine selected cursor values. If no data is associated with this plot, extrema are represented by
      * min = infinity, max = negative infinity.
-     *
      * @private
      */
     updateMinMaxXValues() {

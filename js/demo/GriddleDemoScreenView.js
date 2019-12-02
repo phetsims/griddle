@@ -140,7 +140,7 @@ define( require => {
     emitter.addListener( listener );
     const sliderRange = new Range( -200, 300 );
     const sliderOptions = {
-      trackSize: new Dimension2( 200, 5 )
+      trackSize: new Dimension2( 5, 200 )
     };
     const hBox = new HBox( {
       align: 'top',

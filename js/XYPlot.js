@@ -145,6 +145,7 @@ define( require => {
      * @param {boolean} useScaleFactors - if the XYDataSeries is defined in the domain and range of this XYPlot
      *                                  (specified by minX, maxX, minY, maxY) then this should be set to true. But there
      *                                  are cases where this isn't true (like if XYDataSeries is in view coordinates)
+     * @public
      */
     addSeries: function( series, useScaleFactors ) {
       assert && assert( this.dataSeriesList.indexOf( series ) < 0, 'XYDataSeries already added to XYPlot' );
@@ -162,8 +163,8 @@ define( require => {
     },
 
     /**
-     *
      * @param {XYDataSeries} series
+     * @public
      */
     removeSeries: function( series ) {
       const seriesIndex = this.dataSeriesList.indexOf( series );
@@ -180,6 +181,7 @@ define( require => {
      * Set the plot style for the graph, to be drawn as a line graph or a scatter plot.
      *
      * @param {*} plotStyle - one of plotStyle
+     * @public
      */
     setPlotStyle( plotStyle ) {
       this.plotStyle = plotStyle;
@@ -194,6 +196,7 @@ define( require => {
      * Set the minimum X for graph and redraw the plot grid.
      *
      * @param {number} minX
+     * @public
      */
     setMinX( minX ) {
       this.minX = minX;
@@ -204,6 +207,7 @@ define( require => {
      * Set the maximum X for the graph and redraw the plot grid.
      *
      * @param {number} maxX
+     * @public
      */
     setMaxX( maxX ) {
       this.maxX = maxX;
@@ -214,6 +218,7 @@ define( require => {
      * Set the minimum Y for the graph and redraw the plot grid.
      *
      * @param {} minY
+     * @public
      */
     setMinY( minY ) {
       this.minY = minY;
@@ -224,6 +229,7 @@ define( require => {
      * Set the maximum Y for the graph and redraw the plot grid.
      *
      * @param {} maxY
+     * @public
      */
     setMaxY( maxY ) {
       this.maxY = maxY;
@@ -234,6 +240,7 @@ define( require => {
      * Set the x step for the grid lines and labels and redraw the grid and labels.
      *
      * @param {number} stepX
+     * @public
      */
     setStepX( stepX ) {
       this.stepX = stepX;
@@ -244,6 +251,7 @@ define( require => {
      * Set the stepY for the graph and labels and redraw the grid and labels.
      *
      * @param {number} stepY
+     * @public
      */
     setStepY( stepY ) {
       this.stepY = stepY;
@@ -254,6 +262,7 @@ define( require => {
      * Redraw the grid and all labels. Removes all label text and then adds it back as new text. Also creates
      * a new shape for the grid path depending on minimum, maximum, and step values for the x and y dimensions.
      * So this is an expensive function.
+     * @private
      */
     redrawGrid() {
       this.labelsNode.removeAllChildren();

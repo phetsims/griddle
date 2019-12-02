@@ -23,10 +23,12 @@ define( require => {
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
+  const Range = require( 'DOT/Range' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Shape = require( 'KITE/Shape' );
   const SpanNode = require( 'GRIDDLE/SpanNode' );
   const Text = require( 'SCENERY/nodes/Text' );
+  const Util = require( 'DOT/Util' );
 
   // constants
   const LABEL_GRAPH_MARGIN = 3;
@@ -40,9 +42,12 @@ define( require => {
      *                                      - This may be seconds or another unit depending on the model.
      * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted. The client is responsible for pruning data as
      *                                             - it leaves the visible window.
+     * @param {Node} verticalAxisLabelNode - shown on the vertical axis (should already be rotated, if necessary)
+     * @param {Node} horizontalAxisLabelNode - shown on the horizontal axis
+     * @param {Node} spanLabelNode - shown for the time divisions
      * @param {Object} [options]
      */
-    constructor( timeProperty, dynamicSeriesArray, options ) {
+    constructor( timeProperty, dynamicSeriesArray, verticalAxisLabelNode, horizontalAxisLabelNode, spanLabelNode, options ) {
       super();
 
       options = merge( {
@@ -65,12 +70,9 @@ define( require => {
         graphPanelOptions: null, // filled in below because some defaults are based on other options
         gridLineOptions: null, // filled in below because some defaults are based on other options
 
-        // Labels (required) // TODO: Use required pattern
-        verticalAxisLabelNode: null,
-        horizontalAxisLabelNode: null,
-        spanLabelNode: null,
+        showVerticalGridLabels: true,
 
-        showVerticalGridLabels: true
+        verticalRange: new Range( -1, 1 )
       }, options );
 
       // Promote to local variables for readability
@@ -110,7 +112,7 @@ define( require => {
       const modelViewTransform = new ModelViewTransform2();
       timeProperty.link( time => {
         modelViewTransform.setToRectangleMapping(
-          new Bounds2( time - 4, -1, time, +1 ),
+          new Bounds2( time - 4, options.verticalRange.min, time, options.verticalRange.max ),
           new Bounds2( 0, 0, width - options.rightGraphMargin, height )
         );
       } );
@@ -127,7 +129,7 @@ define( require => {
         const b = graphPanel.localToParentBounds( line.bounds );
         const yValue = modelViewTransform.viewToModelY( y );
         if ( options.showVerticalGridLabels ) {
-          this.addChild( new Text( yValue, {
+          this.addChild( new Text( Util.toFixed( yValue, 2 ), {
             fill: 'white',
             rightCenter: b.leftCenter.plusXY( horizontalLabelMargin, 0 )
           } ) );
@@ -175,32 +177,32 @@ define( require => {
        * -------------------------------------------*/
 
       // Position the vertical axis title node
-      options.verticalAxisLabelNode.mutate( {
+      verticalAxisLabelNode.mutate( {
         maxHeight: graphPanel.height,
         right: this.bounds.minX - VERTICAL_AXIS_LABEL_MARGIN, // whether or not there are vertical axis labels, position to the left
         centerY: graphPanel.centerY
       } );
-      this.addChild( options.verticalAxisLabelNode );
+      this.addChild( verticalAxisLabelNode );
 
-      const spanNode = new SpanNode( options.spanLabelNode, plotWidth / 4, {
+      const spanNode = new SpanNode( spanLabelNode, plotWidth / 4, {
         left: graphPanel.left,
         top: graphPanel.bottom + 2
       } );
 
       this.addChild( spanNode );
-      this.addChild( options.horizontalAxisLabelNode );
+      this.addChild( horizontalAxisLabelNode );
 
       // For i18n, “Time” will expand symmetrically L/R until it gets too close to the scale bar. Then, the string will
       // expand to the R only, until it reaches the point it must be scaled down in size.
-      options.horizontalAxisLabelNode.maxWidth = graphPanel.right - spanNode.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
+      horizontalAxisLabelNode.maxWidth = graphPanel.right - spanNode.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
 
       // Position the horizontal axis title node after its maxWidth is specified
-      options.horizontalAxisLabelNode.mutate( {
+      horizontalAxisLabelNode.mutate( {
         top: graphPanel.bottom + LABEL_GRAPH_MARGIN,
         centerX: plotWidth / 2 + graphPanel.bounds.minX
       } );
-      if ( options.horizontalAxisLabelNode.left < spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
-        options.horizontalAxisLabelNode.left = spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
+      if ( horizontalAxisLabelNode.left < spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
+        horizontalAxisLabelNode.left = spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
       }
 
       this.mutate( options );

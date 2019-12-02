@@ -12,6 +12,7 @@ define( require => {
   const DynamicSeries = require( 'GRIDDLE/DynamicSeries' );
   const Property = require( 'AXON/Property' );
   const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
+  const Text = require( 'SCENERY/nodes/Text' );
 
   QUnit.module( 'ScrollingChartNode' );
 
@@ -20,7 +21,10 @@ define( require => {
     const series1 = new DynamicSeries( { color: 'blue' } );
     const scrollingChartNode = new ScrollingChartNode(
       timeProperty,
-      [ series1 ]
+      [ series1 ],
+      new Text( 'vertical' ),
+      new Text( 'horizontal' ),
+      new Text( 'scale' ), {}
     );
     scrollingChartNode.dispose();
     assert.ok( true, 'dispose completed' );

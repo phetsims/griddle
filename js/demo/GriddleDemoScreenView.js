@@ -193,13 +193,15 @@ define( require => {
       series1.emitter.emit();
     };
     emitter.addListener( listener );
-    const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], {
-      width: 200,
-      height: 150,
-      verticalAxisLabelNode: new Text( 'Height (m)', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
-      horizontalAxisLabelNode: new Text( 'time (s)', { fill: 'white' } ),
-      spanLabelNode: new Text( '1 s', { fill: 'white' } )
-    } );
+    const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], new Text( 'Height (m)', {
+        rotation: 3 * Math.PI / 2,
+        fill: 'white'
+      } ),
+      new Text( 'time (s)', { fill: 'white' } ),
+      new Text( '1 s', { fill: 'white' } ), {
+        width: 200,
+        height: 150
+      } );
     const panel = new Panel( scrollingChartNode, {
       fill: 'gray',
       center: layoutBounds.center

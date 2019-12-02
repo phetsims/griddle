@@ -112,7 +112,7 @@ define( require => {
       // Map from data coordinates to chart coordinates. Note that the "x" axis is the "time" axis in most or all cases
       const modelViewTransform = new ModelViewTransform2();
       timeProperty.link( time => {
-        modelViewTransform.setToRectangleMapping(
+        modelViewTransform.setToRectangleInvertedYMapping(
           new Bounds2( time - 4, options.verticalRange.min, time, options.verticalRange.max ),
           new Bounds2( 0, 0, width - options.rightGraphMargin, height )
         );

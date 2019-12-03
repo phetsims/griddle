@@ -16,6 +16,7 @@ define( require => {
 
   // modules
   const Bounds2 = require( 'DOT/Bounds2' );
+  const DerivedProperty = require( 'AXON/DerivedProperty' );
   const DynamicSeriesNode = require( 'GRIDDLE/DynamicSeriesNode' );
   const Emitter = require( 'AXON/Emitter' );
   const griddle = require( 'GRIDDLE/griddle' );
@@ -23,12 +24,14 @@ define( require => {
   const merge = require( 'PHET_CORE/merge' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   const Node = require( 'SCENERY/nodes/Node' );
+  const Property = require( 'AXON/Property' );
   const Range = require( 'DOT/Range' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Shape = require( 'KITE/Shape' );
   const SpanNode = require( 'GRIDDLE/SpanNode' );
   const Text = require( 'SCENERY/nodes/Text' );
   const Util = require( 'DOT/Util' );
+  const ZoomButton = require( 'SCENERY_PHET/buttons/ZoomButton' );
 
   // constants
   const LABEL_GRAPH_MARGIN = 3;
@@ -73,8 +76,14 @@ define( require => {
         showVerticalGridLabels: true,
         verticalGridLabelNumberOfDecimalPlaces: 0,
 
-        verticalRange: new Range( -1, 1 )
+        verticalRanges: [ new Range( -1, 1 ) ], // If there is more than one specified vertical range, zoom buttons are displayed
+        initialVerticalRangeIndex: 0
       }, options );
+
+      const zoomLevelIndexProperty = new Property( options.initialVerticalRangeIndex, {
+        isValidValue: v => v >= 0 && v < options.verticalRanges.length
+      } );
+      const verticalRangeProperty = new DerivedProperty( [ zoomLevelIndexProperty ], index => options.verticalRanges[ index ] );
 
       // Promote to local variables for readability
       const { width, height, numberHorizontalLines, numberVerticalLines } = options;
@@ -111,31 +120,47 @@ define( require => {
 
       // Map from data coordinates to chart coordinates. Note that the "x" axis is the "time" axis in most or all cases
       const modelViewTransform = new ModelViewTransform2();
-      timeProperty.link( time => {
+
+      // TODO: unlink on dispose
+      Property.multilink( [ timeProperty, verticalRangeProperty ], ( time, verticalRange ) => {
         modelViewTransform.setToRectangleInvertedYMapping(
-          new Bounds2( time - 4, options.verticalRange.min, time, options.verticalRange.max ),
+          new Bounds2( time - 4, verticalRange.min, time, verticalRange.max ),
           new Bounds2( 0, 0, width - options.rightGraphMargin, height )
         );
       } );
+      const gridLineLayer = new Node();
+      graphPanel.addChild( gridLineLayer );
+      const gridLabelLayer = new Node();
+      this.addChild( gridLabelLayer );
 
-      // Horizontal lines indicate increasing vertical value
-      const horizontalLabelMargin = -3;
-      for ( let i = 0; i <= numberHorizontalLines + 1; i++ ) {
-        const y = height * i / ( numberHorizontalLines + 1 );
-        const line = new Line( 0, y, width, y, options.gridLineOptions );
-        if ( i !== 0 && i !== numberHorizontalLines + 1 ) {
-          graphPanel.addChild( line );
-        }
+      verticalRangeProperty.link( verticalRange => {
 
-        const b = graphPanel.localToParentBounds( line.bounds );
-        const yValue = modelViewTransform.viewToModelY( y );
-        if ( options.showVerticalGridLabels ) {
-          this.addChild( new Text( Util.toFixed( yValue, options.verticalGridLabelNumberOfDecimalPlaces ), {
-            fill: 'white',
-            rightCenter: b.leftCenter.plusXY( horizontalLabelMargin, 0 )
-          } ) );
+        const gridLineChildren = [];
+        const gridLabelChildren = [];
+
+        // Horizontal lines indicate increasing vertical value
+        const horizontalLabelMargin = -3;
+        for ( let i = 0; i <= numberHorizontalLines + 1; i++ ) {
+          const y = height * i / ( numberHorizontalLines + 1 );
+          const line = new Line( 0, y, width, y, options.gridLineOptions );
+          if ( i !== 0 && i !== numberHorizontalLines + 1 ) {
+            gridLineChildren.push( line );
+          }
+
+          const b = graphPanel.localToParentBounds( line.bounds );
+          const yValue = modelViewTransform.viewToModelY( y );
+          if ( options.showVerticalGridLabels ) {
+
+            // TODO: Should number of decimal places depend on value or perhaps on zoom level?  We want to show -2 -1 0 1 2, but also -0.5, 0, 0.5, right?
+            gridLabelChildren.push( new Text( Util.toFixed( yValue, options.verticalGridLabelNumberOfDecimalPlaces ), {
+              fill: 'white',
+              rightCenter: b.leftCenter.plusXY( horizontalLabelMargin, 0 )
+            } ) );
+          }
         }
-      }
+        gridLineLayer.children = gridLineChildren;
+        gridLabelLayer.children = gridLabelChildren;
+      } );
 
       const plotWidth = width - options.rightGraphMargin;
 
@@ -146,6 +171,31 @@ define( require => {
       }
 
       this.addChild( graphPanel );
+
+      if ( options.verticalRanges.length > 1 ) {
+        const zoomButtonOptions = {
+          left: graphPanel.right + 5,
+          baseColor: '#97c7fa',
+          radius: 6,
+          xMargin: 5,
+          yMargin: 3
+        };
+
+        const zoomInButton = new ZoomButton( merge( {
+          in: true, top: graphPanel.top, listener: () => zoomLevelIndexProperty.value--
+        }, zoomButtonOptions ) );
+        this.addChild( zoomInButton );
+
+        const zoomOutButton = new ZoomButton( merge( {
+          in: false, top: zoomInButton.bottom + 5, listener: () => zoomLevelIndexProperty.value++
+        }, zoomButtonOptions ) );
+        this.addChild( zoomOutButton );
+
+        zoomLevelIndexProperty.link( zoomLevelIndex => {
+          zoomOutButton.enabled = zoomLevelIndex < options.verticalRanges.length - 1;
+          zoomInButton.enabled = zoomLevelIndex > 0;
+        } );
+      }
 
       // @private - for disposal
       this.scrollingChartNodeDisposeEmitter = new Emitter();
@@ -177,6 +227,7 @@ define( require => {
        * Optional decorations
        * -------------------------------------------*/
 
+      // TODO: How to make sure this accommodates the widest grid labels?
       // Position the vertical axis title node
       verticalAxisLabelNode.mutate( {
         maxHeight: graphPanel.height,

@@ -21,7 +21,7 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  const PlotStyle = new Enumeration( [ 'SCATTER', 'LINE' ] );
+  const PlotStyle = Enumeration.byKeys( [ 'SCATTER', 'LINE' ] );
 
   // to avoid instantiating numerous Colors
   const scratchColor = new Color( 'black' );

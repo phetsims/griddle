@@ -29,6 +29,7 @@ define( require => {
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Shape = require( 'KITE/Shape' );
   const SpanNode = require( 'GRIDDLE/SpanNode' );
+  const Tandem = require( 'TANDEM/Tandem' );
   const Text = require( 'SCENERY/nodes/Text' );
   const Util = require( 'DOT/Util' );
   const ZoomButton = require( 'SCENERY_PHET/buttons/ZoomButton' );
@@ -77,7 +78,9 @@ define( require => {
         verticalGridLabelNumberOfDecimalPlaces: 0,
 
         verticalRanges: [ new Range( -1, 1 ) ], // If there is more than one specified vertical range, zoom buttons are displayed
-        initialVerticalRangeIndex: 0
+        initialVerticalRangeIndex: 0,
+
+        tandem: Tandem.optional
       }, options );
 
       const zoomLevelIndexProperty = new Property( options.initialVerticalRangeIndex, {
@@ -182,12 +185,18 @@ define( require => {
         };
 
         const zoomInButton = new ZoomButton( merge( {
-          in: true, top: graphPanel.top, listener: () => zoomLevelIndexProperty.value--
+          in: true,
+          top: graphPanel.top,
+          listener: () => zoomLevelIndexProperty.value--,
+          tandem: options.tandem.createTandem( 'zoomInButton' )
         }, zoomButtonOptions ) );
         this.addChild( zoomInButton );
 
         const zoomOutButton = new ZoomButton( merge( {
-          in: false, top: zoomInButton.bottom + 5, listener: () => zoomLevelIndexProperty.value++
+          in: false,
+          top: zoomInButton.bottom + 5,
+          listener: () => zoomLevelIndexProperty.value++,
+          tandem: options.tandem.createTandem( 'zoomOutButton' )
         }, zoomButtonOptions ) );
         this.addChild( zoomOutButton );
 

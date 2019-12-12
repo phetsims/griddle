@@ -35,7 +35,7 @@ define( require => {
         cursorOptions: null,
 
         // phet-io
-        tandem: Tandem.optional
+        tandem: Tandem.OPTIONAL
       }, options );
 
       super( options );
@@ -292,7 +292,7 @@ define( require => {
         drag: () => {},
 
         // phet-io
-        tandem: Tandem.optional
+        tandem: Tandem.OPTIONAL
       }, options );
 
       const width = plot.plotPath.width * WIDTH_PROPORTION;

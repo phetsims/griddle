@@ -57,7 +57,7 @@ define( require => {
       plotStyle: XYDataSeriesNode.PlotStyle.LINE,
 
       // phet-io
-      tandem: Tandem.optional
+      tandem: Tandem.OPTIONAL
     }, options );
 
     assert && assert( XYDataSeriesNode.PlotStyle.includes( options.plotStyle ), 'plotStyle must be one of PlotStyle' );

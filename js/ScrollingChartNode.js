@@ -80,7 +80,7 @@ define( require => {
         verticalRanges: [ new Range( -1, 1 ) ], // If there is more than one specified vertical range, zoom buttons are displayed
         initialVerticalRangeIndex: 0,
 
-        tandem: Tandem.optional
+        tandem: Tandem.OPTIONAL
       }, options );
 
       const zoomLevelIndexProperty = new Property( options.initialVerticalRangeIndex, {

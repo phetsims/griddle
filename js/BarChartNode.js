@@ -1,9 +1,8 @@
 // Copyright 2017-2019, University of Colorado Boulder
 
 /**
- * Bar chart for sims that need to display separate values
- *
- * TODO: Add horizontal support
+ * Bar chart for sims that need to display separate values. This chart is vertically aligned, with bars that represent
+ * values within a specified range.
  *
  * @author Jonathan Olson <jonathan.olson@colorado.edu>
  * @author Denzell Barnett (PhET Interactive Simulations)
@@ -45,10 +44,9 @@ define( require => {
    */
   function BarChartNode( bars, rangeProperty, options ) {
     Node.call( this );
-
     const self = this;
-
     options = merge( {
+
       // {number} - Space in-between each bar
       barSpacing: 12,
 
@@ -60,7 +58,6 @@ define( require => {
         minPadding: 8,
         maxExtension: 5
       },
-
       barOptions: {
         // See BarNode's options.
       },
@@ -111,7 +108,7 @@ define( require => {
           fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
         } ) );
 
-        // The valuePanel is a transparent background for each label. Used to make the label standout against bar if the bar falls beneath the x-Axis.
+        // Transparent background for each label, used to make the label standout against bar if the bar falls beneath the x-Axis.
         const valuePanel = new Panel( labelText, {
           stroke: null,
           fill: options.labelBackgroundColor, // put transparency in the color so that the children aren't transparent
@@ -141,6 +138,7 @@ define( require => {
 
     // Manual positioning of labels to match position of barNodes in HBox.
     for ( let i = 0; i < bars.length; i++ ) {
+
       // Checks if the labelBox's VBox has any children.
       if ( typeof( labelBox.children[ i ].children[ 0 ] ) !== 'undefined' ) {
         labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;
@@ -160,7 +158,6 @@ define( require => {
       headHeight: 9,
       headWidth: 8
     } );
-
     rangeProperty.link( function( range ) {
       yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );
     } );
@@ -171,7 +168,6 @@ define( require => {
       self.localBounds = self.localBounds.withMinY( Math.min( yAxis.bottom, -range.max ) )
         .withMaxY( Math.max( options.xAxisOptions.lineWidth / 2, -range.min, labelBox.bottom ) );
     } );
-
     this.mutate( options );
   }
 

@@ -154,7 +154,8 @@ define( require => {
           const yValue = modelViewTransform.viewToModelY( y );
           if ( options.showVerticalGridLabels ) {
 
-            // TODO: Should number of decimal places depend on value or perhaps on zoom level?  We want to show -2 -1 0 1 2, but also -0.5, 0, 0.5, right?
+            // TODO: Should number of decimal places depend on value or perhaps on zoom level?
+            // We want to show -2 -1 0 1 2, but also -0.5, 0, 0.5, right? See https://github.com/phetsims/griddle/issues/47
             gridLabelChildren.push( new Text( Util.toFixed( yValue, options.verticalGridLabelNumberOfDecimalPlaces ), {
               fill: 'white',
               rightCenter: b.leftCenter.plusXY( horizontalLabelMargin, 0 )

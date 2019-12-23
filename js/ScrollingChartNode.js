@@ -124,8 +124,8 @@ define( require => {
       // Map from data coordinates to chart coordinates. Note that the "x" axis is the "time" axis in most or all cases
       const modelViewTransform = new ModelViewTransform2();
 
-      // TODO: unlink on dispose
-      Property.multilink( [ timeProperty, verticalRangeProperty ], ( time, verticalRange ) => {
+      // @private {MultiLink}
+      this.dataMappingLink = Property.multilink( [ timeProperty, verticalRangeProperty ], ( time, verticalRange ) => {
         modelViewTransform.setToRectangleInvertedYMapping(
           new Bounds2( time - 4, verticalRange.min, time, verticalRange.max ),
           new Bounds2( 0, 0, width - options.rightGraphMargin, height )
@@ -136,7 +136,7 @@ define( require => {
       const gridLabelLayer = new Node();
       this.addChild( gridLabelLayer );
 
-      verticalRangeProperty.link( verticalRange => {
+      verticalRangeProperty.link( () => {
 
         const gridLineChildren = [];
         const gridLabelChildren = [];
@@ -236,7 +236,6 @@ define( require => {
        * Optional decorations
        * -------------------------------------------*/
 
-      // TODO: How to make sure this accommodates the widest grid labels?
       // Position the vertical axis title node
       verticalAxisLabelNode.mutate( {
         maxHeight: graphPanel.height,
@@ -276,6 +275,7 @@ define( require => {
     dispose() {
       this.scrollingChartNodeDisposeEmitter.emit();
       this.scrollingChartNodeDisposeEmitter.dispose();
+      Property.unmultilink( this.dataMappingLink );
       super.dispose();
     }
   }

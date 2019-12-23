@@ -52,7 +52,6 @@ define( require => {
 
       // @private - maps XYDataSeries.uniqueId to a listener required by XYCursorPlot so that it can be removed if the
       // series is removed.
-      // TODO: This can be replaced by an actual Map when we can use them
       this.valueSeriesListenerMap = {};
 
       // @private

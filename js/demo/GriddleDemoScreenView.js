@@ -28,7 +28,6 @@ define( require => {
   const sceneryPhetQueryParameters = require( 'SCENERY_PHET/sceneryPhetQueryParameters' );
   const ScrollingChartNode = require( 'GRIDDLE/ScrollingChartNode' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Vector2 = require( 'DOT/Vector2' );
   const VSlider = require( 'SUN/VSlider' );
   const XYPlot = require( 'GRIDDLE/XYPlot' );
 

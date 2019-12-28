@@ -50,7 +50,7 @@ define( require => {
       this.minRecordedValue = 0;
       this.maxRecordedValue = 0;
 
-      // @private - maps XYDataSeries.uniqueId to a listener required by XYCursorPlot so that it can be removed if the
+      // @private - maps DataSeries.uniqueId to a listener required by XYCursorPlot so that it can be removed if the
       // series is removed.
       this.valueSeriesListenerMap = {};
 
@@ -67,7 +67,7 @@ define( require => {
      * @public
      * @override
      *
-     * @param {XYDataSeries} series
+     * @param {DynamicSeries} series
      * @param {number} scaleFactor
      */
     addSeries( series, scaleFactor ) {
@@ -85,14 +85,14 @@ define( require => {
 
       // save to map so that listener can be found again for disposal
       this.valueSeriesListenerMap[ series.uniqueId ] = seriesListener;
-      series.addDataSeriesListener( seriesListener );
+      series.emitter.addListener( seriesListener );
     }
 
     /**
      * Remove a series from the plot and dispose of the plot specific series listener.
      * @public
      *
-     * @param {XYDataSeries} series - to remove
+     * @param {DynamicSeries} series - to remove
      */
     removeSeries( series ) {
       series.removeDataSeriesListener( this.valueSeriesListenerMap[ series.uniqueId ] );
@@ -361,7 +361,7 @@ define( require => {
      */
     constructor( diameter, baseColor, options ) {
 
-      options =  merge( {
+      options = merge( {
         lineWidth: 0.5
       }, options );
 

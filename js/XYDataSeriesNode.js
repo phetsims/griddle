@@ -1,7 +1,7 @@
 // Copyright 2014-2019, University of Colorado Boulder
 
 /**
- * Node that depicts an XYDataSeries as a line on a canvas. There is no reason to create this outside of griddle,
+ * Node that depicts an DynamicSeries as a line on a canvas. There is no reason to create this outside of griddle,
  * it is created internally by XYPlot.
  *
  * @author Sam Reid (PhET Interactive Simulations)
@@ -18,7 +18,6 @@ define( require => {
   const griddle = require( 'GRIDDLE/griddle' );
   const inherit = require( 'PHET_CORE/inherit' );
   const merge = require( 'PHET_CORE/merge' );
-  const Vector2 = require( 'DOT/Vector2' );
 
   // constants
   const PlotStyle = Enumeration.byKeys( [ 'SCATTER', 'LINE' ] );
@@ -27,7 +26,7 @@ define( require => {
   const scratchColor = new Color( 'black' );
 
   /**
-   * @param {XYDataSeries} xyDataSeries
+   * @param {DynamicSeries} xyDataSeries
    * @param {Bounds2} plotBounds
    * @param {Range} yRange - in "model" coordinates for the plotted data
    * @param {Object} [options]
@@ -38,8 +37,8 @@ define( require => {
     const self = this;
     options = merge( {
 
-      // If true, XYDataSeries values will be scaled by xScaleFactor and yScaleFactor before drawing to the view. this
-      // is generally used if the XYDataSeries is in the coordinate plot domain and range specified by XYPlot minX,
+      // If true, DynamicSeries values will be scaled by xScaleFactor and yScaleFactor before drawing to the view. this
+      // is generally used if the DynamicSeries is in the coordinate plot domain and range specified by XYPlot minX,
       // maxX, minY, maxY. But if your data is relative another coordinate frame (like view coordinates), this can
       // be set to false
       useScaleFactors: true,
@@ -51,7 +50,7 @@ define( require => {
 
     assert && assert( PlotStyle.includes( options.plotStyle ), 'plotStyle must be one of STYLE_OPTIONS' );
 
-    // @private {XYDataSeries} - the data for this node to be plotted
+    // @private {DynamicSeries} - the data for this node to be plotted
     this.xyDataSeries = xyDataSeries;
 
     // @private {Bounds2} - the bounds for the plot for positioning drawn data points, excludes labels
@@ -76,27 +75,12 @@ define( require => {
 
     self.setCanvasBounds( plotBounds );
 
-    const listener = function() {
-      self.invalidatePaint();
-    };
+    const listener = () => self.invalidatePaint();
 
-    const clearListener = function() {
-      self.invalidatePaint();
-    };
-    xyDataSeries.addDataSeriesListener( listener );
-    xyDataSeries.cleared.addListener( clearListener );
+    xyDataSeries.emitter.addListener( listener );
 
-    // reusable vectors for optimal performance
-    this.previousPoint = new Vector2( 0, 0 );
-    this.currentPoint = new Vector2( 0, 0 );
-
-    /**
-     * @private
-     */
-    this.disposeXYDataSeriesNode = function() {
-      xyDataSeries.removeDataSeriesListener( listener );
-      xyDataSeries.cleared.removeListener( clearListener );
-    };
+    // @private
+    this.disposeXYDataSeriesNode = () => xyDataSeries.emitter.removeListener( listener );
   }
 
   griddle.register( 'XYDataSeriesNode', XYDataSeriesNode );
@@ -104,7 +88,7 @@ define( require => {
   return inherit( CanvasNode, XYDataSeriesNode, {
 
     /**
-     * Set the scale factor for the x coordinates - before drawing, x points in the XYDataSeries will be multiplied by
+     * Set the scale factor for the x coordinates - before drawing, x points in the DynamicSeries will be multiplied by
      * this factor.
      *
      * @param {number} scaleFactor
@@ -114,7 +98,7 @@ define( require => {
     },
 
     /**
-     * Set the scale factor for the y coordinates - before drawing, y points in the XYDataSeries will by multiplied
+     * Set the scale factor for the y coordinates - before drawing, y points in the DynamicSeries will by multiplied
      * by this factor.
      *
      * @param {} scaleFactor
@@ -124,8 +108,7 @@ define( require => {
     },
 
     /**
-     *
-     * @param {*} plotStyle - value from of PlotStyle
+     * @param {PlotStyle} plotStyle - value from of PlotStyle
      */
     setPlotStyle( plotStyle ) {
       assert && assert( PlotStyle.includes( plotStyle ) );
@@ -155,44 +138,31 @@ define( require => {
      * @public
      */
     paintCanvas: function( context ) {
-
-      const xPoints = this.xyDataSeries.getXPoints();
-      const yPoints = this.xyDataSeries.getYPoints();
-      const pointStyles = this.xyDataSeries.getPointStyles();
-      const dataPointsLength = this.xyDataSeries.getLength();
-
-      if ( dataPointsLength > 0 ) {
-        if ( this.plotStyle === PlotStyle.LINE ) {
-          this.drawDataLine( context, xPoints, yPoints, dataPointsLength );
-        }
-        else if ( this.plotStyle === PlotStyle.SCATTER ) {
-          this.drawDataScatter( context, xPoints, yPoints, pointStyles, dataPointsLength );
-        }
-        else if ( assert ) {
-          throw new Error( 'Cannot draw plot for ' + this.plotStyle + 'plot style' );
-        }
+      if ( this.plotStyle === PlotStyle.LINE ) {
+        this.drawDataLine( context, this.xyDataSeries.data );
+      }
+      else if ( this.plotStyle === PlotStyle.SCATTER ) {
+        this.drawDataScatter( context, this.xyDataSeries.data );
       }
     },
 
     /**
-     * Draw the data as a continuous line over all points in the XYDataSeries.
+     * Draw the data as a continuous line over all points in the DynamicSeries.
      *
-     * @param {CanvasRenderingContext2D}
-     * @param {Array.<number>} xPoints
-     * @param {Array.<number>} yPoints
-     * @param {number} dataPointsLength
+     * @param {CanvasRenderingContext2D} context
+     * @param {Vector2[]} points
      */
-    drawDataLine( context, xPoints, yPoints, dataPointsLength ) {
+    drawDataLine( context, points ) {
       let previousPointOnGraph = false;
       context.beginPath();
 
       // draw the line by connecting all of the points in the data set
-      for ( let i = 0; i < dataPointsLength; i++ ) {
+      for ( let i = 0; i < points.length; i++ ) {
         const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
         const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
 
-        const xPos = xPoints[ i ] * xScaleFactor;
-        const yPos = yPoints[ i ] * yScaleFactor - this.yPointOffset;
+        const xPos = points[ i ].x * xScaleFactor;
+        const yPos = points[ i ].y * yScaleFactor - this.yPointOffset;
 
         // only render points that are on the graph
         if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
@@ -218,21 +188,18 @@ define( require => {
     },
 
     /**
-     * Draw the XYDataSeries as a scatter plot.
+     * Draw the DynamicSeries as a scatter plot.
      *
-     * @param {CanvasRenderingContext2D}
-     * @param {Array.<number>} xPoints
-     * @param {Array.<number>} yPoints
-     * @param {Array.<PointStyle|null>} pointStyles [description]
-     * @param {number} dataPointsLength
+     * @param {CanvasRenderingContext2D} context
+     * @param {PointStyledVector2[]} points
      */
-    drawDataScatter( context, xPoints, yPoints, pointStyles, dataPointsLength ) {
-      for ( let i = 0; i < dataPointsLength; i++ ) {
+    drawDataScatter( context, points ) {
+      for ( let i = 0; i < points.length; i++ ) {
         const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
         const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
 
-        const xPos = xPoints[ i ] * xScaleFactor;
-        const yPos = yPoints[ i ] * yScaleFactor - this.yPointOffset;
+        const xPos = points[ i ].x * xScaleFactor;
+        const yPos = points[ i ].y * yScaleFactor - this.yPointOffset;
 
         // only render points that are on the graph
         if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
@@ -244,7 +211,7 @@ define( require => {
           let lineWidth = this.xyDataSeries.lineWidth;
           let strokeStyle = null;
 
-          const pointStyle = pointStyles[ i ];
+          const pointStyle = points[ i ].pointStyle;
           if ( pointStyle ) {
             scratchColor.alpha = pointStyle.opacity || opacity;
             radius = pointStyle.radius || radius;

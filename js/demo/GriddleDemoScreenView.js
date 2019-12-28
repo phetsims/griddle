@@ -30,7 +30,6 @@ define( require => {
   const Text = require( 'SCENERY/nodes/Text' );
   const Vector2 = require( 'DOT/Vector2' );
   const VSlider = require( 'SUN/VSlider' );
-  const XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
   const XYPlot = require( 'GRIDDLE/XYPlot' );
 
   // constants - this is a hack to enable components to animate from the animation loop
@@ -76,12 +75,13 @@ define( require => {
       yMargin: 10,
       center: layoutBounds.center
     } );
-    const series = new XYDataSeries( { color: Color.BLUE } );
+    const series = new DynamicSeries( { color: Color.BLUE } );
     plot.addSeries( series, false );
     let forward = true;
     let count = 0;
     const listener = function( dt ) {
-      series.addPoint( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) );
+      series.data.push( new Vector2( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) ) );
+      series.emitter.emit();
       time = time + ( forward ? 1 : -1 );
 
       if ( time > 400 ) {

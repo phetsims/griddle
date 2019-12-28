@@ -1,7 +1,7 @@
 // Copyright 2014-2019, University of Colorado Boulder
 
 /**
- * Displays scatter or line data via XYDataSeries on an xy chart.
+ * Displays scatter or line data via DynamicSeries on an xy chart.
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Aadish Gupta (PhET Interactive Simulations)
@@ -118,14 +118,14 @@ define( require => {
     this.addChild( content );
 
     /**
-     * Map XYDataSeries.uniqueId -> XYDataSeriesNode, for disposal and so that one can access an XYDataSeriesNode
+     * Map DynamicSeries.uniqueId -> XYDataSeriesNode, for disposal and so that one can access an XYDataSeriesNode
      * if necessary.
      * @public
      * @type {{}}
      */
     this.seriesViewMap = {};
 
-    // @public - the list of XYDataSeries attached to this XYPlot.
+    // @public - the list of DynamicSeries attached to this XYPlot.
     // TODO: not necessary when we support Map because these can be the keys of this.seriesViewMap and retrieved that
     // way, see https://github.com/phetsims/tasks/issues/992
     this.dataSeriesList = [];
@@ -141,14 +141,14 @@ define( require => {
   return inherit( Node, XYPlot, {
 
     /**
-     * @param {XYDataSeries} series
-     * @param {boolean} useScaleFactors - if the XYDataSeries is defined in the domain and range of this XYPlot
+     * @param {DynamicSeries} series
+     * @param {boolean} useScaleFactors - if the DynamicSeries is defined in the domain and range of this XYPlot
      *                                  (specified by minX, maxX, minY, maxY) then this should be set to true. But there
-     *                                  are cases where this isn't true (like if XYDataSeries is in view coordinates)
+     *                                  are cases where this isn't true (like if DynamicSeries is in view coordinates)
      * @public
      */
     addSeries: function( series, useScaleFactors ) {
-      assert && assert( this.dataSeriesList.indexOf( series ) < 0, 'XYDataSeries already added to XYPlot' );
+      assert && assert( this.dataSeriesList.indexOf( series ) < 0, 'DynamicSeries already added to XYPlot' );
       this.dataSeriesList.push( series );
       const dataSeriesNode = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
         useScaleFactors: useScaleFactors,
@@ -163,12 +163,12 @@ define( require => {
     },
 
     /**
-     * @param {XYDataSeries} series
+     * @param {DynamicSeries} series
      * @public
      */
     removeSeries: function( series ) {
       const seriesIndex = this.dataSeriesList.indexOf( series );
-      assert && assert( seriesIndex >= 0, 'XYDataSeries not attached to XYPlot' );
+      assert && assert( seriesIndex >= 0, 'DynamicSeries not attached to XYPlot' );
       this.dataSeriesList.splice( seriesIndex, 1 );
 
       const view = this.seriesViewMap[ series.uniqueId ];

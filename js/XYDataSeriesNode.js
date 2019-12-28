@@ -131,10 +131,10 @@ define( require => {
      */
     paintCanvas( context ) {
       if ( this.plotStyle === PlotStyle.LINE ) {
-        this.drawDataLine( context, this.xyDataSeries.data );
+        this.drawDataLine( context, this.xyDataSeries );
       }
       else if ( this.plotStyle === PlotStyle.SCATTER ) {
-        this.drawDataScatter( context, this.xyDataSeries.data );
+        this.drawDataScatter( context, this.xyDataSeries );
       }
     },
 
@@ -142,19 +142,19 @@ define( require => {
      * Draw the data as a continuous line over all points in the DynamicSeries.
      *
      * @param {CanvasRenderingContext2D} context
-     * @param {Vector2[]} points
+     * @param {DynamicSeries} dynamicSeries
      */
-    drawDataLine( context, points ) {
+    drawDataLine( context, dynamicSeries ) {
       let previousPointOnGraph = false;
       context.beginPath();
 
       // draw the line by connecting all of the points in the data set
-      for ( let i = 0; i < points.length; i++ ) {
+      for ( let i = 0; i < dynamicSeries.getLength(); i++ ) {
         const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
         const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
 
-        const xPos = points[ i ].x * xScaleFactor;
-        const yPos = points[ i ].y * yScaleFactor - this.yPointOffset;
+        const xPos = dynamicSeries.getDataPoint( i ).x * xScaleFactor;
+        const yPos = dynamicSeries.getDataPoint( i ).y * yScaleFactor - this.yPointOffset;
 
         // only render points that are on the graph
         if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
@@ -183,15 +183,15 @@ define( require => {
      * Draw the DynamicSeries as a scatter plot.
      *
      * @param {CanvasRenderingContext2D} context
-     * @param {PointStyledVector2[]} points
+     * @param {DynamicSeries} dynamicSeries
      */
-    drawDataScatter( context, points ) {
-      for ( let i = 0; i < points.length; i++ ) {
+    drawDataScatter( context, dynamicSeries ) {
+      for ( let i = 0; i < dynamicSeries.getLength(); i++ ) {
         const xScaleFactor = this.useScaleFactors ? this.xScaleFactor : 1;
         const yScaleFactor = this.useScaleFactors ? this.yScaleFactor : 1;
 
-        const xPos = points[ i ].x * xScaleFactor;
-        const yPos = points[ i ].y * yScaleFactor - this.yPointOffset;
+        const xPos = dynamicSeries.getDataPoint( i ).x * xScaleFactor;
+        const yPos = dynamicSeries.getDataPoint( i ).y * yScaleFactor - this.yPointOffset;
 
         // only render points that are on the graph
         if ( this.plotBounds.containsCoordinates( xPos, yPos ) ) {
@@ -203,7 +203,7 @@ define( require => {
           let lineWidth = this.xyDataSeries.lineWidth;
           let strokeStyle = null;
 
-          const pointStyle = points[ i ].pointStyle;
+          const pointStyle = dynamicSeries.getDataPoint( i ).pointStyle;
           if ( pointStyle ) {
             scratchColor.alpha = pointStyle.opacity || opacity;
             radius = pointStyle.radius || radius;

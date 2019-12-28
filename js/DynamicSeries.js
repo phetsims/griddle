@@ -2,7 +2,7 @@
 
 /**
  * Represents a data series that has a color and associated data points which may change.  The change is signified with
- * an Emitter.  This type was introduced as a convenience type / data type for ScrollingChartNode.
+ * an Emitter.
  *
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -15,9 +15,6 @@ define( require => {
   const merge = require( 'PHET_CORE/merge' );
   const Vector2 = require( 'DOT/Vector2' );
 
-  // TODO: https://github.com/phetsims/griddle/issues/46 documentation or eliminate
-  let count = 0;
-
   class DynamicSeries {
 
     /**
@@ -25,12 +22,9 @@ define( require => {
      */
     constructor( options ) {
 
-      // @public {Vector2[]} - the data points in the series.  A NaN "y" value indicates there is no sample at that
+      // @private {Vector2[]} - the data points in the series.  A NaN "y" value indicates there is no sample at that
       // point in time
-      // TODO: https://github.com/phetsims/griddle/issues/46 should be private
       this.data = [];
-
-      this.uniqueId = count++; // TODO: https://github.com/phetsims/griddle/issues/46 eliminate this
 
       // @public {Emitter} -  sends notification when the data series changes // TODO: https://github.com/phetsims/griddle/issues/46 should be private
       this.emitter = new Emitter();
@@ -48,6 +42,11 @@ define( require => {
       this.lineWidth = options.lineWidth;
 
       this.radius = options.radius; // TODO: https://github.com/phetsims/griddle/issues/46 eliminate or document
+    }
+
+    shiftData() {
+      this.data.shift();
+      this.emitter.emit();
     }
 
     /**
@@ -83,7 +82,7 @@ define( require => {
      * @param {number} y
      * @public
      */
-    addPoint( x, y ) { // TODO https://github.com/phetsims/griddle/issues/46 rename to addXY
+    addXYDataPoint( x, y ) {
       this.addDataPoint( new Vector2( x, y ) );
     }
 
@@ -95,6 +94,23 @@ define( require => {
     addDataPoint( dataPoint ) {
       this.data.push( dataPoint );
       this.emitter.emit();
+    }
+
+    /**
+     * Returns the data point at the specified index.
+     * @param {number} index
+     * @returns {Vector2}
+     */
+    getDataPoint( index ) {
+      return this.data[ index ];
+    }
+
+    /**
+     * Returns true if there are any data points.
+     * @returns {boolean}
+     */
+    hasData() {
+      return this.data.length > 0;
     }
 
     /**

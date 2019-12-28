@@ -196,7 +196,7 @@ define( require => {
      * @public
      */
     getDataExists() {
-      return _.some( this.dataSeriesList, dataSeries => dataSeries.getLength() > 0 );
+      return _.some( this.dataSeriesList, dataSeries => dataSeries.hasData() );
     },
 
     /**
@@ -206,7 +206,7 @@ define( require => {
      * @public
      */
     setPlotStyle( plotStyle ) {
-      this.plotStyle = plotStyle; // TODO: maybe eliminate this?  See https://github.com/phetsims/griddle/issues/46
+      this.plotStyle = plotStyle;
 
       this.dataSeriesNodes.forEach( dataSeriesNode => dataSeriesNode.setPlotStyle( plotStyle ) );
     },

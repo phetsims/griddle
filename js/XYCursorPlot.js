@@ -50,9 +50,8 @@ define( require => {
       this.minRecordedValue = 0;
       this.maxRecordedValue = 0;
 
-      // @private - maps DataSeries.uniqueId to a listener required by XYCursorPlot so that it can be removed if the
-      // series is removed.
-      this.valueSeriesListenerMap = {};
+      // @private - Keep track of listeners for each series so the listeners can be removed when the series is removed
+      this.valueSeriesListenerMap = new Map();
 
       // @private
       this.chartCursor = new ChartCursor( this, options.cursorOptions );
@@ -84,7 +83,7 @@ define( require => {
       };
 
       // save to map so that listener can be found again for disposal
-      this.valueSeriesListenerMap[ series.uniqueId ] = seriesListener;
+      this.valueSeriesListenerMap.set( series, seriesListener );
       series.addDynamicSeriesListener( seriesListener );
     }
 
@@ -95,9 +94,8 @@ define( require => {
      * @param {DynamicSeries} series - to remove
      */
     removeSeries( series ) {
-      series.emitter.removeListener( this.valueSeriesListenerMap[ series.uniqueId ] );
-      delete this.valueSeriesListenerMap[ series.uniqueId ];
-
+      series.emitter.removeListener( this.valueSeriesListenerMap.get( series ) );
+      this.valueSeriesListenerMap.delete( series );
       super.removeSeries( series );
     }
 
@@ -241,7 +239,7 @@ define( require => {
       for ( let i = 0; i < this.dataSeriesList.length; i++ ) {
         const dataSeries = this.dataSeriesList[ i ];
         for ( let j = 0; j < dataSeries.getLength(); j++ ) {
-          const xValue = dataSeries.data[ j ].x;
+          const xValue = dataSeries.getDataPoint( j ).x;
 
           if ( xValue > this.maxRecordedValue ) {
             this.maxRecordedValue = xValue;

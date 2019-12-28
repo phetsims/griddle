@@ -52,8 +52,8 @@ define( require => {
 
         // Draw the graph with line segments
         const dynamicSeriesPathShape = new Shape();
-        for ( let i = 0; i < dynamicSeries.data.length; i++ ) {
-          const dataPoint = dynamicSeries.data[ i ];
+        for ( let i = 0; i < dynamicSeries.getLength(); i++ ) {
+          const dataPoint = dynamicSeries.getDataPoint( i );
           if ( isNaN( dataPoint.y ) ) {
             moveToNextPoint = true;
 
@@ -69,7 +69,7 @@ define( require => {
               dynamicSeriesPathShape.lineToPoint( point );
             }
 
-            if ( i === dynamicSeries.data.length - 1 ) {
+            if ( i === dynamicSeries.getLength() - 1 ) {
               penNode.centerY = point.y;
             }
             moveToNextPoint = false;

@@ -80,8 +80,7 @@ define( require => {
     let forward = true;
     let count = 0;
     const listener = function( dt ) {
-      series.data.push( new Vector2( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) ) );
-      series.emitter.emit();
+      series.addXYDataPoint( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) );
       time = time + ( forward ? 1 : -1 );
 
       if ( time > 400 ) {

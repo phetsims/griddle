@@ -1,12 +1,11 @@
 // Copyright 2014-2019, University of Colorado Boulder
 
 /**
- * Node that depicts an DynamicSeries as a line on a canvas. There is no reason to create this outside of griddle,
- * it is created internally by XYPlot.
+ * Node that depicts an DynamicSeries as a line or scatterplot on a canvas, created internally by XYPlot.
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
- * @author Aadish Gupta
+ * @author Aadish Gupta (PhET Interactive Simulations)
  */
 define( require => {
   'use strict';

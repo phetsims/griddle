@@ -206,7 +206,7 @@ define( require => {
      * @public
      */
     setPlotStyle( plotStyle ) {
-      this.plotStyle = plotStyle;
+      this.plotStyle = plotStyle; // TODO: maybe eliminate this?  See https://github.com/phetsims/griddle/issues/46
 
       this.dataSeriesNodes.forEach( dataSeriesNode => dataSeriesNode.setPlotStyle( plotStyle ) );
     },

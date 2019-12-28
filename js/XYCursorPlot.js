@@ -94,7 +94,7 @@ define( require => {
      * @param {DynamicSeries} series - to remove
      */
     removeSeries( series ) {
-      series.emitter.removeListener( this.valueSeriesListenerMap.get( series ) );
+      series.removeDynamicSeriesListener( this.valueSeriesListenerMap.get( series ) );
       this.valueSeriesListenerMap.delete( series );
       super.removeSeries( series );
     }

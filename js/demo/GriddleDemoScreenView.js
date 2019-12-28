@@ -183,13 +183,12 @@ define( require => {
       timeProperty.value += dt;
 
       // Sample new data
-      series1.data.push( new Vector2( timeProperty.value, Math.sin( timeProperty.value ) ) );
+      series1.addXYDataPoint( timeProperty.value, Math.sin( timeProperty.value ) );
 
       // Data that does not fall within the displayed window should be removed.
-      while ( series1.data[ 0 ].x < timeProperty.value - maxTime ) {
-        series1.data.shift();
+      while ( series1.getDataPoint( 0 ).x < timeProperty.value - maxTime ) {
+        series1.shiftData();
       }
-      series1.emitter.emit();
     };
     emitter.addListener( listener );
     const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], new Text( 'Height (m)', {

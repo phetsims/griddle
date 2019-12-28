@@ -77,10 +77,10 @@ define( require => {
         }
         pathNode.shape = dynamicSeriesPathShape;
       };
-      dynamicSeries.emitter.addListener( dynamicSeriesListener );
+      dynamicSeries.addDynamicSeriesListener( dynamicSeriesListener );
       modelViewTransform.on( 'change', dynamicSeriesListener );
       this.disposeDynamicSeriesNode = () => {
-        dynamicSeries.emitter.removeListener( dynamicSeriesListener );
+        dynamicSeries.removeDynamicSeriesListener( dynamicSeriesListener );
         modelViewTransform.off( 'change', dynamicSeriesListener );
       };
     }

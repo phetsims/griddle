@@ -26,7 +26,7 @@ define( require => {
       // point in time
       this.data = [];
 
-      // @public {Emitter} -  sends notification when the data series changes // TODO: https://github.com/phetsims/griddle/issues/46 should be private
+      // @private {Emitter} -  sends notification when the data series changes
       this.emitter = new Emitter();
 
       options = merge( {
@@ -44,6 +44,10 @@ define( require => {
       this.radius = options.radius; // TODO: https://github.com/phetsims/griddle/issues/46 eliminate or document
     }
 
+    /**
+     * Removes the first data point
+     * @public
+     */
     shiftData() {
       this.data.shift();
       this.emitter.emit();
@@ -65,6 +69,15 @@ define( require => {
      */
     addDynamicSeriesListener( listener ) {
       this.emitter.addListener( listener );
+    }
+
+    /**
+     * Removes a listener when the data series changes.
+     * @param {function} listener
+     * @public
+     */
+    removeDynamicSeriesListener( listener ) {
+      this.emitter.removeListener( listener );
     }
 
     /**

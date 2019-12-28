@@ -77,10 +77,10 @@ define( require => {
 
     const listener = () => self.invalidatePaint();
 
-    xyDataSeries.emitter.addListener( listener );
+    xyDataSeries.addDynamicSeriesListener( listener );
 
     // @private
-    this.disposeXYDataSeriesNode = () => xyDataSeries.emitter.removeListener( listener );
+    this.disposeXYDataSeriesNode = () => xyDataSeries.removeDynamicSeriesListener( listener );
   }
 
   griddle.register( 'XYDataSeriesNode', XYDataSeriesNode );

@@ -50,7 +50,7 @@ define( require => {
 
     assert && assert( PlotStyle.includes( options.plotStyle ), 'plotStyle must be one of STYLE_OPTIONS' );
 
-    // @private {DynamicSeries} - the data for this node to be plotted
+    // @public {DynamicSeries} - the data for this node to be plotted
     this.xyDataSeries = xyDataSeries;
 
     // @private {Bounds2} - the bounds for the plot for positioning drawn data points, excludes labels
@@ -119,17 +119,9 @@ define( require => {
     /**
      * make eligible for garbage collection
      */
-    dispose: function() {
+    dispose() {
       this.disposeXYDataSeriesNode();
       CanvasNode.prototype.dispose.call( this );
-    },
-
-    /**
-     * Redraw the node, calling invalidatePaint to ensure that Scenery will redraw the canvas when it can.
-     * @public
-     */
-    redraw: function() {
-      this.invalidatePaint();
     },
 
     /**
@@ -137,7 +129,7 @@ define( require => {
      * @param {CanvasRenderingContext2D} context
      * @public
      */
-    paintCanvas: function( context ) {
+    paintCanvas( context ) {
       if ( this.plotStyle === PlotStyle.LINE ) {
         this.drawDataLine( context, this.xyDataSeries.data );
       }

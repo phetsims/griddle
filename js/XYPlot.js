@@ -108,6 +108,9 @@ define( require => {
     } );
     content.addChild( this.plotPath );
 
+    // @private {XYDataSeriesNode[]}
+    this.dataSeriesNodes = [];
+
     this.redrawGrid();
 
     if ( options.showAxis ) {
@@ -117,17 +120,9 @@ define( require => {
 
     this.addChild( content );
 
-    /**
-     * Map DynamicSeries.uniqueId -> XYDataSeriesNode, for disposal and so that one can access an XYDataSeriesNode
-     * if necessary.
-     * @public
-     * @type {{}}
-     */
-    this.seriesViewMap = {};
-
     // @public - the list of DynamicSeries attached to this XYPlot.
-    // TODO: not necessary when we support Map because these can be the keys of this.seriesViewMap and retrieved that
     // way, see https://github.com/phetsims/tasks/issues/992
+    // TODO https://github.com/phetsims/griddle/issues/46 this should be private
     this.dataSeriesList = [];
 
     // @private
@@ -154,12 +149,16 @@ define( require => {
         useScaleFactors: useScaleFactors,
         plotStyle: this.plotStyle
       } );
-      this.seriesViewMap[ series.uniqueId ] = dataSeriesNode;
+      this.dataSeriesNodes.push( dataSeriesNode );
 
       dataSeriesNode.setXScaleFactor( this.xScaleFactor );
       dataSeriesNode.setYScaleFactor( this.yScaleFactor );
 
       this.content.addChild( dataSeriesNode );
+    },
+
+    getXYDataSeriesNode( series ) {
+      return _.find( this.dataSeriesNodes, dataSeriesNode => dataSeriesNode.xyDataSeries === series );
     },
 
     /**
@@ -171,10 +170,10 @@ define( require => {
       assert && assert( seriesIndex >= 0, 'DynamicSeries not attached to XYPlot' );
       this.dataSeriesList.splice( seriesIndex, 1 );
 
-      const view = this.seriesViewMap[ series.uniqueId ];
-      this.content.removeChild( view );
-      view.dispose();
-      delete this.seriesViewMap[ series.uniqueId ];
+      const xyDataSeriesNode = this.getXYDataSeriesNode( series );
+      this.content.removeChild( xyDataSeriesNode );
+      xyDataSeriesNode.dispose();
+      arrayRemove( this.dataSeriesNodes, xyDataSeriesNode );
     },
 
     /**
@@ -186,10 +185,7 @@ define( require => {
     setPlotStyle( plotStyle ) {
       this.plotStyle = plotStyle;
 
-      for ( const uniqueId in this.seriesViewMap ) {
-        const dataSeriesNode = this.seriesViewMap[ uniqueId ];
-        dataSeriesNode.setPlotStyle( plotStyle );
-      }
+      this.dataSeriesNodes.forEach( dataSeriesNode => dataSeriesNode.setPlotStyle( plotStyle ) );
     },
 
     /**
@@ -355,13 +351,12 @@ define( require => {
       }
 
       // after redrawing the grid, make sure that XYDataSeriesNodes have the correct scale factors and are redrawn
-      for ( const uniqueId in this.seriesViewMap ) {
-        const dataSeriesNode = this.seriesViewMap[ uniqueId ];
+      this.dataSeriesNodes.forEach( dataSeriesNode => {
         dataSeriesNode.setXScaleFactor( this.xScaleFactor );
         dataSeriesNode.setYScaleFactor( this.yScaleFactor );
 
         dataSeriesNode.invalidatePaint();
-      }
+      } );
     }
   }, {
 

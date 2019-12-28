@@ -32,7 +32,7 @@ define( require => {
       options = merge( {
         color: 'black',
         lineWidth: 1,
-        radius: 2 // TODO: https://github.com/phetsims/griddle/issues/46 eliminate?
+        radius: 2
       }, options );
 
       // @public (read-only) {Color}
@@ -41,7 +41,8 @@ define( require => {
       // @public (read-only) {number}
       this.lineWidth = options.lineWidth;
 
-      this.radius = options.radius; // TODO: https://github.com/phetsims/griddle/issues/46 eliminate or document
+      // @public (read-only) {number}
+      this.radius = options.radius;
     }
 
     /**

@@ -53,6 +53,7 @@ define( require => {
     /**
      * Returns the number of points in the data series.
      * @returns {number}
+     * @public
      */
     getLength() {
       return this.data.length;
@@ -61,6 +62,7 @@ define( require => {
     /**
      * Adds a listener when the data series changes.
      * @param {function} listener
+     * @public
      */
     addDynamicSeriesListener( listener ) {
       this.emitter.addListener( listener );
@@ -75,6 +77,12 @@ define( require => {
       this.emitter.emit();
     }
 
+    /**
+     * Adds an (x,y) point
+     * @param {number} x
+     * @param {number} y
+     * @public
+     */
     addPoint( x, y ) {
       this.data.push( new Vector2( x, y ) );
       this.emitter.emit();
@@ -83,9 +91,8 @@ define( require => {
     /**
      * Remove a point in the data series with the provided x value. Does not remove duplicates, only the first
      * occurrence of the value starting at the beginning of the xPoints list.
-     * @public
-     *
      * @param {number} x
+     * @public
      */
     removePointAtX( x ) {
       for ( let i = 0; i < this.data.length; i++ ) {

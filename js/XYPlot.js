@@ -10,6 +10,7 @@ define( require => {
   'use strict';
 
   // modules
+  const arrayRemove = require( 'PHET_CORE/arrayRemove' );
   const ArrowNode = require( 'SCENERY_PHET/ArrowNode' );
   const griddle = require( 'GRIDDLE/griddle' );
   const inherit = require( 'PHET_CORE/inherit' );
@@ -120,9 +121,7 @@ define( require => {
 
     this.addChild( content );
 
-    // @public - the list of DynamicSeries attached to this XYPlot.
-    // way, see https://github.com/phetsims/tasks/issues/992
-    // TODO https://github.com/phetsims/griddle/issues/46 this should be private
+    // @protected - the list of DynamicSeries rendered by this XYPlot.
     this.dataSeriesList = [];
 
     // @private
@@ -134,6 +133,21 @@ define( require => {
   griddle.register( 'XYPlot', XYPlot );
 
   return inherit( Node, XYPlot, {
+
+    /**
+     * Apply an action for each of the data series.
+     * @param {function} callback
+     */
+    forEachDataSeries( callback ) {
+      this.dataSeriesList.forEach( callback );
+    },
+
+    /**
+     * @public - trigger all data series nodes to repaint
+     */
+    invalidateDataSeriesNodes() {
+      this.dataSeriesNodes.forEach( dataSeriesNode => dataSeriesNode.invalidatePaint() );
+    },
 
     /**
      * @param {DynamicSeries} series
@@ -174,6 +188,15 @@ define( require => {
       this.content.removeChild( xyDataSeriesNode );
       xyDataSeriesNode.dispose();
       arrayRemove( this.dataSeriesNodes, xyDataSeriesNode );
+    },
+
+    /**
+     * Returns true if any data is attached to this plot.
+     * @returns {boolean}
+     * @public
+     */
+    getDataExists() {
+      return _.some( this.dataSeriesList, dataSeries => dataSeries.getLength() > 0 );
     },
 
     /**

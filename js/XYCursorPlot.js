@@ -74,7 +74,7 @@ define( require => {
       super.addSeries( series, scaleFactor );
 
       // when a point is added, update the min and max recorded values
-      const seriesListener = ( x, y, previousX, previousY ) => {
+      const seriesListener = () => {
 
         // update min/max domain of the plotted data
         this.updateMinMaxXValues();
@@ -85,7 +85,7 @@ define( require => {
 
       // save to map so that listener can be found again for disposal
       this.valueSeriesListenerMap[ series.uniqueId ] = seriesListener;
-      series.emitter.addListener( seriesListener );
+      series.addDynamicSeriesListener( seriesListener );
     }
 
     /**
@@ -95,7 +95,7 @@ define( require => {
      * @param {DynamicSeries} series - to remove
      */
     removeSeries( series ) {
-      series.removeDataSeriesListener( this.valueSeriesListenerMap[ series.uniqueId ] );
+      series.emitter.removeListener( this.valueSeriesListenerMap[ series.uniqueId ] );
       delete this.valueSeriesListenerMap[ series.uniqueId ];
 
       super.removeSeries( series );
@@ -128,7 +128,7 @@ define( require => {
      * @param {boolean|null} visible
      */
     setCursorVisibleOverride( visible ) {
-      assert && assert( typeof visible === 'boolean' || visible === null, '' );
+      assert && assert( typeof visible === 'boolean' || visible === null, 'visible must be boolean or null' );
       this._cursorVisibleOverride = visible;
       this.updateChartCursorVisibility();
     }
@@ -230,26 +230,6 @@ define( require => {
     }
 
     /**
-     * Returns true if any data is attached to this plot.
-     * @public
-     *
-     * @returns {boolean}
-     */
-    getDataExists() {
-      let dataExists = false;
-      for ( let i = 0; i < this.dataSeriesList.length; i++ ) {
-
-        // dataSeriesList[ i ].length is always greater than zero (pre-allocated for performance), check tracked value
-        if ( this.dataSeriesList[ i ].dataSeriesLength > 0 ) {
-          dataExists = true;
-          break;
-        }
-      }
-
-      return dataExists;
-    }
-
-    /**
      * Update the minimum/maximum plotted domain of the data recorded on this plot. This information is used
      * to determine selected cursor values. If no data is associated with this plot, extrema are represented by
      * min = infinity, max = negative infinity.
@@ -260,8 +240,8 @@ define( require => {
       this.maxRecordedValue = Number.NEGATIVE_INFINITY;
       for ( let i = 0; i < this.dataSeriesList.length; i++ ) {
         const dataSeries = this.dataSeriesList[ i ];
-        for ( let j = 0; j < dataSeries.dataSeriesLength; j++ ) {
-          const xValue = dataSeries.getX( j );
+        for ( let j = 0; j < dataSeries.getLength(); j++ ) {
+          const xValue = dataSeries.data[ j ].x;
 
           if ( xValue > this.maxRecordedValue ) {
             this.maxRecordedValue = xValue;

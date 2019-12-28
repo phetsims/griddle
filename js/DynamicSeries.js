@@ -83,8 +83,17 @@ define( require => {
      * @param {number} y
      * @public
      */
-    addPoint( x, y ) {
-      this.data.push( new Vector2( x, y ) );
+    addPoint( x, y ) { // TODO https://github.com/phetsims/griddle/issues/46 rename to addXY
+      this.addDataPoint( new Vector2( x, y ) );
+    }
+
+    /**
+     * Adds a Vector2 data point
+     * @param {Vector2} dataPoint
+     * @public
+     */
+    addDataPoint( dataPoint ) {
+      this.data.push( dataPoint );
       this.emitter.emit();
     }
 

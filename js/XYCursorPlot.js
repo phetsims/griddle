@@ -17,7 +17,7 @@ define( require => {
   const Node = require( 'SCENERY/nodes/Node' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Tandem = require( 'TANDEM/Tandem' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const XYPlot = require( 'GRIDDLE/XYPlot' );
 
   // constants
@@ -203,7 +203,7 @@ define( require => {
 
       // origin of cursor is at the center
       const xPosition = value * this.plotPath.width / ( this.maxX - this.minX );
-      this.chartCursor.centerX = Util.clamp( xPosition, 0, this.plotPath.width );
+      this.chartCursor.centerX = Utils.clamp( xPosition, 0, this.plotPath.width );
       this.chartCursor.centerY = this.plotPath.centerY;
     }
 
@@ -311,7 +311,7 @@ define( require => {
           let newValue = this.plot.positionToValue( parentX );
 
           // limit cursor to the domain of recorded values
-          newValue = Util.clamp( newValue, plot.getMinRecordedValue(), plot.getMaxRecordedValue() );
+          newValue = Utils.clamp( newValue, plot.getMinRecordedValue(), plot.getMaxRecordedValue() );
           this.plot.setCursorValue( newValue );
 
           options.drag();

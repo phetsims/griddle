@@ -31,7 +31,7 @@ define( require => {
   const SpanNode = require( 'GRIDDLE/SpanNode' );
   const Tandem = require( 'TANDEM/Tandem' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const ZoomButton = require( 'SCENERY_PHET/buttons/ZoomButton' );
 
   // constants
@@ -156,7 +156,7 @@ define( require => {
 
             // TODO: Should number of decimal places depend on value or perhaps on zoom level?
             // We want to show -2 -1 0 1 2, but also -0.5, 0, 0.5, right? See https://github.com/phetsims/griddle/issues/47
-            gridLabelChildren.push( new Text( Util.toFixed( yValue, options.verticalGridLabelNumberOfDecimalPlaces ), {
+            gridLabelChildren.push( new Text( Utils.toFixed( yValue, options.verticalGridLabelNumberOfDecimalPlaces ), {
               fill: 'white',
               rightCenter: b.leftCenter.plusXY( horizontalLabelMargin, 0 )
             } ) );

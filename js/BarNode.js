@@ -19,7 +19,7 @@ define( require => {
   const NumberProperty = require( 'AXON/NumberProperty' );
   const Range = require( 'DOT/Range' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
 
   /**
    * @constructor
@@ -252,7 +252,7 @@ define( require => {
         this.offScaleArrow.visible = false;
       }
 
-      setBarYValues( this.borderRectangle, 0, currentY + this.borderWidth * Util.sign( currentY ) );
+      setBarYValues( this.borderRectangle, 0, currentY + this.borderWidth * Utils.sign( currentY ) );
       this.borderRectangle.visible = currentY !== 0;
     }
   } );

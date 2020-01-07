@@ -10,6 +10,7 @@ define( require => {
 
   // modules
   require( 'GRIDDLE/ScrollingChartNodeTests' );
+  require( 'GRIDDLE/GriddleUtilsTests' );
 
   // Since our tests are loaded asynchronously, we must direct QUnit to begin the tests
   QUnit.start();

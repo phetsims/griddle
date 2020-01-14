@@ -267,6 +267,20 @@ define( require => {
       }
 
       this.mutate( options );
+
+      // @private
+      this.resetScrollingChartNode = () => {
+        zoomLevelIndexProperty.reset();
+      };
+    }
+
+    /**
+     * @public - restore initial conditions
+     */
+    reset() {
+      this.resetScrollingChartNode();
+
+      // TODO: who is responsible for clearing the dynamicSeriesArray?  See https://github.com/phetsims/griddle/issues/48
     }
 
     /**

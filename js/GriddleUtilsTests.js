@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * QUnit tests for ScrollingChartNode
+ * QUnit tests for GriddleUtil
  *
  * @author Sam Reid (PhET Interactive Simulations)
  */

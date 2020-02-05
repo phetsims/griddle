@@ -335,7 +335,7 @@ define( require => {
     /**
      * @param {number} diameter
      * @param {Color} baseColor
-     * @param {object} options
+     * @param {Object} [options]
      */
     constructor( diameter, baseColor, options ) {
 

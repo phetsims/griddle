@@ -66,6 +66,11 @@ define( require => {
     // @private {string} - one of STYLE_OPTIONS, see options for documentation
     this.plotStyle = options.plotStyle;
 
+    // @public {boolean} - If true, the XYDataSeriesNode will not redraw when the DynamicSeries changes - this is
+    // useful for performance if you want to wait to redraw until after many points are added/removed from the
+    // DynamicSeries at once
+    this.waitToRedraw = false;
+
     // @private - Offset for drawing y data points since the plot may not be drawn
     // with y=0 at the bottom. This is in "view" coordinates relative to the plotBounds
     this.yPointOffset = plotBounds.height * ( -yRange.min ) / yRange.getLength();
@@ -74,8 +79,11 @@ define( require => {
 
     self.setCanvasBounds( plotBounds );
 
-    const listener = () => self.invalidatePaint();
-
+    const listener = () => {
+      if ( !this.waitToRedraw ) {
+        self.invalidatePaint();
+      }
+    };
     xyDataSeries.addDynamicSeriesListener( listener );
 
     // @private

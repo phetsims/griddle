@@ -134,14 +134,12 @@ define( require => {
      * @param {boolean} withRedraw - if false, points can be removed without emitting to redraw (for performance)
      * @public
      */
-    removePointAtX( x, withRedraw = true ) {
+    removePointAtX( x ) {
       for ( let i = 0; i < this.data.length; i++ ) {
         const point = this.data[ i ];
         if ( point.x === x ) {
           this.data.splice( i, 1 );
-          if ( withRedraw ) {
-            this.emitter.emit();
-          }
+          this.emitter.emit();
           break;
         }
       }

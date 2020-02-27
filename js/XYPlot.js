@@ -212,16 +212,6 @@ define( require => {
     },
 
     /**
-     * If set to true, the XYPlot will not redraw until set to false again. This is useful for performance, for example
-     * if you need to add/remove many points at once from a DynamicSeries and wait until done before repainting.
-     *
-     * @param {boolean} waitToRedraw
-     */
-    setWaitToRedraw( waitToRedraw ) {
-      this.dataSeriesNodes.forEach( dataSeriesNode => { dataSeriesNode.waitToRedraw = waitToRedraw; } );
-    },
-
-    /**
      * Set the minimum X for graph and redraw the plot grid.
      *
      * @param {number} minX

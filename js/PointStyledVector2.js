@@ -5,29 +5,26 @@
  *
  * @author Sam Reid (PhET Interactive Simulations)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const griddle = require( 'GRIDDLE/griddle' );
-  const PointStyle = require( 'GRIDDLE/PointStyle' );
-  const Vector2 = require( 'DOT/Vector2' );
+import Vector2 from '../../dot/js/Vector2.js';
+import griddle from './griddle.js';
+import PointStyle from './PointStyle.js';
 
-  class PointStyledVector2 extends Vector2 {
+class PointStyledVector2 extends Vector2 {
 
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {PointStyle} pointStyle
-     */
-    constructor( x, y, pointStyle ) {
-      assert && assert( pointStyle instanceof PointStyle, 'wrong type for pointStyle' );
-      super( x, y );
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {PointStyle} pointStyle
+   */
+  constructor( x, y, pointStyle ) {
+    assert && assert( pointStyle instanceof PointStyle, 'wrong type for pointStyle' );
+    super( x, y );
 
-      // @public {PointStyle}
-      this.pointStyle = pointStyle;
-    }
+    // @public {PointStyle}
+    this.pointStyle = pointStyle;
   }
+}
 
-  return griddle.register( 'PointStyledVector2', PointStyledVector2 );
-} );
+griddle.register( 'PointStyledVector2', PointStyledVector2 );
+export default PointStyledVector2;

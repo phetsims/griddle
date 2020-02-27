@@ -1,4 +1,4 @@
-// Copyright 2014-2019, University of Colorado Boulder
+// Copyright 2014-2020, University of Colorado Boulder
 
 /**
  * Node that depicts an DynamicSeries as a line or scatterplot on a canvas, created internally by XYPlot.

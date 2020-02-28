@@ -1,4 +1,4 @@
-// Copyright 2019, University of Colorado Boulder
+// Copyright 2019-2020, University of Colorado Boulder
 
 /**
  * This class renders DynamicSeries data in a ScrollingChartNode and is tightly coupled with ScrollingChartNode

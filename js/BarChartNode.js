@@ -1,4 +1,4 @@
-// Copyright 2017-2019, University of Colorado Boulder
+// Copyright 2017-2020, University of Colorado Boulder
 
 /**
  * Bar chart for sims that need to display separate values. This chart is vertically aligned, with bars that represent

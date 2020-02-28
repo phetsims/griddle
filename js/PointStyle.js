@@ -1,4 +1,4 @@
-// Copyright 2019, University of Colorado Boulder
+// Copyright 2019-2020, University of Colorado Boulder
 
 /**
  * A collection of styles that can be applied to a single point of a scatter styled XYPlot. Can control things like

@@ -1,4 +1,4 @@
-// Copyright 2019, University of Colorado Boulder
+// Copyright 2019-2020, University of Colorado Boulder
 
 /**
  * Extends Vector2 and adds PointStyle, so that individual points in a data series can be drawn with different styles.

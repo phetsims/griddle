@@ -146,7 +146,7 @@ class XYCursorPlot extends XYPlot {
   updateChartCursorPos() {
     const recordingStartValue = this.getMinRecordedValue();
     const recordingCurrentValue = this.cursorValue;
-    this.moveChartCursorToValue( ( recordingCurrentValue - recordingStartValue ) );
+    this.moveChartCursorToValue( recordingCurrentValue - recordingStartValue );
   }
 
   /**

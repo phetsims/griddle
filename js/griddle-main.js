@@ -8,7 +8,7 @@ import Screen from '../../joist/js/Screen.js';
 import Sim from '../../joist/js/Sim.js';
 import SimLauncher from '../../joist/js/SimLauncher.js';
 import GriddleDemoScreenView from './demo/GriddleDemoScreenView.js';
-import griddleStrings from './griddle-strings.js';
+import griddleStrings from './griddleStrings.js';
 
 const griddleTitleString = griddleStrings.griddle.title;
 

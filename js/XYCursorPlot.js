@@ -274,7 +274,7 @@ class ChartCursor extends Rectangle {
 
     // Set the shape. Origin is at the center top of the rectangle.
     super( 0, -height, width, height, 0, 0, {
-      cursor: 'e-resize',
+      cursor: 'ew-resize',
       fill: CURSOR_FILL_COLOR,
       stroke: CURSOR_STROKE_COLOR,
       lineWidth: 0.4,

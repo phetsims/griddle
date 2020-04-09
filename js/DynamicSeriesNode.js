@@ -75,10 +75,10 @@ class DynamicSeriesNode extends Node {
       pathNode.shape = dynamicSeriesPathShape;
     };
     dynamicSeries.addDynamicSeriesListener( dynamicSeriesListener );
-    modelViewTransform.on( 'change', dynamicSeriesListener );
+    modelViewTransform.changeEmitter.addListener( dynamicSeriesListener );
     this.disposeDynamicSeriesNode = () => {
       dynamicSeries.removeDynamicSeriesListener( dynamicSeriesListener );
-      modelViewTransform.off( 'change', dynamicSeriesListener );
+      modelViewTransform.changeEmitter.removeListener( dynamicSeriesListener );
     };
   }
 

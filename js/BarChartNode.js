@@ -32,6 +32,7 @@ import griddle from './griddle.js';
  *   {
  *     entries: {Array.<{ property: {Property.<number>}, color: {paint} }>}
  *     [labelString]: {string} formatted for RichText
+ *     [labelColor]: {PaintDef} if provided, sets color of the bar label, otherwise label match color of bar
  *     [labelNode]: {node} displayed below the label string if the label string exist
  *     [offScaleArrowFill]: {paint} - If provided, allows bar-specific arrow fills (that are different than the color)
  *   }
@@ -101,7 +102,7 @@ function BarChartNode( bars, rangeProperty, options ) {
     if ( bar.labelString ) {
 
       const labelText = new RichText( bar.labelString, merge( {}, options.barLabelOptions, {
-        fill: bar.entries.length === 1 ? bar.entries[ 0 ].color : 'black'
+        fill: bar.labelColor || 'black'
       } ) );
 
       // Transparent background for each label, used to make the label standout against bar if the bar falls beneath the x-Axis.

@@ -136,7 +136,7 @@ function setBarYValues( rectangle, y1, y2 ) {
   rectangle.rectHeight = Math.abs( y1 - y2 );
 }
 
-export default inherit( Node, BarNode, {
+inherit( Node, BarNode, {
   /**
    * Updates all of the bars to the correct values.
    * @public
@@ -252,3 +252,5 @@ export default inherit( Node, BarNode, {
     this.borderRectangle.visible = currentY !== 0;
   }
 } );
+
+export default BarNode;

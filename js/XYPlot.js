@@ -129,7 +129,7 @@ function XYPlot( options ) {
 
 griddle.register( 'XYPlot', XYPlot );
 
-export default inherit( Node, XYPlot, {
+inherit( Node, XYPlot, {
 
   /**
    * Apply an action for each of the data series.
@@ -383,3 +383,5 @@ export default inherit( Node, XYPlot, {
   // @public static, so clients don't have to require XYDataSeriesNode
   PlotStyle: XYDataSeriesNode.PlotStyle
 } );
+
+export default XYPlot;

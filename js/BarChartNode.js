@@ -169,7 +169,7 @@ function BarChartNode( bars, rangeProperty, options ) {
 
 griddle.register( 'BarChartNode', BarChartNode );
 
-export default inherit( Node, BarChartNode, {
+inherit( Node, BarChartNode, {
   /**
    * Updates all of the bar nodes.
    * @public
@@ -180,3 +180,5 @@ export default inherit( Node, BarChartNode, {
     }
   }
 } );
+
+export default BarChartNode;

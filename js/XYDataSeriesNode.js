@@ -80,7 +80,7 @@ function XYDataSeriesNode( xyDataSeries, plotBounds, yRange, options ) {
 
 griddle.register( 'XYDataSeriesNode', XYDataSeriesNode );
 
-export default inherit( CanvasNode, XYDataSeriesNode, {
+inherit( CanvasNode, XYDataSeriesNode, {
 
   /**
    * Set the scale factor for the x coordinates - before drawing, x points in the DynamicSeries will be multiplied by
@@ -227,3 +227,5 @@ export default inherit( CanvasNode, XYDataSeriesNode, {
   // @public (read-only)
   PlotStyle: PlotStyle
 } );
+
+export default XYDataSeriesNode;

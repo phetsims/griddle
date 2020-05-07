@@ -6,7 +6,7 @@
 
 import Screen from '../../joist/js/Screen.js';
 import Sim from '../../joist/js/Sim.js';
-import SimLauncher from '../../joist/js/SimLauncher.js';
+import simLauncher from '../../joist/js/simLauncher.js';
 import GriddleDemoScreenView from './demo/GriddleDemoScreenView.js';
 import griddleStrings from './griddleStrings.js';
 
@@ -18,7 +18,7 @@ const simOptions = {
   }
 };
 
-SimLauncher.launch( function() {
+simLauncher.launch( function() {
   // Create and start the sim
   new Sim( griddleTitleString, [
     new Screen( function() {return {};}, function() {return new GriddleDemoScreenView();}, {

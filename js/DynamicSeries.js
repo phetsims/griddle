@@ -111,6 +111,7 @@ class DynamicSeries {
    * Returns the data point at the specified index.
    * @param {number} index
    * @returns {Vector2}
+   * @public
    */
   getDataPoint( index ) {
     return this.data[ index ];
@@ -119,6 +120,7 @@ class DynamicSeries {
   /**
    * Returns true if there are any data points.
    * @returns {boolean}
+   * @public
    */
   hasData() {
     return this.data.length > 0;

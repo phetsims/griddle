@@ -121,6 +121,7 @@ class XYCursorPlot extends XYPlot {
    * Override the default behavior for setting cursor visibility. If set to null, cursor visibility will behave as
    * described in updateChartCursorVisibility. Otherwise, visibility will equal the boolean value set here.
    * @param {boolean|null} visible
+   * @public
    */
   setCursorVisibleOverride( visible ) {
     assert && assert( typeof visible === 'boolean' || visible === null, 'visible must be boolean or null' );
@@ -152,7 +153,6 @@ class XYCursorPlot extends XYPlot {
   /**
    * Update the chart cursor visibility. The chart cursor should be visible any time the cursor value is within
    * the recorded value range.
-   *
    * @private
    */
   updateChartCursorVisibility() {
@@ -209,6 +209,7 @@ class XYCursorPlot extends XYPlot {
    * is updated whenever data is added to the list.
    *
    * @returns {number}
+   * @public
    */
   getMinRecordedValue() {
     return !this.getDataExists() ? 0 : this.minRecordedValue;
@@ -219,6 +220,7 @@ class XYCursorPlot extends XYPlot {
    * is updated whenever data is added to the data series list.
    *
    * @returns {number}
+   * @public
    */
   getMaxRecordedValue() {
     return !this.getDataExists() ? 0 : this.maxRecordedValue;

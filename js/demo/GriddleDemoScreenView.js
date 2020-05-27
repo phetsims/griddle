@@ -34,7 +34,7 @@ import DynamicSeries from '../DynamicSeries.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
 import ScrollingChartNode from '../ScrollingChartNode.js';
-import XYPlot from '../XYPlot.js';
+import XYPlotNode from '../XYPlotNode.js';
 
 // constants - this is a hack to enable components to animate from the animation loop
 const emitter = new Emitter( { parameters: [ { valueType: 'number' } ] } );
@@ -50,7 +50,7 @@ class GriddleDemoScreenView extends DemosScreenView {
        * {string} label - label in the combo box
        * {function(Bounds2): Node} createNode - creates the scene graph for the demo
        */
-      { label: 'XYPlot', createNode: demoXYPlot },
+      { label: 'XYPlotNode', createNode: demoXYPlotNode },
       { label: 'GridNode', createNode: demoGridNode },
       { label: 'BarChart', createNode: demoBarChart },
       { label: 'ScrollingChartNode', createNode: demoScrollingChartNode }
@@ -69,11 +69,11 @@ class GriddleDemoScreenView extends DemosScreenView {
   }
 }
 
-// Creates a demo for the XYPlot
-const demoXYPlot = function( layoutBounds ) {
+// Creates a demo for the XYPlotNode
+const demoXYPlotNode = function( layoutBounds ) {
 
   let time = 0;
-  const plot = new XYPlot( { backgroundFill: '#efecd9' } );
+  const plot = new XYPlotNode( { backgroundFill: '#efecd9' } );
   const plotPanel = new Panel( plot, {
     fill: '#efecd9',
     xMargin: 10,

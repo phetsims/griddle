@@ -1,7 +1,7 @@
 // Copyright 2014-2020, University of Colorado Boulder
 
 /**
- * Node that depicts an DynamicSeries as a line or scatterplot on a canvas, created internally by XYPlot.
+ * Node that depicts an DynamicSeries as a line or scatterplot on a canvas, created internally by XYPlotNode.
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -34,7 +34,7 @@ function XYDataSeriesNode( xyDataSeries, plotBounds, yRange, options ) {
   options = merge( {
 
     // If true, DynamicSeries values will be scaled by xScaleFactor and yScaleFactor before drawing to the view. this
-    // is generally used if the DynamicSeries is in the coordinate plot domain and range specified by XYPlot minX,
+    // is generally used if the DynamicSeries is in the coordinate plot domain and range specified by XYPlotNode minX,
     // maxX, minY, maxY. But if your data is relative another coordinate frame (like view coordinates), this can
     // be set to false
     useScaleFactors: true,

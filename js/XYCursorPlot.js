@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * An XYPlot that includes a draggable cursor that allows the user to scrub or play back through the data.
+ * An XYPlotNode that includes a draggable cursor that allows the user to scrub or play back through the data.
  *
  * @author Jesse Greenberg
  */
@@ -15,14 +15,14 @@ import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import Color from '../../scenery/js/util/Color.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import griddle from './griddle.js';
-import XYPlot from './XYPlot.js';
+import XYPlotNode from './XYPlotNode.js';
 
 // constants
 const WIDTH_PROPORTION = 0.013; // empirically determined
 const CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
 const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 
-class XYCursorPlot extends XYPlot {
+class XYCursorPlot extends XYPlotNode {
 
   constructor( options ) {
 
@@ -257,7 +257,7 @@ class XYCursorPlot extends XYPlot {
 class ChartCursor extends Rectangle {
 
   /**
-   * @param {XYPlot} plot
+   * @param {XYPlotNode} plot
    * @param {number} options
    */
   constructor( plot, options ) {

@@ -29,7 +29,7 @@ const LINE_WIDTH = 0.8; // Empirically determined
 const STROKE_COLOR = 'gray';
 const LABEL_OFFSET = 6;
 
-function XYPlot( options ) {
+function XYPlotNode( options ) {
   const content = new Node();
 
   options = merge( {
@@ -118,7 +118,7 @@ function XYPlot( options ) {
 
   this.addChild( content );
 
-  // @protected - the list of DynamicSeries rendered by this XYPlot.
+  // @protected - the list of DynamicSeries rendered by this XYPlotNode.
   this.dataSeriesList = [];
 
   // @private
@@ -127,9 +127,9 @@ function XYPlot( options ) {
   this.mutate( options );
 }
 
-griddle.register( 'XYPlot', XYPlot );
+griddle.register( 'XYPlotNode', XYPlotNode );
 
-inherit( Node, XYPlot, {
+inherit( Node, XYPlotNode, {
 
   /**
    * Apply an action for each of the data series.
@@ -148,13 +148,13 @@ inherit( Node, XYPlot, {
 
   /**
    * @param {DynamicSeries} series
-   * @param {boolean} useScaleFactors - if the DynamicSeries is defined in the domain and range of this XYPlot
+   * @param {boolean} useScaleFactors - if the DynamicSeries is defined in the domain and range of this XYPlotNode
    *                                  (specified by minX, maxX, minY, maxY) then this should be set to true. But there
    *                                  are cases where this isn't true (like if DynamicSeries is in view coordinates)
    * @public
    */
   addSeries: function( series, useScaleFactors ) {
-    assert && assert( this.dataSeriesList.indexOf( series ) < 0, 'DynamicSeries already added to XYPlot' );
+    assert && assert( this.dataSeriesList.indexOf( series ) < 0, 'DynamicSeries already added to XYPlotNode' );
     this.dataSeriesList.push( series );
     const dataSeriesNode = new XYDataSeriesNode( series, this.rectangle.bounds, new Range( this.minY, this.maxY ), {
       useScaleFactors: useScaleFactors,
@@ -178,7 +178,7 @@ inherit( Node, XYPlot, {
    */
   removeSeries: function( series ) {
     const seriesIndex = this.dataSeriesList.indexOf( series );
-    assert && assert( seriesIndex >= 0, 'DynamicSeries not attached to XYPlot' );
+    assert && assert( seriesIndex >= 0, 'DynamicSeries not attached to XYPlotNode' );
     this.dataSeriesList.splice( seriesIndex, 1 );
 
     const xyDataSeriesNode = this.getXYDataSeriesNode( series );
@@ -384,4 +384,4 @@ inherit( Node, XYPlot, {
   PlotStyle: XYDataSeriesNode.PlotStyle
 } );
 
-export default XYPlot;
+export default XYPlotNode;

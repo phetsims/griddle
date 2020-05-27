@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * A collection of styles that can be applied to a single point of a scatter styled XYPlot. Can control things like
+ * A collection of styles that can be applied to a single point of a scatter styled XYPlotNode. Can control things like
  * point visibility, stroke, size, and opacity for an individual point.
  *
  * @author Jesse Greenberg

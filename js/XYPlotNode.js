@@ -108,6 +108,7 @@ function XYPlotNode( options ) {
 
   // @private {XYDataSeriesNode[]}
   this.dataSeriesNodes = [];
+
   this.redrawGrid();
 
   if ( options.showAxis ) {

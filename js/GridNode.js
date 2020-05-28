@@ -9,7 +9,6 @@
  */
 
 import merge from '../../phet-core/js/merge.js';
-import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import Path from '../../scenery/js/nodes/Path.js';
 import griddle from './griddle.js';
 import Node from '../../scenery/js/nodes/Node.js';
@@ -18,34 +17,29 @@ import Shape from '../../kite/js/Shape.js';
 class GridNode extends Node {
 
   /**
-   * @param {number} gridWidth - in model coordinates
-   * @param {number} gridHeight - in model coordinates
+   * @param {number} gridWidth
+   * @param {number} gridHeight
    * @param {Object} [options]
    */
   constructor( gridWidth, gridHeight, options ) {
     options = merge( {
 
-      // {number|null} spacing between major horizontal lines in model coordinates - no major horizontal lines if null
+      // {number|null} spacing between major horizontal lines - no major horizontal lines added if null
       majorHorizontalLineSpacing: null,
 
-      // {number|null} spacing between major vertical lines in model coordinates - no major vertical lines if null
+      // {number|null} spacing between major vertical lines - no major vertical lines if null
       majorVerticalLineSpacing: null,
 
-      // {number|null} spacing between minor horizontal lines in model coordinates - no minor horizontal lines added if
-      // null
+      // {number|null} spacing between minor horizontal lines - no minor horizontal lines added if null
       minorHorizontalLineSpacing: null,
 
-      // {number|null} spacing between minor vertical lines in model coordinates - no minor vertical lines if null
+      // {number|null} spacing between minor vertical lines - no minor vertical lines if null
       minorVerticalLineSpacing: null,
 
-      // {number} - Offsets for lines relative to the top left of the grid, in model coordinates. Lines are still drawn
-      // at intervals of line spacings across bounds grid bounds, so this won't create empty space within the grid.
+      // {number} - Offsets for lines relative to the top left of the grid. Lines are still drawn at
+      // intervals of line spacings across bounds grid bounds, so this won't create empty space within the grid.
       verticalLineOffset: 0,
       horizontalLineOffset: 0,
-
-      // {ModelViewTransform2} if provided, transforms grid dimensions, spacings, and offsets from the model
-      // coordinate frame to the view coordinate frame for drawing
-      modelViewTransform: ModelViewTransform2.createIdentity(),
 
       // {Object} - passed to the Path for minor lines
       minorLineOptions: {
@@ -71,9 +65,6 @@ class GridNode extends Node {
     this.minorVerticalLineSpacing = null;
     this.majorVerticalLineSpacing = null;
     this.majorHorizontalLineSpacing = null;
-
-    // @private {ModelViewTransform2}
-    this.modelViewTransform = options.modelViewTransform;
 
     // @private {number}
     this._verticalLineOffset = options.verticalLineOffset;
@@ -137,7 +128,6 @@ class GridNode extends Node {
       this.drawAllLines();
     }
   }
-
   set verticalLineOffset( offset ) { this.setVerticalLineOffset( offset ); }
 
   /**
@@ -149,7 +139,6 @@ class GridNode extends Node {
   getVerticalLineOffset() {
     return this._verticalLineOffset;
   }
-
   get verticalLineOffset() { return this.getVerticalLineOffset(); }
 
   /**
@@ -166,7 +155,6 @@ class GridNode extends Node {
       this.drawAllLines();
     }
   }
-
   set horizontalLineOffset( offset ) { this.setHorizontalLineOffset( offset ); }
 
   /**
@@ -178,7 +166,6 @@ class GridNode extends Node {
   getHorizontalLineOffset() {
     return this._horizontalLineOffset;
   }
-
   get horizontalLineOffset() { return this.getHorizontalLineOffset(); }
 
   /**
@@ -259,31 +246,25 @@ class GridNode extends Node {
     const shape = new Shape();
 
     if ( verticalSpacing ) {
-      const viewHeight = this.modelViewTransform.modelToViewDeltaY( this.gridHeight );
 
+      // constrain offset to within width of grid
       const verticalLineOffset = this._verticalLineOffset % ( this.gridWidth * 2 );
 
       for ( let x = 0; x <= this.gridWidth * 2; x += verticalSpacing ) {
         const xPosition = x + verticalLineOffset % verticalSpacing;
         if ( xPosition >= 0 && xPosition <= this.gridWidth ) {
-          const xViewPosition = this.modelViewTransform.modelToViewX( xPosition );
-          shape.moveTo( xViewPosition, 0 );
-          shape.lineTo( xViewPosition, viewHeight );
+          shape.moveTo( xPosition, 0 );
+          shape.lineTo( xPosition, this.gridHeight );
         }
       }
     }
 
     if ( horizontalSpacing ) {
-      const viewWidth = this.modelViewTransform.modelToViewDeltaX( this.gridWidth );
-
-      const horizontalLineOffset = this._horizontalLineOffset % ( this.gridHeight * 2 );
-
-      for ( let y = 0; y <= this.gridHeight * 2; y += horizontalSpacing ) {
-        const yPosition = y + horizontalLineOffset % horizontalSpacing;
+      for ( let y = 0; y <= this.gridHeight; y += horizontalSpacing ) {
+        const yPosition = y + this._horizontalLineOffset % horizontalSpacing;
         if ( yPosition >= 0 && yPosition <= this.gridHeight ) {
-          const yViewPosition = this.modelViewTransform.modelToViewY( yPosition );
-          shape.moveTo( 0, yViewPosition );
-          shape.lineTo( viewWidth, yViewPosition );
+          shape.moveTo( 0, yPosition );
+          shape.lineTo( this.gridWidth, yPosition );
         }
       }
     }

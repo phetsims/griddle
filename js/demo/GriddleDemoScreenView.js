@@ -15,9 +15,7 @@ import NumberProperty from '../../../axon/js/NumberProperty.js';
 import Property from '../../../axon/js/Property.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
-import Vector2 from '../../../dot/js/Vector2.js';
 import merge from '../../../phet-core/js/merge.js';
-import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import sceneryPhetQueryParameters from '../../../scenery-phet/js/sceneryPhetQueryParameters.js';
 import HBox from '../../../scenery/js/nodes/HBox.js';
@@ -178,12 +176,10 @@ const demoBarChart = function( layoutBounds ) {
 
 // Creates a demo for GridNode
 const demoGridNode = layoutBounds => {
-  const modelViewTransform = ModelViewTransform2.createOffsetScaleMapping( Vector2.ZERO, 30 );
-
-  const gridWidth = 20;
-  const gridHeight = 20;
-  const minorSpacingRange = new Range( 1, 2 );
-  const majorSpacingRange = new Range( 4, 10 );
+  const gridWidth = 360;
+  const gridHeight = 360;
+  const minorSpacingRange = new Range( 10, 40 );
+  const majorSpacingRange = new Range( 120, 360 );
   const defaultMinorSpacing = minorSpacingRange.min;
   const defaultMajorSpacing = majorSpacingRange.min;
 
@@ -191,8 +187,7 @@ const demoGridNode = layoutBounds => {
     majorHorizontalLineSpacing: defaultMajorSpacing,
     majorVerticalLineSpacing: defaultMajorSpacing,
     minorHorizontalLineSpacing: defaultMinorSpacing,
-    minorVerticalLineSpacing: defaultMinorSpacing,
-    modelViewTransform: modelViewTransform
+    minorVerticalLineSpacing: defaultMinorSpacing
   } );
 
   // creates a NumberSpinner with a text label that controls grid spacing
@@ -224,10 +219,10 @@ const demoGridNode = layoutBounds => {
   const majorVerticalLineSpacingProperty = new NumberProperty( defaultMajorSpacing, { range: majorSpacingRange } );
 
   // controls to change the GridNode
-  const minorHorizontalLineSpinner = createLabelledSpinner( 'Minor Horizontal Spacing', minorHorizontalLineSpacingProperty, horizontalLinesVisibleProperty, 1 );
-  const minorVerticalLineSpinner = createLabelledSpinner( 'Minor Vertical Spacing', minorVerticalLineSpacingProperty, verticalLinesVisibleProperty, 1 );
-  const majorHorizontalLineSpinner = createLabelledSpinner( 'Major Horizontal Spacing', majorHorizontalLineSpacingProperty, horizontalLinesVisibleProperty, 2 );
-  const majorVerticalLineSpinner = createLabelledSpinner( 'Major Vertical Spacing', majorVerticalLineSpacingProperty, verticalLinesVisibleProperty, 2 );
+  const minorHorizontalLineSpinner = createLabelledSpinner( 'Minor Horizontal Spacing', minorHorizontalLineSpacingProperty, horizontalLinesVisibleProperty, 10 );
+  const minorVerticalLineSpinner = createLabelledSpinner( 'Minor Vertical Spacing', minorVerticalLineSpacingProperty, verticalLinesVisibleProperty, 10 );
+  const majorHorizontalLineSpinner = createLabelledSpinner( 'Major Horizontal Spacing', majorHorizontalLineSpacingProperty, horizontalLinesVisibleProperty, 120 );
+  const majorVerticalLineSpinner = createLabelledSpinner( 'Major Vertical Spacing', majorVerticalLineSpacingProperty, verticalLinesVisibleProperty, 120 );
 
   const hideHorizontalLinesButton = createToggleLinesButton( horizontalLinesVisibleProperty, 'Hide Horizontal', 'Show Horizontal' );
   const hideVerticalLinesButton = createToggleLinesButton( verticalLinesVisibleProperty, 'Hide Vertical', 'Show Horizontal' );
@@ -273,7 +268,7 @@ const demoGridNode = layoutBounds => {
 
   emitter.addListener( dt => {
     if ( scrollingProperty.get() ) {
-      const offset = gridNode.verticalLineOffset + 1 * dt;
+      const offset = gridNode.verticalLineOffset + 80 * dt;
       gridNode.verticalLineOffset = offset;
       gridNode.horizontalLineOffset = offset;
     }

@@ -18,17 +18,18 @@ import Property from '../../axon/js/Property.js';
 import Bounds2 from '../../dot/js/Bounds2.js';
 import Range from '../../dot/js/Range.js';
 import Utils from '../../dot/js/Utils.js';
+import Vector2 from '../../dot/js/Vector2.js';
 import Shape from '../../kite/js/Shape.js';
 import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import ZoomButton from '../../scenery-phet/js/buttons/ZoomButton.js';
-import Line from '../../scenery/js/nodes/Line.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import Text from '../../scenery/js/nodes/Text.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import DynamicSeriesNode from './DynamicSeriesNode.js';
 import griddle from './griddle.js';
+import GridNode from './GridNode.js';
 import SpanNode from './SpanNode.js';
 
 // constants
@@ -112,7 +113,12 @@ class ScrollingChartNode extends Node {
     options.graphPanelOptions = merge( {
 
       // Prevent data from being plotted outside the graph
-      clipArea: Shape.rect( 0, 0, width, height )
+      clipArea: Shape.roundedRectangleWithRadii( 0, 0, width, height, {
+        topLeft: options.cornerRadius,
+        topRight: options.cornerRadius,
+        bottomLeft: options.cornerRadius,
+        bottomRight: options.cornerRadius
+      } )
     }, options.graphPanelOptions );
     const graphPanel = new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius,
       options.graphPanelOptions
@@ -128,48 +134,40 @@ class ScrollingChartNode extends Node {
         new Bounds2( 0, 0, width - options.rightGraphMargin, height )
       );
     } );
-    const gridLineLayer = new Node();
-    graphPanel.addChild( gridLineLayer );
+
+    const gridNode = new GridNode( width, height, {
+      majorHorizontalLineSpacing: height / ( options.numberHorizontalLines + 1 ),
+      majorVerticalLineSpacing: ( width - options.rightGraphMargin ) / options.numberVerticalLines,
+      majorLineOptions: options.gridLineOptions
+    } );
+    graphPanel.addChild( gridNode );
     const gridLabelLayer = new Node();
     this.addChild( gridLabelLayer );
 
     verticalRangeProperty.link( () => {
-
-      const gridLineChildren = [];
       const gridLabelChildren = [];
 
       // Horizontal lines indicate increasing vertical value
       const horizontalLabelMargin = -3;
+
       for ( let i = 0; i <= numberHorizontalLines + 1; i++ ) {
         const y = height * i / ( numberHorizontalLines + 1 );
-        const line = new Line( 0, y, width, y, options.gridLineOptions );
-        if ( i !== 0 && i !== numberHorizontalLines + 1 ) {
-          gridLineChildren.push( line );
-        }
-
-        const b = graphPanel.localToParentBounds( line.bounds );
         const yValue = modelViewTransform.viewToModelY( y );
         if ( options.showVerticalGridLabels ) {
+          const labelPoint = graphPanel.localToParentPoint( new Vector2( gridNode.bounds.left, y ) );
 
           // TODO: Should number of decimal places depend on value or perhaps on zoom level?
           // We want to show -2 -1 0 1 2, but also -0.5, 0, 0.5, right? See https://github.com/phetsims/griddle/issues/47
           gridLabelChildren.push( new Text( Utils.toFixed( yValue, options.verticalGridLabelNumberOfDecimalPlaces ), {
             fill: 'white',
-            rightCenter: b.leftCenter.plusXY( horizontalLabelMargin, 0 )
+            rightCenter: labelPoint.plusXY( horizontalLabelMargin, 0 )
           } ) );
         }
       }
-      gridLineLayer.children = gridLineChildren;
       gridLabelLayer.children = gridLabelChildren;
     } );
 
     const plotWidth = width - options.rightGraphMargin;
-
-    // Vertical lines
-    for ( let i = 1; i <= numberVerticalLines; i++ ) {
-      const x = plotWidth * i / numberVerticalLines;
-      graphPanel.addChild( new Line( x, 0, x, height, options.gridLineOptions ) );
-    }
 
     this.addChild( graphPanel );
 

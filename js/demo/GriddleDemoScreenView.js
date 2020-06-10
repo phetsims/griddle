@@ -13,9 +13,12 @@ import BooleanProperty from '../../../axon/js/BooleanProperty.js';
 import Emitter from '../../../axon/js/Emitter.js';
 import NumberProperty from '../../../axon/js/NumberProperty.js';
 import Property from '../../../axon/js/Property.js';
+import Bounds2 from '../../../dot/js/Bounds2.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
+import Vector2 from '../../../dot/js/Vector2.js';
 import merge from '../../../phet-core/js/merge.js';
+import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import sceneryPhetQueryParameters from '../../../scenery-phet/js/sceneryPhetQueryParameters.js';
 import HBox from '../../../scenery/js/nodes/HBox.js';
@@ -176,18 +179,23 @@ const demoBarChart = function( layoutBounds ) {
 
 // Creates a demo for GridNode
 const demoGridNode = layoutBounds => {
-  const gridWidth = 360;
-  const gridHeight = 360;
-  const minorSpacingRange = new Range( 10, 40 );
-  const majorSpacingRange = new Range( 120, 360 );
+  const gridWidth = 400;
+  const gridHeight = 400;
+  const minorSpacingRange = new Range( 1, 2 );
+  const majorSpacingRange = new Range( 4, 10 );
   const defaultMinorSpacing = minorSpacingRange.min;
   const defaultMajorSpacing = majorSpacingRange.min;
+  const modelViewTransformProperty = new Property( ModelViewTransform2.createRectangleMapping(
+    new Bounds2( 0, 0, 10, 10 ),
+    new Bounds2( 0, 0, gridWidth, gridHeight )
+  ) );
 
   const gridNode = new GridNode( gridWidth, gridHeight, {
     majorHorizontalLineSpacing: defaultMajorSpacing,
     majorVerticalLineSpacing: defaultMajorSpacing,
     minorHorizontalLineSpacing: defaultMinorSpacing,
-    minorVerticalLineSpacing: defaultMinorSpacing
+    minorVerticalLineSpacing: defaultMinorSpacing,
+    modelViewTransformProperty: modelViewTransformProperty
   } );
 
   // creates a NumberSpinner with a text label that controls grid spacing
@@ -219,10 +227,10 @@ const demoGridNode = layoutBounds => {
   const majorVerticalLineSpacingProperty = new NumberProperty( defaultMajorSpacing, { range: majorSpacingRange } );
 
   // controls to change the GridNode
-  const minorHorizontalLineSpinner = createLabelledSpinner( 'Minor Horizontal Spacing', minorHorizontalLineSpacingProperty, horizontalLinesVisibleProperty, 10 );
-  const minorVerticalLineSpinner = createLabelledSpinner( 'Minor Vertical Spacing', minorVerticalLineSpacingProperty, verticalLinesVisibleProperty, 10 );
-  const majorHorizontalLineSpinner = createLabelledSpinner( 'Major Horizontal Spacing', majorHorizontalLineSpacingProperty, horizontalLinesVisibleProperty, 120 );
-  const majorVerticalLineSpinner = createLabelledSpinner( 'Major Vertical Spacing', majorVerticalLineSpacingProperty, verticalLinesVisibleProperty, 120 );
+  const minorHorizontalLineSpinner = createLabelledSpinner( 'Minor Horizontal Spacing', minorHorizontalLineSpacingProperty, horizontalLinesVisibleProperty, 1 );
+  const minorVerticalLineSpinner = createLabelledSpinner( 'Minor Vertical Spacing', minorVerticalLineSpacingProperty, verticalLinesVisibleProperty, 1 );
+  const majorHorizontalLineSpinner = createLabelledSpinner( 'Major Horizontal Spacing', majorHorizontalLineSpacingProperty, horizontalLinesVisibleProperty, 2 );
+  const majorVerticalLineSpinner = createLabelledSpinner( 'Major Vertical Spacing', majorVerticalLineSpacingProperty, verticalLinesVisibleProperty, 2 );
 
   const hideHorizontalLinesButton = createToggleLinesButton( horizontalLinesVisibleProperty, 'Hide Horizontal', 'Show Horizontal' );
   const hideVerticalLinesButton = createToggleLinesButton( verticalLinesVisibleProperty, 'Hide Vertical', 'Show Horizontal' );
@@ -266,11 +274,16 @@ const demoGridNode = layoutBounds => {
     gridNode.setLineSpacings.bind( gridNode )
   );
 
+  let offset = 0;
   emitter.addListener( dt => {
     if ( scrollingProperty.get() ) {
-      const offset = gridNode.verticalLineOffset + 80 * dt;
-      gridNode.verticalLineOffset = offset;
-      gridNode.horizontalLineOffset = offset;
+      offset -= dt;
+      const offsetVector = new Vector2( offset, offset );
+
+      modelViewTransformProperty.set( ModelViewTransform2.createRectangleMapping(
+        new Bounds2( offsetVector.x, offsetVector.y, 10 + offsetVector.x, 10 + offsetVector.y),
+        new Bounds2(0, 0, gridWidth, gridHeight )
+      ) );
     }
   } );
 

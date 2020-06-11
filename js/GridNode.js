@@ -24,6 +24,7 @@ class GridNode extends Node {
    * @param {Object} [options]
    */
   constructor( gridWidth, gridHeight, options ) {
+    options = options || {};
     const ownsModelViewTransformProperty = !options.modelViewTransformProperty;
 
     options = merge( {

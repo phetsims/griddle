@@ -24,9 +24,6 @@ class GridNode extends Node {
    * @param {Object} [options]
    */
   constructor( gridWidth, gridHeight, options ) {
-    options = options || {};
-    const ownsModelViewTransformProperty = !options.modelViewTransformProperty;
-
     options = merge( {
 
       // {number|null} spacing between major horizontal lines, in model coordinates - no major horizontal lines if null
@@ -53,9 +50,9 @@ class GridNode extends Node {
         lineWidth: 1
       },
 
-      // {Property.<ModelViewTransform2>} - model-view transform for the grid for line spacings and other
+      // {null|Property.<ModelViewTransform2>} - model-view transform for the grid for line spacings and other
       // transformations
-      modelViewTransformProperty: new Property( ModelViewTransform2.createIdentity() ),
+      modelViewTransformProperty: null,
 
       // {Object} - passed to the Path for major lines
       majorLineOptions: {
@@ -63,6 +60,8 @@ class GridNode extends Node {
         lineWidth: 3
       }
     }, options );
+
+    const ownsModelViewTransformProperty = !options.modelViewTransformProperty;
 
     super();
 
@@ -77,7 +76,7 @@ class GridNode extends Node {
     this.majorHorizontalLineSpacing = null;
 
     // @private {Property.<ModelViewTransform2>} - model-view transform for the grid
-    this.modelViewTransformProperty = options.modelViewTransformProperty;
+    this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createIdentity() );
 
     // @private {number}
     this._verticalLineOffset = options.verticalLineOffset;

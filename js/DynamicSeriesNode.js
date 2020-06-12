@@ -19,7 +19,7 @@ class DynamicSeriesNode extends Node {
    * @param {Bounds2} bounds - bounds for rendering, includes area to the right of the pens
    * @param {number} maxTime - Set the range by incorporating the model's time units, so it will match with the timer.
    * @param {Property.<number>} timeProperty
-   * @param {ModelViewTransform2} modelViewTransformProperty
+   * @param {Property.<ModelViewTransform2>} modelViewTransformProperty
    */
   constructor( dynamicSeries, plotWidth, bounds, maxTime, timeProperty, modelViewTransformProperty ) {
 

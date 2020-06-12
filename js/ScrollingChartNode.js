@@ -51,8 +51,8 @@ class ScrollingChartNode extends Node {
     super();
 
     options = merge( {
-      width: 190,  // dimensions, in view coordinates
-      height: 140, // dimensions, in view coordinates
+      width: 500,  // dimensions, in view coordinates
+      height: 300, // dimensions, in view coordinates
       rightGraphMargin: 0,
       cornerRadius: 5,
       seriesLineWidth: 2,

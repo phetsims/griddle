@@ -9,6 +9,15 @@ import DynamicSeriesNode from './DynamicSeriesNode.js';
 import Circle from '../../scenery/js/nodes/Circle.js';
 
 class SeismographDynamicSeriesNode extends DynamicSeriesNode {
+
+  /**
+   * @param {DynamicSeries} dynamicSeries - the data to plot
+   * @param {number} plotWidth
+   * @param {Bounds2} bounds - bounds for rendering, includes area to the right of the pens
+   * @param {number} maxTime - max value for plotting data
+   * @param {Property.<number>} timeProperty
+   * @param {Property.<ModelViewTransform2>}modelViewTransformProperty
+   */
   constructor( dynamicSeries, plotWidth, bounds, maxTime, timeProperty, modelViewTransformProperty ) {
     super( dynamicSeries, plotWidth, bounds, maxTime, timeProperty, modelViewTransformProperty );
 

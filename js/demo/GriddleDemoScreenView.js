@@ -342,8 +342,6 @@ const demoScrollingChartNode = function( layoutBounds ) {
     } ),
     new Text( 'time (s)', { fill: 'white' } ),
     new Text( '1 s', { fill: 'white' } ), {
-      width: 200,
-      height: 150,
       modelViewTransformProperty: modelViewTransformProperty
     } );
   const panel = new Panel( scrollingChartNode, {

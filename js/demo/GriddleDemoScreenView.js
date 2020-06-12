@@ -299,6 +299,7 @@ const demoGridNode = layoutBounds => {
 const demoScrollingChartNode = function( layoutBounds ) {
   const timeProperty = new Property( 0 );
   const series1 = new DynamicSeries( { color: 'blue' } );
+  const series2 = new DynamicSeries( { color: 'orange' } );
   const maxTime = 4;
   const horizontalRange = new Range( 0, maxTime );
   const verticalRange = new Range( -1, 1 );
@@ -317,6 +318,7 @@ const demoScrollingChartNode = function( layoutBounds ) {
 
     // Sample new data
     series1.addXYDataPoint( timeProperty.value, Math.sin( timeProperty.value ) );
+    series2.addXYDataPoint( timeProperty.value, Math.sin( timeProperty.value + 0.5 ) );
 
     // time has gone beyond the initial max time, so update the transform to pan data so that the new points
     // are in view
@@ -330,10 +332,11 @@ const demoScrollingChartNode = function( layoutBounds ) {
     // Data that does not fall within the displayed window should be removed.
     while ( series1.getDataPoint( 0 ).x < timeProperty.value - maxTime ) {
       series1.shiftData();
+      series2.shiftData();
     }
   };
   emitter.addListener( listener );
-  const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], new Text( 'Height (m)', {
+  const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1, series2 ], new Text( 'Height (m)', {
       rotation: 3 * Math.PI / 2,
       fill: 'white'
     } ),

@@ -7,7 +7,6 @@
  */
 
 import Shape from '../../kite/js/Shape.js';
-import Circle from '../../scenery/js/nodes/Circle.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import Path from '../../scenery/js/nodes/Path.js';
 import griddle from './griddle.js';
@@ -27,19 +26,13 @@ class DynamicSeriesNode extends Node {
     // For the initial point or when there has been NaN data, the next call should be moveTo() instead of lineTo()
     let moveToNextPoint = true;
 
-    // Create the pen which draws the data at the right side of the graph
-    const penNode = new Circle( 4.5, {
-      fill: dynamicSeries.color,
-      centerX: plotWidth,
-      centerY: bounds.height / 2
-    } );
     const pathNode = new Path( new Shape(), {
       stroke: dynamicSeries.color,
       lineWidth: dynamicSeries.lineWidth
     } );
 
     super( {
-      children: [ penNode, pathNode ]
+      children: [ pathNode ]
     } );
 
     // prevent bounds computations during main loop
@@ -54,9 +47,6 @@ class DynamicSeriesNode extends Node {
         const dataPoint = dynamicSeries.getDataPoint( i );
         if ( isNaN( dataPoint.y ) ) {
           moveToNextPoint = true;
-
-          // Center the pen when data is NaN
-          penNode.centerY = modelViewTransform.modelToViewY( 0 );
         }
         else {
           const point = modelViewTransform.modelToViewPosition( dataPoint );
@@ -67,9 +57,6 @@ class DynamicSeriesNode extends Node {
             dynamicSeriesPathShape.lineToPoint( point );
           }
 
-          if ( i === dynamicSeries.getLength() - 1 ) {
-            penNode.centerY = point.y;
-          }
           moveToNextPoint = false;
         }
       }

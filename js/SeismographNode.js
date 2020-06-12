@@ -23,6 +23,7 @@ import ZoomButton from '../../scenery-phet/js/buttons/ZoomButton.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import griddle from './griddle.js';
 import ScrollingChartNode from './ScrollingChartNode.js';
+import SeismographDynamicSeriesNode from './SeismographDynamicSeriesNode.js';
 import SpanNode from './SpanNode.js';
 
 // constants
@@ -176,6 +177,26 @@ class SeismographNode extends ScrollingChartNode {
       zoomLevelIndexProperty.unlink( zoomListener );
       Property.unmultilink( dataMappingLink );
     };
+  }
+
+  /**
+   * Adds a SeismographDynamicSeriesNode to represent the DynamicSeries.
+   * @protected
+   * @override
+   *
+   * @param {DynamicSeries} dynamicSeries
+   */
+  addDynamicSeries( dynamicSeries ) {
+    const dynamicSeriesNode = new SeismographDynamicSeriesNode(
+      dynamicSeries,
+      this.plotWidth - this.rightGraphMargin,
+      this.graphPanel.bounds,
+      this.horizontalRangeProperty.max,
+      this.timeProperty,
+      this.modelViewTransformProperty
+    );
+    this.graphPanel.addChild( dynamicSeriesNode );
+    this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeriesNode.dispose() );
   }
 
   /**

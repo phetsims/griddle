@@ -39,12 +39,6 @@ class GridNode extends Node {
       // {number|null} spacing between minor vertical lines, in model coordinates - no minor vertical lines if null
       minorVerticalLineSpacing: null,
 
-      // {number} - Offsets for lines relative to the top left of the grid. Lines are still drawn at
-      // intervals of line spacings across bounds grid bounds, so this won't create empty space within the grid.
-      // DEPRECATED - use the modelViewTransform instead
-      verticalLineOffset: 0,
-      horizontalLineOffset: 0,
-
       // {Object} - passed to the Path for minor lines
       minorLineOptions: {
         stroke: 'grey',
@@ -78,10 +72,6 @@ class GridNode extends Node {
 
     // @private {Property.<ModelViewTransform2>} - model-view transform for the grid
     this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createIdentity() );
-
-    // @private {number}
-    this._verticalLineOffset = options.verticalLineOffset;
-    this._horizontalLineOffset = options.horizontalLineOffset;
 
     // @private {Path} - Path for minor lines
     this.minorLines = new Path( null, options.minorLineOptions );
@@ -136,64 +126,6 @@ class GridNode extends Node {
       this.drawMinorLines();
     }
   }
-
-  /**
-   * Set the offset for vertical lines (major and minor), relative to the left of the grid node. Lines will be
-   * drawn at spacing intervals from left to right edge of the grid, so this cannot be used to create empty space
-   * within grid bounds if offset is larger than spacings.
-   * @public
-   *
-   * @param {number} offset
-   */
-  setVerticalLineOffset( offset ) {
-    if ( this._verticalLineOffset !== offset ) {
-      this._verticalLineOffset = offset;
-      this.drawAllLines();
-    }
-  }
-
-  set verticalLineOffset( offset ) { this.setVerticalLineOffset( offset ); }
-
-  /**
-   * Get the offset for vertical lines.
-   * @public
-   *
-   * @returns {number}
-   */
-  getVerticalLineOffset() {
-    return this._verticalLineOffset;
-  }
-
-  get verticalLineOffset() { return this.getVerticalLineOffset(); }
-
-  /**
-   * Set the offset for horizontal lines (major and minor) relative to the top of the GridNode. Lines will be
-   * drawn at spacing intervals from top to bottom edge of the grid, so this cannot be used to create empty space
-   * within grid bounds if offset is larger than spacings.
-   * @public
-   *
-   * @param {number} offset
-   */
-  setHorizontalLineOffset( offset ) {
-    if ( this._horizontalLineOffset !== offset ) {
-      this._horizontalLineOffset = offset;
-      this.drawAllLines();
-    }
-  }
-
-  set horizontalLineOffset( offset ) { this.setHorizontalLineOffset( offset ); }
-
-  /**
-   * Get the offset for horizontal lines.
-   * @public
-   *
-   * @returns {number}
-   */
-  getHorizontalLineOffset() {
-    return this._horizontalLineOffset;
-  }
-
-  get horizontalLineOffset() { return this.getHorizontalLineOffset(); }
 
   /**
    * Validate each parameter, and make sure that as a pair they are as expected.

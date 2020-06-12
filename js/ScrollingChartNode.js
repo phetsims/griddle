@@ -10,9 +10,9 @@
  * Moved from wave-interference repo to griddle repo on Wed, Aug 29, 2018.
  *
  * @author Sam Reid (PhET Interactive Simulations)
+ * @author Jesse Greenberg (PhET Interactive Simulations)
  */
 
-import DerivedProperty from '../../axon/js/DerivedProperty.js';
 import Emitter from '../../axon/js/Emitter.js';
 import Property from '../../axon/js/Property.js';
 import Bounds2 from '../../dot/js/Bounds2.js';
@@ -22,7 +22,6 @@ import Vector2 from '../../dot/js/Vector2.js';
 import Shape from '../../kite/js/Shape.js';
 import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
-import ZoomButton from '../../scenery-phet/js/buttons/ZoomButton.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import Text from '../../scenery/js/nodes/Text.js';
@@ -30,12 +29,11 @@ import Tandem from '../../tandem/js/Tandem.js';
 import DynamicSeriesNode from './DynamicSeriesNode.js';
 import griddle from './griddle.js';
 import GridNode from './GridNode.js';
-import SpanNode from './SpanNode.js';
 
 // constants
 const LABEL_GRAPH_MARGIN = 3;
 const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
-const VERTICAL_AXIS_LABEL_MARGIN = 4;
+const VERTICAL_AXIS_LABEL_MARGIN = 8;
 
 class ScrollingChartNode extends Node {
 
@@ -53,11 +51,9 @@ class ScrollingChartNode extends Node {
     super();
 
     options = merge( {
-      width: 190,  // dimensions
-      height: 140, // dimensions
-      numberHorizontalLines: 3, // Number of horizontal lines (not counting top and bottom)
-      numberVerticalLines: 4, // Determines the time between vertical gridlines
-      rightGraphMargin: 10, // There is a blank space on the right side of the graph so there is room for the pens
+      width: 190,  // dimensions, in view coordinates
+      height: 140, // dimensions, in view coordinates
+      rightGraphMargin: 0,
       cornerRadius: 5,
       seriesLineWidth: 2,
       topMargin: 10,
@@ -75,19 +71,32 @@ class ScrollingChartNode extends Node {
       showVerticalGridLabels: true,
       verticalGridLabelNumberOfDecimalPlaces: 0,
 
-      verticalRanges: [ new Range( -1, 1 ) ], // If there is more than one specified vertical range, zoom buttons are displayed
+      // line spacing, in model coordinates
+      majorVerticalLineSpacing: 1,
+      majorHorizontalLineSpacing: 1,
+
+      // {Range} ranges in model coordinates of plotted data
+      verticalRangeProperty: new Property( new Range( -1, 1 ) ),
+      horizontalRangeProperty: new Property( new Range( 0, 4 ) ),
+
+      gridNodeOptions: null,
+
       initialVerticalRangeIndex: 0,
 
       tandem: Tandem.OPTIONAL
     }, options );
 
-    const zoomLevelIndexProperty = new Property( options.initialVerticalRangeIndex, {
-      isValidValue: v => v >= 0 && v < options.verticalRanges.length
-    } );
-    const verticalRangeProperty = new DerivedProperty( [ zoomLevelIndexProperty ], index => options.verticalRanges[ index ] );
-
-    // Promote to local variables for readability
-    const { width, height, numberHorizontalLines, numberVerticalLines } = options;
+    // @private
+    this.plotWidth = options.width;
+    this.plotHeight = options.height;
+    this.showVerticalGridLabels = options.showVerticalGridLabels;
+    this.verticalGridLabelNumberOfDecimalPlaces = options.verticalGridLabelNumberOfDecimalPlaces;
+    this.timeProperty = timeProperty;
+    this.rightGraphMargin = options.rightGraphMargin;
+    this.verticalRangeProperty = options.verticalRangeProperty;
+    this.horizontalRangeProperty = options.horizontalRangeProperty;
+    this.majorHorizontalLineSpacing = options.majorHorizontalLineSpacing;
+    this.majorVerticalLineSpacing = options.majorVerticalLineSpacing;
 
     // default options to be passed into the graphPanel Rectangle
     options.graphPanelOptions = merge( {
@@ -95,138 +104,67 @@ class ScrollingChartNode extends Node {
 
       // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
       stroke: 'black',
-      right: width - options.rightMargin,
+      right: this.plotWidth - options.rightMargin,
       top: options.topMargin,
       pickable: false
     }, options.graphPanelOptions );
 
     // default options for the horizontal and vertical grid lines
-    const dashLength = height / options.numberVerticalDashes / 2;
     options.gridLineOptions = merge( {
       stroke: 'lightGray',
-      lineDash: [ dashLength + 0.6, dashLength - 0.6 ],
-      lineWidth: 0.8,
-      lineDashOffset: dashLength / 2
+      lineWidth: 0.8
     }, options.gridLineOptions );
 
     // White panel with gridlines that shows the data
     options.graphPanelOptions = merge( {
 
       // Prevent data from being plotted outside the graph
-      clipArea: Shape.roundedRectangleWithRadii( 0, 0, width, height, {
+      clipArea: Shape.roundedRectangleWithRadii( 0, 0, this.plotWidth, this.plotHeight, {
         topLeft: options.cornerRadius,
         topRight: options.cornerRadius,
         bottomLeft: options.cornerRadius,
         bottomRight: options.cornerRadius
       } )
     }, options.graphPanelOptions );
-    const graphPanel = new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius,
+    const graphPanel = new Rectangle( 0, 0, this.plotWidth, this.plotHeight, options.cornerRadius, options.cornerRadius,
       options.graphPanelOptions
     );
 
-    // Map from data coordinates to chart coordinates. Note that the "x" axis is the "time" axis in most or all cases
-    const modelViewTransform = new ModelViewTransform2();
+    // @public {Property.<ModelViewTransform2} - Observable model-view transformation for the data, set to
+    // transform the plot (zoom or pan data). Default transform puts origin at bottom left of the plot.
+    this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createRectangleInvertedYMapping(
+      new Bounds2( options.horizontalRangeProperty.get().min, this.verticalRangeProperty.get().min, options.horizontalRangeProperty.get().max, this.verticalRangeProperty.get().max ),
+      new Bounds2( 0, 0, this.plotWidth - options.rightGraphMargin, this.plotHeight )
+    ) );
 
-    // @private {MultiLink}
-    this.dataMappingLink = Property.multilink( [ timeProperty, verticalRangeProperty ], ( time, verticalRange ) => {
-      modelViewTransform.setToRectangleInvertedYMapping(
-        new Bounds2( time - 4, verticalRange.min, time, verticalRange.max ),
-        new Bounds2( 0, 0, width - options.rightGraphMargin, height )
-      );
-    } );
+    const gridNodeOptions = merge( {
+      majorHorizontalLineSpacing: this.majorHorizontalLineSpacing,
+      majorVerticalLineSpacing: this.majorVerticalLineSpacing,
+      majorLineOptions: options.gridLineOptions,
+      modelViewTransformProperty: this.modelViewTransformProperty
+    }, options.gridNodeOptions );
 
-    const gridNode = new GridNode( width, height, {
-      majorHorizontalLineSpacing: height / ( options.numberHorizontalLines + 1 ),
-      majorVerticalLineSpacing: ( width - options.rightGraphMargin ) / options.numberVerticalLines,
-      majorLineOptions: options.gridLineOptions
-    } );
-    graphPanel.addChild( gridNode );
-    const gridLabelLayer = new Node();
-    this.addChild( gridLabelLayer );
+    this.gridNode = new GridNode( this.plotWidth, this.plotHeight, gridNodeOptions );
 
-    verticalRangeProperty.link( () => {
-      const gridLabelChildren = [];
+    graphPanel.addChild( this.gridNode );
+    this.gridLabelLayer = new Node();
+    this.addChild( this.gridLabelLayer );
 
-      // Horizontal lines indicate increasing vertical value
-      const horizontalLabelMargin = -3;
-
-      for ( let i = 0; i <= numberHorizontalLines + 1; i++ ) {
-        const y = height * i / ( numberHorizontalLines + 1 );
-        const yValue = modelViewTransform.viewToModelY( y );
-        if ( options.showVerticalGridLabels ) {
-          const labelPoint = graphPanel.localToParentPoint( new Vector2( gridNode.bounds.left, y ) );
-
-          // TODO: Should number of decimal places depend on value or perhaps on zoom level?
-          // We want to show -2 -1 0 1 2, but also -0.5, 0, 0.5, right? See https://github.com/phetsims/griddle/issues/47
-          gridLabelChildren.push( new Text( Utils.toFixed( yValue, options.verticalGridLabelNumberOfDecimalPlaces ), {
-            fill: 'white',
-            rightCenter: labelPoint.plusXY( horizontalLabelMargin, 0 )
-          } ) );
-        }
-      }
-      gridLabelLayer.children = gridLabelChildren;
-    } );
-
-    const plotWidth = width - options.rightGraphMargin;
+    const plotWidthWithMargin = this.plotWidth - options.rightGraphMargin;
 
     this.addChild( graphPanel );
+    this.graphPanel = graphPanel;
 
-    if ( options.verticalRanges.length > 1 ) {
-      const zoomButtonOptions = {
-        left: graphPanel.right + 5,
-        baseColor: '#97c7fa',
-        radius: 6,
-        xMargin: 5,
-        yMargin: 3
-      };
-
-      const zoomInButton = new ZoomButton( merge( {
-        in: true,
-        top: graphPanel.top,
-        listener: () => zoomLevelIndexProperty.value--,
-        tandem: options.tandem.createTandem( 'zoomInButton' )
-      }, zoomButtonOptions ) );
-      this.addChild( zoomInButton );
-
-      const zoomOutButton = new ZoomButton( merge( {
-        in: false,
-        top: zoomInButton.bottom + 5,
-        listener: () => zoomLevelIndexProperty.value++,
-        tandem: options.tandem.createTandem( 'zoomOutButton' )
-      }, zoomButtonOptions ) );
-      this.addChild( zoomOutButton );
-
-      zoomLevelIndexProperty.link( zoomLevelIndex => {
-        zoomOutButton.enabled = zoomLevelIndex < options.verticalRanges.length - 1;
-        zoomInButton.enabled = zoomLevelIndex > 0;
-      } );
-    }
+    this.redrawLabels();
 
     // @private - for disposal
     this.scrollingChartNodeDisposeEmitter = new Emitter();
 
-    /**
-     * Creates and adds a dynamicSeries with the given color
-     * @param {DynamicSeries} dynamicSeries - see constructor docs
-     */
-    const addDynamicSeries = dynamicSeries => {
-      const dynamicSeriesNode = new DynamicSeriesNode(
-        dynamicSeries,
-        plotWidth,
-        graphPanel.bounds,
-        numberVerticalLines,
-        timeProperty,
-        modelViewTransform
-      );
-      graphPanel.addChild( dynamicSeriesNode );
-      this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeriesNode.dispose() );
-    };
-
-    dynamicSeriesArray.forEach( addDynamicSeries );
+    dynamicSeriesArray.forEach( this.addDynamicSeries.bind( this ) );
 
     // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
     // This is a faster alternative to clipping.
-    graphPanel.addChild( new Rectangle( 0, 0, width, height, options.cornerRadius, options.cornerRadius, options.graphPanelOverlayOptions ) );
+    graphPanel.addChild( new Rectangle( 0, 0, this.plotWidth, this.plotHeight, options.cornerRadius, options.cornerRadius, options.graphPanelOverlayOptions ) );
 
     /* -------------------------------------------
      * Optional decorations
@@ -240,42 +178,87 @@ class ScrollingChartNode extends Node {
     } );
     this.addChild( verticalAxisLabelNode );
 
-    const spanNode = new SpanNode( spanLabelNode, plotWidth / 4, {
-      left: graphPanel.left,
-      top: graphPanel.bottom + 2
-    } );
-
-    this.addChild( spanNode );
     this.addChild( horizontalAxisLabelNode );
 
     // For i18n, “Time” will expand symmetrically L/R until it gets too close to the scale bar. Then, the string will
     // expand to the R only, until it reaches the point it must be scaled down in size.
-    horizontalAxisLabelNode.maxWidth = graphPanel.right - spanNode.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
+    horizontalAxisLabelNode.maxWidth = graphPanel.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
 
     // Position the horizontal axis title node after its maxWidth is specified
     horizontalAxisLabelNode.mutate( {
       top: graphPanel.bottom + LABEL_GRAPH_MARGIN,
-      centerX: plotWidth / 2 + graphPanel.bounds.minX
+      centerX: plotWidthWithMargin / 2 + graphPanel.bounds.minX
     } );
-    if ( horizontalAxisLabelNode.left < spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
-      horizontalAxisLabelNode.left = spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
+    if ( horizontalAxisLabelNode.left < HORIZONTAL_AXIS_LABEL_MARGIN ) {
+      horizontalAxisLabelNode.left = HORIZONTAL_AXIS_LABEL_MARGIN;
     }
 
     this.mutate( options );
-
-    // @private
-    this.resetScrollingChartNode = () => {
-      zoomLevelIndexProperty.reset();
-    };
   }
 
   /**
-   * @public - restore initial conditions
+   * Adds a DynamicSeriesNode to this ScrollingChartNode.
+   * @protected
+   *
+   * @param {DynamicSeries} dynamicSeries
    */
-  reset() {
-    this.resetScrollingChartNode();
+  addDynamicSeries( dynamicSeries ) {
+    const dynamicSeriesNode = new DynamicSeriesNode(
+      dynamicSeries,
+      this.plotWidth - this.rightGraphMargin,
+      this.graphPanel.bounds,
+      this.horizontalRangeProperty.max,
+      this.timeProperty,
+      this.modelViewTransformProperty
+    );
+    this.graphPanel.addChild( dynamicSeriesNode );
+    this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeriesNode.dispose() );
+  }
 
-    // TODO: who is responsible for clearing the dynamicSeriesArray?  See https://github.com/phetsims/griddle/issues/48
+  /**
+   * Set line spacings for the grid and labels.
+   * @public
+   *
+   * @param {number} majorVerticalLineSpacing
+   * @param {number} majorHorizontalLineSpacing
+   * @param {number} minorVerticalLineSpacing
+   * @param {number} minorHorizontalLineSpacing
+   */
+  setLineSpacings( majorVerticalLineSpacing, majorHorizontalLineSpacing, minorVerticalLineSpacing, minorHorizontalLineSpacing ) {
+    this.majorHorizontalLineSpacing = majorHorizontalLineSpacing;
+    this.majorVerticalLineSpacing = majorVerticalLineSpacing;
+
+    this.gridNode.setLineSpacings( majorVerticalLineSpacing, majorHorizontalLineSpacing, minorVerticalLineSpacing, minorHorizontalLineSpacing );
+    this.redrawLabels();
+  }
+
+  /**
+   * Redraws labels for when line spacing or transform changes.
+   *
+   * @protected
+   */
+  redrawLabels() {
+    const gridLabelChildren = [];
+
+    // Horizontal lines indicate increasing vertical value
+    const horizontalLabelMargin = -3;
+
+    const numberHorizontalLines = this.verticalRangeProperty.get().getLength() / this.majorHorizontalLineSpacing;
+    for ( let i = 0; i <= numberHorizontalLines; i++ ) {
+      const y = this.plotHeight * i / ( numberHorizontalLines );
+      const yValue = this.modelViewTransformProperty.get().viewToModelY( y );
+      if ( this.showVerticalGridLabels ) {
+        const labelPoint = this.graphPanel.localToParentPoint( new Vector2( this.gridNode.bounds.left, y ) );
+
+        // TODO: Should number of decimal places depend on value or perhaps on zoom level?
+        // We want to show -2 -1 0 1 2, but also -0.5, 0, 0.5, right? See https://github.com/phetsims/griddle/issues/47
+        gridLabelChildren.push( new Text( Utils.toFixed( yValue, this.verticalGridLabelNumberOfDecimalPlaces ), {
+          fill: 'white',
+          rightCenter: labelPoint.plusXY( horizontalLabelMargin, 0 )
+        } ) );
+      }
+    }
+    this.gridLabelLayer.children = gridLabelChildren;
   }
 
   /**
@@ -285,7 +268,6 @@ class ScrollingChartNode extends Node {
   dispose() {
     this.scrollingChartNodeDisposeEmitter.emit();
     this.scrollingChartNodeDisposeEmitter.dispose();
-    Property.unmultilink( this.dataMappingLink );
     super.dispose();
   }
 }

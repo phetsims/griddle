@@ -15,6 +15,7 @@ import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js
 import Property from '../../axon/js/Property.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import Shape from '../../kite/js/Shape.js';
+import Utils from '../../dot/js/Utils.js';
 
 class GridNode extends Node {
 
@@ -270,43 +271,42 @@ class GridNode extends Node {
    */
   drawLines( horizontalSpacing, verticalSpacing, linesPath ) {
     const shape = new Shape();
-
     const modelViewTransform = this.modelViewTransformProperty.get();
 
     if ( verticalSpacing ) {
-      const modelWidth = modelViewTransform.viewToModelDeltaX( this.gridWidth );
 
       // model postion of left of grid Node, we will start drawing lines here
       const modelGridLeft = modelViewTransform.viewToModelX( 0 );
 
       // distance from left edge of the gridNode to the first vertical line
-      const distanceToGridLine = ( verticalSpacing - ( modelGridLeft % verticalSpacing ) ) % verticalSpacing;
+      const remainderToLine = Utils.toFixedNumber( modelGridLeft % verticalSpacing, 10 );
+      const distanceToGridLine = ( verticalSpacing - remainderToLine ) % verticalSpacing;
 
-      const firstLineModelX = modelGridLeft + distanceToGridLine;
-      for ( let x = firstLineModelX; x <= firstLineModelX + modelWidth; x += verticalSpacing ) {
-        const xViewPosition = modelViewTransform.modelToViewX( x );
-        if ( xViewPosition >= 0 && xViewPosition <= this.gridWidth ) {
-          shape.moveTo( xViewPosition, 0 );
-          shape.lineTo( xViewPosition, this.gridHeight );
+      const viewSpacing = modelViewTransform.modelToViewDeltaX( verticalSpacing );
+      for ( let x = 0; x <= this.gridWidth; x += viewSpacing ) {
+        const offsetPosition = x + modelViewTransform.modelToViewDeltaX( distanceToGridLine );
+        if ( offsetPosition >= 0 && offsetPosition <= this.gridWidth ) {
+          shape.moveTo( offsetPosition, 0 );
+          shape.lineTo( offsetPosition, this.gridHeight );
         }
       }
     }
 
     if ( horizontalSpacing ) {
-      const modelHeight = modelViewTransform.viewToModelDeltaY( this.gridHeight );
 
       // model position of the top of gridNode
       const modelGridBottom = modelViewTransform.viewToModelY( 0 );
 
       // distance from top edge of the gridNode to the first horizontal line
-      const distanceToGridLine = ( horizontalSpacing - ( modelGridBottom % horizontalSpacing ) ) % horizontalSpacing;
+      const remainderToGridLine = Utils.toFixedNumber( modelGridBottom % horizontalSpacing, 10 );
+      const distanceToGridLine = ( horizontalSpacing - remainderToGridLine ) % horizontalSpacing;
 
-      const firstLineModelY = modelGridBottom + distanceToGridLine;
-      for ( let y = firstLineModelY; y <= firstLineModelY + modelHeight; y += horizontalSpacing ) {
-        const yViewPosition = modelViewTransform.modelToViewY( y );
-        if ( yViewPosition >= 0 && yViewPosition <= this.gridHeight ) {
-          shape.moveTo( 0, yViewPosition );
-          shape.lineTo( this.gridWidth, yViewPosition );
+      const viewSpacing = Math.abs( modelViewTransform.modelToViewDeltaY( horizontalSpacing ) );
+      for ( let y = 0; y <= this.gridHeight; y += viewSpacing ) {
+        const offsetPosition = y + modelViewTransform.modelToViewDeltaY( distanceToGridLine );
+        if ( offsetPosition >= 0 && offsetPosition <= this.gridHeight ) {
+          shape.moveTo( 0, offsetPosition );
+          shape.lineTo( this.gridWidth, offsetPosition );
         }
       }
     }

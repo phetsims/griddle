@@ -37,6 +37,7 @@ import DynamicSeries from '../DynamicSeries.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
 import ScrollingChartNode from '../ScrollingChartNode.js';
+import SeismographNode from '../SeismographNode.js';
 import XYPlotNode from '../XYPlotNode.js';
 
 // constants - this is a hack to enable components to animate from the animation loop
@@ -56,7 +57,8 @@ class GriddleDemoScreenView extends DemosScreenView {
       { label: 'XYPlotNode', createNode: demoXYPlotNode },
       { label: 'GridNode', createNode: demoGridNode },
       { label: 'BarChart', createNode: demoBarChart },
-      { label: 'ScrollingChartNode', createNode: demoScrollingChartNode }
+      { label: 'ScrollingChartNode', createNode: demoScrollingChartNode },
+      { label: 'SeismographNode', createNode: demoSeismographNode }
     ], {
       selectedDemoLabel: sceneryPhetQueryParameters.component
     } );
@@ -281,8 +283,8 @@ const demoGridNode = layoutBounds => {
       const offsetVector = new Vector2( offset, offset );
 
       modelViewTransformProperty.set( ModelViewTransform2.createRectangleMapping(
-        new Bounds2( offsetVector.x, offsetVector.y, 10 + offsetVector.x, 10 + offsetVector.y),
-        new Bounds2(0, 0, gridWidth, gridHeight )
+        new Bounds2( offsetVector.x, offsetVector.y, 10 + offsetVector.x, 10 + offsetVector.y ),
+        new Bounds2( 0, 0, gridWidth, gridHeight )
       ) );
     }
   } );
@@ -295,6 +297,67 @@ const demoGridNode = layoutBounds => {
  * @param layoutBounds
  */
 const demoScrollingChartNode = function( layoutBounds ) {
+  const timeProperty = new Property( 0 );
+  const series1 = new DynamicSeries( { color: 'blue' } );
+  const maxTime = 4;
+  const horizontalRange = new Range( 0, maxTime );
+  const verticalRange = new Range( -1, 1 );
+  const plotWidth = 200;
+  const plotHeight = 150;
+
+  const modelViewTransformProperty = new Property( ModelViewTransform2.createRectangleInvertedYMapping(
+    new Bounds2( horizontalRange.min, verticalRange.min, horizontalRange.max, verticalRange.max ),
+    new Bounds2( 0, 0, plotWidth, plotHeight )
+  ) );
+
+  const listener = dt => {
+
+    // Increment the model time
+    timeProperty.value += dt;
+
+    // Sample new data
+    series1.addXYDataPoint( timeProperty.value, Math.sin( timeProperty.value ) );
+
+    // time has gone beyond the initial max time, so update the transform to pan data so that the new points
+    // are in view
+    if ( timeProperty.get() > maxTime ) {
+      modelViewTransformProperty.set( ModelViewTransform2.createRectangleInvertedYMapping(
+        new Bounds2( timeProperty.get() - maxTime, verticalRange.min, timeProperty.get(), verticalRange.max ),
+        new Bounds2( 0, 0, plotWidth, plotHeight )
+      ) );
+    }
+
+    // Data that does not fall within the displayed window should be removed.
+    while ( series1.getDataPoint( 0 ).x < timeProperty.value - maxTime ) {
+      series1.shiftData();
+    }
+  };
+  emitter.addListener( listener );
+  const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], new Text( 'Height (m)', {
+      rotation: 3 * Math.PI / 2,
+      fill: 'white'
+    } ),
+    new Text( 'time (s)', { fill: 'white' } ),
+    new Text( '1 s', { fill: 'white' } ), {
+      width: 200,
+      height: 150,
+      modelViewTransformProperty: modelViewTransformProperty
+    } );
+  const panel = new Panel( scrollingChartNode, {
+    fill: 'gray',
+    center: layoutBounds.center
+  } );
+
+  // Swap out the dispose function for one that also removes the Emitter listener
+  const panelDispose = panel.dispose.bind( panel );
+  panel.dispose = () => {
+    emitter.removeListener( listener );
+    panelDispose();
+  };
+  return panel;
+};
+
+const demoSeismographNode = layoutBounds => {
   const timeProperty = new Property( 0 );
   const series1 = new DynamicSeries( { color: 'blue' } );
   const maxTime = 4;
@@ -312,14 +375,15 @@ const demoScrollingChartNode = function( layoutBounds ) {
     }
   };
   emitter.addListener( listener );
-  const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1 ], new Text( 'Height (m)', {
+  const scrollingChartNode = new SeismographNode( timeProperty, [ series1 ], new Text( 'Height (m)', {
       rotation: 3 * Math.PI / 2,
       fill: 'white'
     } ),
     new Text( 'time (s)', { fill: 'white' } ),
     new Text( '1 s', { fill: 'white' } ), {
       width: 200,
-      height: 150
+      height: 150,
+      verticalRanges: [ new Range( -1, 1 ), new Range( -2, 2 ), new Range( -3, 3 ) ]
     } );
   const panel = new Panel( scrollingChartNode, {
     fill: 'gray',

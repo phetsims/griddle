@@ -20,9 +20,9 @@ class DynamicSeriesNode extends Node {
    * @param {Bounds2} bounds - bounds for rendering, includes area to the right of the pens
    * @param {number} maxTime - Set the range by incorporating the model's time units, so it will match with the timer.
    * @param {Property.<number>} timeProperty
-   * @param {ModelViewTransform2} modelViewTransform
+   * @param {ModelViewTransform2} modelViewTransformProperty
    */
-  constructor( dynamicSeries, plotWidth, bounds, maxTime, timeProperty, modelViewTransform ) {
+  constructor( dynamicSeries, plotWidth, bounds, maxTime, timeProperty, modelViewTransformProperty ) {
 
     // For the initial point or when there has been NaN data, the next call should be moveTo() instead of lineTo()
     let moveToNextPoint = true;
@@ -46,6 +46,7 @@ class DynamicSeriesNode extends Node {
     pathNode.computeShapeBounds = () => bounds;
 
     const dynamicSeriesListener = () => {
+      const modelViewTransform = modelViewTransformProperty.get();
 
       // Draw the graph with line segments
       const dynamicSeriesPathShape = new Shape();
@@ -75,10 +76,10 @@ class DynamicSeriesNode extends Node {
       pathNode.shape = dynamicSeriesPathShape;
     };
     dynamicSeries.addDynamicSeriesListener( dynamicSeriesListener );
-    modelViewTransform.changeEmitter.addListener( dynamicSeriesListener );
+    modelViewTransformProperty.link( dynamicSeriesListener );
     this.disposeDynamicSeriesNode = () => {
       dynamicSeries.removeDynamicSeriesListener( dynamicSeriesListener );
-      modelViewTransform.changeEmitter.removeListener( dynamicSeriesListener );
+      modelViewTransformProperty.unlink( dynamicSeriesListener );
     };
   }
 

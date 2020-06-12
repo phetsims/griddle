@@ -303,8 +303,8 @@ const demoScrollingChartNode = function( layoutBounds ) {
   const maxTime = 4;
   const horizontalRange = new Range( 0, maxTime );
   const verticalRange = new Range( -1, 1 );
-  const plotWidth = 200;
-  const plotHeight = 150;
+  const plotWidth = 600;
+  const plotHeight = 300;
 
   const modelViewTransformProperty = new Property( ModelViewTransform2.createRectangleInvertedYMapping(
     new Bounds2( horizontalRange.min, verticalRange.min, horizontalRange.max, verticalRange.max ),
@@ -342,6 +342,8 @@ const demoScrollingChartNode = function( layoutBounds ) {
     } ),
     new Text( 'time (s)', { fill: 'white' } ),
     new Text( '1 s', { fill: 'white' } ), {
+      width: 600,
+      height: 300,
       modelViewTransformProperty: modelViewTransformProperty
     } );
   const panel = new Panel( scrollingChartNode, {

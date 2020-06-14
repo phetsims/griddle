@@ -80,7 +80,7 @@ class SeismographNode extends ScrollingChartNode {
     assert && assert( options.gridNodeOptions.modelViewTransformProperty === undefined, 'SeismographNode sets transform for GridNode' );
     options.gridNodeOptions.modelViewTransformProperty = gridTransformProperty;
 
-    super( timeProperty, dynamicSeriesArray, verticalAxisLabelNode, horizontalAxisLabelNode, spanLabelNode, options );
+    super( timeProperty, dynamicSeriesArray, verticalAxisLabelNode, horizontalAxisLabelNode, options );
 
     const zoomLevelIndexProperty = new Property( options.initialVerticalRangeIndex, {
       isValidValue: v => v >= 0 && v < options.verticalRanges.length

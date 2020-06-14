@@ -340,8 +340,7 @@ const demoScrollingChartNode = function( layoutBounds ) {
       rotation: 3 * Math.PI / 2,
       fill: 'white'
     } ),
-    new Text( 'time (s)', { fill: 'white' } ),
-    new Text( '1 s', { fill: 'white' } ), {
+    new Text( 'time (s)', { fill: 'white' } ), {
       width: 600,
       height: 300,
       modelViewTransformProperty: modelViewTransformProperty

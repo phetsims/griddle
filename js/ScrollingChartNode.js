@@ -44,10 +44,9 @@ class ScrollingChartNode extends Node {
    *                                             - it leaves the visible window.
    * @param {Node} verticalAxisLabelNode - shown on the vertical axis (should already be rotated, if necessary)
    * @param {Node} horizontalAxisLabelNode - shown on the horizontal axis
-   * @param {Node} spanLabelNode - shown for the time divisions
    * @param {Object} [options]
    */
-  constructor( timeProperty, dynamicSeriesArray, verticalAxisLabelNode, horizontalAxisLabelNode, spanLabelNode, options ) {
+  constructor( timeProperty, dynamicSeriesArray, verticalAxisLabelNode, horizontalAxisLabelNode, options ) {
     super();
 
     options = merge( {

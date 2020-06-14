@@ -20,8 +20,7 @@ QUnit.test( 'Test dispose', assert => {
     timeProperty,
     [ series1 ],
     new Text( 'vertical' ),
-    new Text( 'horizontal' ),
-    new Text( 'scale' ), {}
+    new Text( 'horizontal' ), {}
   );
   scrollingChartNode.dispose();
   assert.ok( true, 'dispose completed' );

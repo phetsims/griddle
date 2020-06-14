@@ -18,9 +18,10 @@ QUnit.test( 'Test dispose', assert => {
   const series1 = new DynamicSeries( { color: 'blue' } );
   const scrollingChartNode = new ScrollingChartNode(
     timeProperty,
-    [ series1 ],
-    new Text( 'vertical' ),
-    new Text( 'horizontal' ), {}
+    [ series1 ], {
+      horizontalAxisLabelNode: new Text( 'horizontal' ),
+      verticalAxisLabelNode: new Text( 'vertical' )
+    }
   );
   scrollingChartNode.dispose();
   assert.ok( true, 'dispose completed' );

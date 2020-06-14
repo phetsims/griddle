@@ -42,11 +42,9 @@ class ScrollingChartNode extends Node {
    *                                      - This may be seconds or another unit depending on the model.
    * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted. The client is responsible for pruning data as
    *                                             - it leaves the visible window.
-   * @param {Node} verticalAxisLabelNode - shown on the vertical axis (should already be rotated, if necessary)
-   * @param {Node} horizontalAxisLabelNode - shown on the horizontal axis
    * @param {Object} [options]
    */
-  constructor( timeProperty, dynamicSeriesArray, verticalAxisLabelNode, horizontalAxisLabelNode, options ) {
+  constructor( timeProperty, dynamicSeriesArray, options ) {
     super();
 
     options = merge( {
@@ -58,6 +56,12 @@ class ScrollingChartNode extends Node {
       topMargin: 10,
       numberVerticalDashes: 12,
       rightMargin: 10,
+
+      // {Node} - label for the vertical axis, should already be rotated if necessary
+      verticalAxisLabelNode: null,
+
+      // {Node} - label for the horizontal axis
+      horizontalAxisLabelNode: null,
 
       // default options for the Rectangle on top (to make sure graph lines don't protrude)
       graphPanelOverlayOptions: {
@@ -170,26 +174,31 @@ class ScrollingChartNode extends Node {
      * -------------------------------------------*/
 
     // Position the vertical axis title node
-    verticalAxisLabelNode.mutate( {
-      maxHeight: graphPanel.height,
-      right: this.bounds.minX - VERTICAL_AXIS_LABEL_MARGIN, // whether or not there are vertical axis labels, position to the left
-      centerY: graphPanel.centerY
-    } );
-    this.addChild( verticalAxisLabelNode );
+    if ( options.verticalAxisLabelNode ) {
+      options.verticalAxisLabelNode.mutate( {
+        maxHeight: graphPanel.height,
+        right: this.bounds.minX - VERTICAL_AXIS_LABEL_MARGIN, // whether or not there are vertical axis labels, position to the left
+        centerY: graphPanel.centerY
+      } );
+      this.addChild( options.verticalAxisLabelNode );
+    }
 
-    this.addChild( horizontalAxisLabelNode );
+    // add and position the horizontal axis label
+    if ( options.horizontalAxisLabelNode ) {
+      this.addChild( options.horizontalAxisLabelNode );
 
-    // For i18n, “Time” will expand symmetrically L/R until it gets too close to the scale bar. Then, the string will
-    // expand to the R only, until it reaches the point it must be scaled down in size.
-    horizontalAxisLabelNode.maxWidth = graphPanel.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
+      // For i18n, “Time” will expand symmetrically L/R until it gets too close to the scale bar. Then, the string will
+      // expand to the R only, until it reaches the point it must be scaled down in size.
+      options.horizontalAxisLabelNode.maxWidth = graphPanel.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
 
-    // Position the horizontal axis title node after its maxWidth is specified
-    horizontalAxisLabelNode.mutate( {
-      top: graphPanel.bottom + LABEL_GRAPH_MARGIN,
-      centerX: plotWidthWithMargin / 2 + graphPanel.bounds.minX
-    } );
-    if ( horizontalAxisLabelNode.left < HORIZONTAL_AXIS_LABEL_MARGIN ) {
-      horizontalAxisLabelNode.left = HORIZONTAL_AXIS_LABEL_MARGIN;
+      // Position the horizontal axis title node after its maxWidth is specified
+      options.horizontalAxisLabelNode.mutate( {
+        top: graphPanel.bottom + LABEL_GRAPH_MARGIN,
+        centerX: plotWidthWithMargin / 2 + graphPanel.bounds.minX
+      } );
+      if ( options.horizontalAxisLabelNode.left < HORIZONTAL_AXIS_LABEL_MARGIN ) {
+        options.horizontalAxisLabelNode.left = HORIZONTAL_AXIS_LABEL_MARGIN;
+      }
     }
 
     this.mutate( options );

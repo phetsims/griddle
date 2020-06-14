@@ -336,15 +336,13 @@ const demoScrollingChartNode = function( layoutBounds ) {
     }
   };
   emitter.addListener( listener );
-  const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1, series2 ], new Text( 'Height (m)', {
-      rotation: 3 * Math.PI / 2,
-      fill: 'white'
-    } ),
-    new Text( 'time (s)', { fill: 'white' } ), {
-      width: 600,
-      height: 300,
-      modelViewTransformProperty: modelViewTransformProperty
-    } );
+  const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1, series2 ], {
+    width: 600,
+    height: 300,
+    verticalAxisLabelNode: new Text( 'Height (m)', { fill: 'white', rotation: 3 * Math.PI / 2 } ),
+    horizontalAxisLabelNode: new Text( 'time (s)', { fill: 'white' } ),
+    modelViewTransformProperty: modelViewTransformProperty
+  } );
   const panel = new Panel( scrollingChartNode, {
     fill: 'gray',
     center: layoutBounds.center
@@ -377,17 +375,17 @@ const demoSeismographNode = layoutBounds => {
     }
   };
   emitter.addListener( listener );
-  const scrollingChartNode = new SeismographNode( timeProperty, [ series1 ], new Text( 'Height (m)', {
+  const seismographNode = new SeismographNode( timeProperty, [ series1 ], new Text( '1 s', { fill: 'white' } ), {
+    width: 200,
+    height: 150,
+    verticalAxisLabelNode: new Text( 'Height (m)', {
       rotation: 3 * Math.PI / 2,
       fill: 'white'
     } ),
-    new Text( 'time (s)', { fill: 'white' } ),
-    new Text( '1 s', { fill: 'white' } ), {
-      width: 200,
-      height: 150,
-      verticalRanges: [ new Range( -1, 1 ), new Range( -2, 2 ), new Range( -3, 3 ) ]
-    } );
-  const panel = new Panel( scrollingChartNode, {
+    horizontalAxisLabelNode: new Text( 'time (s)', { fill: 'white' } ),
+    verticalRanges: [ new Range( -1, 1 ), new Range( -2, 2 ), new Range( -3, 3 ) ]
+  } );
+  const panel = new Panel( seismographNode, {
     fill: 'gray',
     center: layoutBounds.center
   } );

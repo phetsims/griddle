@@ -34,12 +34,10 @@ class SeismographNode extends ScrollingChartNode {
   /**
    * @param {NumberProperty} timeProperty - indicates passage of time in the model, in model units
    * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted
-   * @param verticalAxisLabelNode - shown on the vertical axis (should already be rotated, if necessary)
-   * @param horizontalAxisLabelNode - shown on the horizontal axis
    * @param spanLabelNode - label Node for the span, indicating units of time
    * @param options
    */
-  constructor( timeProperty, dynamicSeriesArray, verticalAxisLabelNode, horizontalAxisLabelNode, spanLabelNode, options ) {
+  constructor( timeProperty, dynamicSeriesArray, spanLabelNode, options ) {
 
     // the grid for a seismograph does not scroll with the data, so it will get its own transform (set below)
     const gridTransformProperty = new Property( ModelViewTransform2.createIdentity() );
@@ -55,6 +53,10 @@ class SeismographNode extends ScrollingChartNode {
       // number of grid lines in the seismograph, including lines along the min and max (edges of plot)
       numberHorizontalLines: 5,
       numberVerticalLines: 5,
+
+      // {Node} - label for the horizontal axis, layout adjusted to accomodate the span Node of the Seismograph,
+      // otherwise passed to supertype
+      horizontalAxisLabelNode: null,
 
       // {boolean} - if true, the GridNode will scroll with the data
       scrollGridNode: false,
@@ -80,7 +82,7 @@ class SeismographNode extends ScrollingChartNode {
     assert && assert( options.gridNodeOptions.modelViewTransformProperty === undefined, 'SeismographNode sets transform for GridNode' );
     options.gridNodeOptions.modelViewTransformProperty = gridTransformProperty;
 
-    super( timeProperty, dynamicSeriesArray, verticalAxisLabelNode, horizontalAxisLabelNode, options );
+    super( timeProperty, dynamicSeriesArray, options );
 
     const zoomLevelIndexProperty = new Property( options.initialVerticalRangeIndex, {
       isValidValue: v => v >= 0 && v < options.verticalRanges.length
@@ -91,7 +93,6 @@ class SeismographNode extends ScrollingChartNode {
     };
     zoomLevelIndexProperty.link( zoomListener );
 
-    //
     const widthWithMargin = this.plotWidth - options.rightGraphMargin;
 
     // update the transform if vertical ranges change
@@ -155,8 +156,10 @@ class SeismographNode extends ScrollingChartNode {
     } );
 
     // make sure the horizontal label doesn't overlap with the spanNode
-    if ( horizontalAxisLabelNode.left < spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
-      horizontalAxisLabelNode.left = spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
+    if ( options.horizontalAxisLabelNode ) {
+      if ( options.horizontalAxisLabelNode.left < spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
+        options.horizontalAxisLabelNode.left = spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
+      }
     }
 
     this.addChild( spanNode );

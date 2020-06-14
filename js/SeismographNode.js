@@ -32,12 +32,12 @@ const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
 class SeismographNode extends ScrollingChartNode {
 
   /**
-   * @param {NumberProperty} timeProperty - indicates passage of time in the model, in model units
+   * @param {NumberProperty} valueProperty - value along the horizontal axis, in model units
    * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted
-   * @param spanLabelNode - label Node for the span, indicating units of time
+   * @param spanLabelNode - label Node for the span, indicating units of value
    * @param options
    */
-  constructor( timeProperty, dynamicSeriesArray, spanLabelNode, options ) {
+  constructor( valueProperty, dynamicSeriesArray, spanLabelNode, options ) {
 
     // the grid for a seismograph does not scroll with the data, so it will get its own transform (set below)
     const gridTransformProperty = new Property( ModelViewTransform2.createIdentity() );
@@ -82,7 +82,7 @@ class SeismographNode extends ScrollingChartNode {
     assert && assert( options.gridNodeOptions.modelViewTransformProperty === undefined, 'SeismographNode sets transform for GridNode' );
     options.gridNodeOptions.modelViewTransformProperty = gridTransformProperty;
 
-    super( timeProperty, dynamicSeriesArray, options );
+    super( valueProperty, dynamicSeriesArray, options );
 
     const zoomLevelIndexProperty = new Property( options.initialVerticalRangeIndex, {
       isValidValue: v => v >= 0 && v < options.verticalRanges.length
@@ -96,9 +96,9 @@ class SeismographNode extends ScrollingChartNode {
     const widthWithMargin = this.plotWidth - options.rightGraphMargin;
 
     // update the transform if vertical ranges change
-    const dataMappingLink = Property.multilink( [ timeProperty, this.verticalRangeProperty ], ( time, verticalRange ) => {
+    const dataMappingLink = Property.multilink( [ valueProperty, this.verticalRangeProperty ], ( value, verticalRange ) => {
       const transform = ModelViewTransform2.createRectangleInvertedYMapping(
-        new Bounds2( time - 4, verticalRange.min, time, verticalRange.max ),
+        new Bounds2( value - 4, verticalRange.min, value, verticalRange.max ),
         new Bounds2( 0, 0, widthWithMargin, this.plotHeight )
       );
       this.modelViewTransformProperty.set( transform );
@@ -110,7 +110,7 @@ class SeismographNode extends ScrollingChartNode {
       }
       else {
 
-        // if grid isn't scrolling don't pan it with time variable, but still transform with vertical range
+        // if grid isn't scrolling don't pan it with value variable, but still transform with vertical range
         gridTransformProperty.set( ModelViewTransform2.createRectangleInvertedYMapping(
           new Bounds2( 0, verticalRange.min, 4, verticalRange.max ),
           new Bounds2( 0, 0, widthWithMargin, this.plotHeight )
@@ -195,7 +195,7 @@ class SeismographNode extends ScrollingChartNode {
       this.plotWidth - this.rightGraphMargin,
       this.graphPanel.bounds,
       this.horizontalRangeProperty.max,
-      this.timeProperty,
+      this.valueProperty,
       this.modelViewTransformProperty
     );
     this.graphPanel.addChild( dynamicSeriesNode );

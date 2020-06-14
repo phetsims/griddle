@@ -38,13 +38,13 @@ const VERTICAL_AXIS_LABEL_MARGIN = 8;
 class ScrollingChartNode extends Node {
 
   /**
-   * @param {NumberProperty} timeProperty - indicates the passage of time in the model in the same units as the model.
+   * @param {NumberProperty} valueProperty - indicates the passage of horizontal value in the same units as the model.
    *                                      - This may be seconds or another unit depending on the model.
    * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted. The client is responsible for pruning data as
    *                                             - it leaves the visible window.
    * @param {Object} [options]
    */
-  constructor( timeProperty, dynamicSeriesArray, options ) {
+  constructor( valueProperty, dynamicSeriesArray, options ) {
     super();
 
     options = merge( {
@@ -94,7 +94,7 @@ class ScrollingChartNode extends Node {
     this.plotHeight = options.height;
     this.showVerticalGridLabels = options.showVerticalGridLabels;
     this.verticalGridLabelNumberOfDecimalPlaces = options.verticalGridLabelNumberOfDecimalPlaces;
-    this.timeProperty = timeProperty;
+    this.valueProperty = valueProperty;
     this.rightGraphMargin = options.rightGraphMargin;
     this.verticalRangeProperty = options.verticalRangeProperty;
     this.horizontalRangeProperty = options.horizontalRangeProperty;
@@ -216,7 +216,7 @@ class ScrollingChartNode extends Node {
       this.plotWidth - this.rightGraphMargin,
       this.graphPanel.bounds,
       this.horizontalRangeProperty.max,
-      this.timeProperty,
+      this.valueProperty,
       this.modelViewTransformProperty
     );
     this.graphPanel.addChild( dynamicSeriesNode );

@@ -145,7 +145,7 @@ class GridNode extends Node {
 
       // allow for precision errors, see phetsims/scenery-phet#601
       assert && assert( Utils.equalsEpsilon( majorSpacing % minorSpacing, 0, 1E10 ) ||
-                        Utils.equalsEpsilon( majorSpacing % minorSpacing - minorSpacing, 0, 1E10 ), 'minor spacing must be a multiple of major spacing');
+                        Utils.equalsEpsilon( majorSpacing % minorSpacing - minorSpacing, 0, 1E10 ), 'minor spacing must be a multiple of major spacing' );
     }
   }
 
@@ -247,6 +247,71 @@ class GridNode extends Node {
     }
 
     linesPath.shape = shape;
+  }
+
+  /**
+   * Returns an array of positions of grid lines in model coordinates, within the view bounds of the grid. Useful
+   * for decorating the grid with labels or other things.
+   * @public
+   *
+   * @returns {number[]}
+   */
+  getMajorVerticalLinePositionsInGrid() {
+    const modelViewTransform = this.modelViewTransformProperty.get();
+
+    const modelGridLeft = modelViewTransform.viewToModelX( 0 );
+    const modelWidth = modelViewTransform.viewToModelDeltaX( this.gridWidth );
+
+    // distance from left edge of the gridNode to the first vertical line, in model coordinates
+    const remainderToLine = Utils.toFixedNumber( modelGridLeft % this.majorVerticalLineSpacing, 10 );
+    const distanceToGridLine = ( this.majorVerticalLineSpacing - remainderToLine ) % this.majorVerticalLineSpacing;
+
+    const positions = [];
+    for ( let x = modelGridLeft + distanceToGridLine; x <= modelGridLeft + modelWidth; x += this.majorVerticalLineSpacing ) {
+      positions.push( x );
+    }
+
+    return positions;
+  }
+
+  /**
+   * Returns an array of positions in model coordinates of lines that are within grid view bounds, modified
+   * by transform. This is useful if you need to decorate the GridNode with labels or other things.
+   * @public
+   *
+   * @param {string} lineType
+   * @returns {[]}
+   */
+  getHorizontalLinePositionsInGrid( lineType ) {
+    assert && assert( lineType === 'majorHorizontalLineSpacing' || lineType === 'minorHorizontalLineSpacing', 'lineType should be one of the horizontal line spacings' );
+
+    const spacing = this[ lineType ];
+    assert && assert( spacing && typeof spacing === 'number', `spacing not defined for ${lineType}` );
+
+    const modelViewTransform = this.modelViewTransformProperty.get();
+    const modelGridBottom = modelViewTransform.viewToModelY( 0 );
+    const modelGridTop = modelViewTransform.viewToModelY( this.gridHeight );
+    const modelHeight = Math.abs( modelViewTransform.viewToModelDeltaY( this.gridHeight ) );
+
+    // distance from top edge of the gridNode to the first horizontal line
+    const remainderToGridLine = Utils.toFixedNumber( modelGridBottom % spacing, 10 );
+    const distanceToGridLine = ( spacing - remainderToGridLine ) % spacing;
+
+    const positions = [];
+
+    // check to see if model-view transform flipped relative bottom and top due to an inverse vertical transformation
+    if ( modelGridBottom < modelGridTop ) {
+      for ( let y = modelGridBottom + distanceToGridLine; y <= modelGridBottom + modelHeight; y += spacing ) {
+        positions.push( y );
+      }
+    }
+    else {
+      for ( let y = modelGridTop + distanceToGridLine; y <= modelGridTop + modelHeight; y += spacing ) {
+        positions.push( y );
+      }
+    }
+
+    return positions;
   }
 
   /**

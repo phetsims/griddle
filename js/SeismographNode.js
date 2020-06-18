@@ -58,6 +58,9 @@ class SeismographNode extends ScrollingChartNode {
       // otherwise passed to supertype
       horizontalAxisLabelNode: null,
 
+      // {boolean} - by default, there are no horizontal labels for the SeismographNode
+      showHorizontalGridLabels: false,
+
       // {boolean} - if true, the GridNode will scroll with the data
       scrollGridNode: false,
 

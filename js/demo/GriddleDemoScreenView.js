@@ -298,13 +298,13 @@ const demoGridNode = layoutBounds => {
  */
 const demoScrollingChartNode = function( layoutBounds ) {
   const timeProperty = new Property( 0 );
-  const series1 = new DynamicSeries( { color: 'blue' } );
-  const series2 = new DynamicSeries( { color: 'orange' } );
-  const maxTime = 4;
-  const horizontalRange = new Range( 0, maxTime );
-  const verticalRange = new Range( -1, 1 );
-  const plotWidth = 600;
-  const plotHeight = 300;
+  const series1 = new DynamicSeries( { color: 'blue', lineWidth: 3 } );
+  const series2 = new DynamicSeries( { color: 'orange', lineWidth: 3 } );
+  const horizontalRange = new Range( 0, 10 );
+  const verticalRange = new Range( -5, 5 );
+  const maxTime = horizontalRange.max;
+  const plotWidth = 500;
+  const plotHeight = 500;
 
   const modelViewTransformProperty = new Property( ModelViewTransform2.createRectangleInvertedYMapping(
     new Bounds2( horizontalRange.min, verticalRange.min, horizontalRange.max, verticalRange.max ),
@@ -317,14 +317,17 @@ const demoScrollingChartNode = function( layoutBounds ) {
     timeProperty.value += dt;
 
     // Sample new data
-    series1.addXYDataPoint( timeProperty.value, Math.sin( timeProperty.value ) );
-    series2.addXYDataPoint( timeProperty.value, Math.sin( timeProperty.value + 0.5 ) );
+    series1.addXYDataPoint( timeProperty.value, timeProperty.value + Math.sin( timeProperty.value ) + verticalRange.min );
+    series2.addXYDataPoint( timeProperty.value, timeProperty.value + Math.sin( timeProperty.value + 1 ) + verticalRange.min );
 
     // time has gone beyond the initial max time, so update the transform to pan data so that the new points
     // are in view
     if ( timeProperty.get() > maxTime ) {
+
+      const minY = verticalRange.min + timeProperty.value - maxTime;
+      const maxY = verticalRange.max + timeProperty.value - maxTime;
       modelViewTransformProperty.set( ModelViewTransform2.createRectangleInvertedYMapping(
-        new Bounds2( timeProperty.get() - maxTime, verticalRange.min, timeProperty.get(), verticalRange.max ),
+        new Bounds2( timeProperty.get() - maxTime, minY, timeProperty.get(), maxY ),
         new Bounds2( 0, 0, plotWidth, plotHeight )
       ) );
     }
@@ -337,15 +340,16 @@ const demoScrollingChartNode = function( layoutBounds ) {
   };
   emitter.addListener( listener );
   const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1, series2 ], {
-    width: 600,
-    height: 300,
+    width: plotWidth,
+    height: plotHeight,
     verticalAxisLabelNode: new Text( 'Height (m)', { fill: 'white', rotation: 3 * Math.PI / 2 } ),
     horizontalAxisLabelNode: new Text( 'time (s)', { fill: 'white' } ),
     modelViewTransformProperty: modelViewTransformProperty
   } );
   const panel = new Panel( scrollingChartNode, {
     fill: 'gray',
-    center: layoutBounds.center
+    resize: false,
+    center: layoutBounds.center.plusXY( 50, 0 )
   } );
 
   // Swap out the dispose function for one that also removes the Emitter listener

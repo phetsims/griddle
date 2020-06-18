@@ -72,6 +72,7 @@ class ScrollingChartNode extends Node {
       gridLineOptions: null, // filled in below because some defaults are based on other options
 
       showVerticalGridLabels: true,
+      showHorizontalGridLabels: true,
       verticalGridLabelNumberOfDecimalPlaces: 0,
 
       // line spacing, in model coordinates
@@ -93,6 +94,7 @@ class ScrollingChartNode extends Node {
     this.plotWidth = options.width;
     this.plotHeight = options.height;
     this.showVerticalGridLabels = options.showVerticalGridLabels;
+    this.showHorizontalGridLabels = options.showHorizontalGridLabels;
     this.verticalGridLabelNumberOfDecimalPlaces = options.verticalGridLabelNumberOfDecimalPlaces;
     this.valueProperty = valueProperty;
     this.rightGraphMargin = options.rightGraphMargin;
@@ -150,8 +152,12 @@ class ScrollingChartNode extends Node {
     this.gridNode = new GridNode( this.plotWidth, this.plotHeight, gridNodeOptions );
 
     graphPanel.addChild( this.gridNode );
-    this.gridLabelLayer = new Node();
-    this.addChild( this.gridLabelLayer );
+
+    // @private {Node} - layers for each of the vertical and horizontal labels along grid lines
+    this.verticalGridLabelLayer = new Node();
+    this.horizontalGridLabelLayer = new Node();
+    this.addChild( this.verticalGridLabelLayer );
+    this.addChild( this.horizontalGridLabelLayer );
 
     const plotWidthWithMargin = this.plotWidth - options.rightGraphMargin;
 
@@ -159,6 +165,9 @@ class ScrollingChartNode extends Node {
     this.graphPanel = graphPanel;
 
     this.redrawLabels();
+
+    const transformListener = this.redrawLabels.bind( this );
+    this.modelViewTransformProperty.link( transformListener );
 
     // @private - for disposal
     this.scrollingChartNodeDisposeEmitter = new Emitter();
@@ -192,8 +201,9 @@ class ScrollingChartNode extends Node {
       options.horizontalAxisLabelNode.maxWidth = graphPanel.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
 
       // Position the horizontal axis title node after its maxWidth is specified
+      const labelTop = this.showHorizontalGridLabels ? this.horizontalGridLabelLayer.bottom + LABEL_GRAPH_MARGIN : graphPanel.bottom + LABEL_GRAPH_MARGIN;
       options.horizontalAxisLabelNode.mutate( {
-        top: graphPanel.bottom + LABEL_GRAPH_MARGIN,
+        top: labelTop,
         centerX: plotWidthWithMargin / 2 + graphPanel.bounds.minX
       } );
       if ( options.horizontalAxisLabelNode.left < HORIZONTAL_AXIS_LABEL_MARGIN ) {
@@ -202,6 +212,13 @@ class ScrollingChartNode extends Node {
     }
 
     this.mutate( options );
+
+    // @private - for dispose
+    this.disposeScrollingChartNode = () => {
+      this.scrollingChartNodeDisposeEmitter.emit();
+      this.scrollingChartNodeDisposeEmitter.dispose();
+      this.modelViewTransformProperty.unlink( transformListener );
+    };
   }
 
   /**
@@ -246,27 +263,41 @@ class ScrollingChartNode extends Node {
    * @protected
    */
   redrawLabels() {
-    const gridLabelChildren = [];
+    if ( this.showVerticalGridLabels ) {
+      const verticalLabelChildren = [];
+      const yPositions = this.gridNode.getHorizontalLinePositionsInGrid( 'majorHorizontalLineSpacing' );
+      yPositions.forEach( yPosition => {
+        const viewY = this.modelViewTransformProperty.get().modelToViewY( yPosition );
+        const labelPoint = this.graphPanel.localToParentPoint( new Vector2( this.gridNode.bounds.left, viewY ) );
 
-    // Horizontal lines indicate increasing vertical value
-    const horizontalLabelMargin = -3;
-
-    const numberHorizontalLines = this.verticalRangeProperty.get().getLength() / this.majorHorizontalLineSpacing;
-    for ( let i = 0; i <= numberHorizontalLines; i++ ) {
-      const y = this.plotHeight * i / ( numberHorizontalLines );
-      const yValue = this.modelViewTransformProperty.get().viewToModelY( y );
-      if ( this.showVerticalGridLabels ) {
-        const labelPoint = this.graphPanel.localToParentPoint( new Vector2( this.gridNode.bounds.left, y ) );
-
-        // TODO: Should number of decimal places depend on value or perhaps on zoom level?
-        // We want to show -2 -1 0 1 2, but also -0.5, 0, 0.5, right? See https://github.com/phetsims/griddle/issues/47
-        gridLabelChildren.push( new Text( Utils.toFixed( yValue, this.verticalGridLabelNumberOfDecimalPlaces ), {
+        const labelText = new Text( Utils.toFixed( yPosition, this.verticalGridLabelNumberOfDecimalPlaces ), {
           fill: 'white',
-          rightCenter: labelPoint.plusXY( horizontalLabelMargin, 0 )
-        } ) );
-      }
+          rightCenter: labelPoint.plusXY( -3, 0 )
+        } );
+
+        verticalLabelChildren.push( labelText );
+      } );
+      this.verticalGridLabelLayer.children = verticalLabelChildren;
     }
-    this.gridLabelLayer.children = gridLabelChildren;
+
+    if ( this.showHorizontalGridLabels ) {
+
+      // draw labels along the horizontal lines
+      const horizontalLabelChildren = [];
+      const xPositions = this.gridNode.getMajorVerticalLinePositionsInGrid();
+      xPositions.forEach( xPosition => {
+        const viewX = this.modelViewTransformProperty.get().modelToViewX( xPosition );
+        const labelPoint = this.graphPanel.localToParentPoint( new Vector2( viewX, this.gridNode.bounds.bottom ) );
+
+        const labelText = new Text( Utils.toFixed( xPosition, this.verticalGridLabelNumberOfDecimalPlaces ), {
+          fill: 'white',
+          centerTop: labelPoint.plusXY( 0, 3 )
+        } );
+
+        horizontalLabelChildren.push( labelText );
+      } );
+      this.horizontalGridLabelLayer.children = horizontalLabelChildren;
+    }
   }
 
   /**
@@ -274,8 +305,7 @@ class ScrollingChartNode extends Node {
    * @public
    */
   dispose() {
-    this.scrollingChartNodeDisposeEmitter.emit();
-    this.scrollingChartNodeDisposeEmitter.dispose();
+    this.disposeScrollingChartNode();
     super.dispose();
   }
 }

@@ -10,6 +10,7 @@
 import Emitter from '../../axon/js/Emitter.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import merge from '../../phet-core/js/merge.js';
+import Color from '../../scenery/js/util/Color.js';
 import griddle from './griddle.js';
 
 class DynamicSeries {
@@ -27,7 +28,7 @@ class DynamicSeries {
     this.emitter = new Emitter();
 
     options = merge( {
-      color: 'black',
+      color: new Color( 'black' ),
       lineWidth: 1,
       radius: 2
     }, options );

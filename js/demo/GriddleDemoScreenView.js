@@ -38,6 +38,7 @@ import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
 import ScrollingChartNode from '../ScrollingChartNode.js';
 import SeismographNode from '../SeismographNode.js';
+import XYCursorPlot from '../XYCursorPlot.js';
 import XYPlotNode from '../XYPlotNode.js';
 
 // constants - this is a hack to enable components to animate from the animation loop
@@ -58,7 +59,8 @@ class GriddleDemoScreenView extends DemosScreenView {
       { label: 'GridNode', createNode: demoGridNode },
       { label: 'BarChart', createNode: demoBarChart },
       { label: 'ScrollingChartNode', createNode: demoScrollingChartNode },
-      { label: 'SeismographNode', createNode: demoSeismographNode }
+      { label: 'SeismographNode', createNode: demoSeismographNode },
+      { label: 'XYCursorPlot', createNode: demoXYCursorPlot }
     ], {
       selectedDemoLabel: sceneryPhetQueryParameters.component
     } );
@@ -401,6 +403,49 @@ const demoSeismographNode = layoutBounds => {
     panelDispose();
   };
   return panel;
+};
+
+/**
+ * Creates an example XYCursorPlot
+ * @param layoutBounds
+ * @returns {XYCursorPlot}
+ */
+const demoXYCursorPlot = layoutBounds => {
+  const plotWidth = 800;
+  const plotHeight = 200;
+  const maxTime = 10;
+  const plotRange = new Range( -1, 1 );
+
+  const dataSeries = new DynamicSeries();
+
+  const plotNode = new XYCursorPlot( {
+    width: plotWidth,
+    height: plotHeight,
+    maxX: maxTime,
+    showAxis: false,
+    minY: plotRange.min,
+    maxY: plotRange.max,
+    lineDash: [ 4, 4 ]
+  } );
+  plotNode.center = layoutBounds.center;
+
+  plotNode.addSeries( dataSeries );
+
+  let time = 0;
+  const listener = dt => {
+
+    // Increment the model time
+    time += dt;
+    console.log( time );
+
+    // Sample new data
+    dataSeries.addXYDataPoint( time, Math.sin( time ) );
+
+    plotNode.setCursorValue( time );
+  };
+  emitter.addListener( listener );
+
+  return plotNode;
 };
 
 griddle.register( 'GriddleDemoScreenView', GriddleDemoScreenView );

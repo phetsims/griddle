@@ -80,6 +80,7 @@ class ScrollingChartNode extends Node {
       majorHorizontalLineSpacing: 1,
 
       // {Range} ranges in model coordinates of plotted data
+      // TODO: The range changes with modelViewTransformProperty, lets get rid of these, see #46
       verticalRangeProperty: new Property( new Range( -1, 1 ) ),
       horizontalRangeProperty: new Property( new Range( 0, 4 ) ),
 

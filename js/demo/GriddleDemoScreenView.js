@@ -26,6 +26,7 @@ import Node from '../../../scenery/js/nodes/Node.js';
 import Text from '../../../scenery/js/nodes/Text.js';
 import VBox from '../../../scenery/js/nodes/VBox.js';
 import Color from '../../../scenery/js/util/Color.js';
+import ABSwitch from '../../../sun/js/ABSwitch.js';
 import BooleanRectangularStickyToggleButton from '../../../sun/js/buttons/BooleanRectangularStickyToggleButton.js';
 import BooleanRectangularToggleButton from '../../../sun/js/buttons/BooleanRectangularToggleButton.js';
 import DemosScreenView from '../../../sun/js/demo/DemosScreenView.js';
@@ -34,6 +35,7 @@ import Panel from '../../../sun/js/Panel.js';
 import VSlider from '../../../sun/js/VSlider.js';
 import BarChartNode from '../BarChartNode.js';
 import DynamicSeries from '../DynamicSeries.js';
+import DynamicSeriesNode from '../DynamicSeriesNode.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
 import ScrollingChartNode from '../ScrollingChartNode.js';
@@ -55,12 +57,12 @@ class GriddleDemoScreenView extends DemosScreenView {
        * {string} label - label in the combo box
        * {function(Bounds2): Node} createNode - creates the scene graph for the demo
        */
-      { label: 'XYPlotNode', createNode: demoXYPlotNode },
-      { label: 'GridNode', createNode: demoGridNode },
       { label: 'BarChart', createNode: demoBarChart },
+      { label: 'GridNode', createNode: demoGridNode },
       { label: 'ScrollingChartNode', createNode: demoScrollingChartNode },
       { label: 'SeismographNode', createNode: demoSeismographNode },
-      { label: 'XYCursorPlot', createNode: demoXYCursorPlot }
+      { label: 'XYCursorPlot', createNode: demoXYCursorPlot },
+      { label: 'XYPlotNode', createNode: demoXYPlotNode }
     ], {
       selectedDemoLabel: sceneryPhetQueryParameters.component
     } );
@@ -300,13 +302,24 @@ const demoGridNode = layoutBounds => {
  */
 const demoScrollingChartNode = function( layoutBounds ) {
   const timeProperty = new Property( 0 );
-  const series1 = new DynamicSeries( { color: 'blue', lineWidth: 3 } );
-  const series2 = new DynamicSeries( { color: 'orange', lineWidth: 3 } );
+  const series1 = new DynamicSeries( { color: 'blue', lineWidth: 3, radius: 7 } );
+  const series2 = new DynamicSeries( { color: 'orange', lineWidth: 3, radius: 7 } );
   const horizontalRange = new Range( 0, 10 );
   const verticalRange = new Range( -5, 5 );
   const maxTime = horizontalRange.max;
   const plotWidth = 500;
   const plotHeight = 500;
+
+  const styleProperty = new Property( DynamicSeriesNode.PlotStyle.LINE );
+
+  const labelFont = new PhetFont( { size: 25 } );
+  const styleSwitch = new ABSwitch(
+    styleProperty,
+    DynamicSeriesNode.PlotStyle.LINE,
+    new Text( 'Line', { font: labelFont } ),
+    DynamicSeriesNode.PlotStyle.SCATTER,
+    new Text( 'Scatter', { font: labelFont } )
+  );
 
   const modelViewTransformProperty = new Property( ModelViewTransform2.createRectangleInvertedYMapping(
     new Bounds2( horizontalRange.min, verticalRange.min, horizontalRange.max, verticalRange.max ),
@@ -317,10 +330,6 @@ const demoScrollingChartNode = function( layoutBounds ) {
 
     // Increment the model time
     timeProperty.value += dt;
-
-    // Sample new data
-    series1.addXYDataPoint( timeProperty.value, timeProperty.value + Math.sin( timeProperty.value ) + verticalRange.min );
-    series2.addXYDataPoint( timeProperty.value, timeProperty.value + Math.sin( timeProperty.value + 1 ) + verticalRange.min );
 
     // time has gone beyond the initial max time, so update the transform to pan data so that the new points
     // are in view
@@ -334,6 +343,18 @@ const demoScrollingChartNode = function( layoutBounds ) {
       ) );
     }
 
+    // if drawing a scatter plot, just draw a new dot every half second
+    if ( styleProperty.get() === DynamicSeriesNode.PlotStyle.SCATTER && series1.hasData() ) {
+      const timeDifference = timeProperty.get() - series1.getDataPoint( series1.getLength() - 1 ).x;
+      if ( timeDifference < 0.5 ) {
+        return;
+      }
+    }
+
+    // Sample new data
+    series1.addXYDataPoint( timeProperty.value, timeProperty.value + Math.sin( timeProperty.value ) + verticalRange.min );
+    series2.addXYDataPoint( timeProperty.value, timeProperty.value + Math.sin( timeProperty.value + 1 ) + verticalRange.min );
+
     // Data that does not fall within the displayed window should be removed.
     while ( series1.getDataPoint( 0 ).x < timeProperty.value - maxTime ) {
       series1.shiftData();
@@ -341,17 +362,24 @@ const demoScrollingChartNode = function( layoutBounds ) {
     }
   };
   emitter.addListener( listener );
-  const scrollingChartNode = new ScrollingChartNode( timeProperty, [ series1, series2 ], {
+  const scrollingChartNode = new ScrollingChartNode( timeProperty, {
     width: plotWidth,
     height: plotHeight,
     verticalAxisLabelNode: new Text( 'Height (m)', { fill: 'white', rotation: 3 * Math.PI / 2 } ),
     horizontalAxisLabelNode: new Text( 'time (s)', { fill: 'white' } ),
     modelViewTransformProperty: modelViewTransformProperty
   } );
+  scrollingChartNode.addDynamicSeriesArray( [ series1, series2 ] );
+
+  styleProperty.link( style => {
+    scrollingChartNode.setPlotStyle( style );
+    series1.clear();
+    series2.clear();
+  } );
+
   const panel = new Panel( scrollingChartNode, {
     fill: 'gray',
-    resize: false,
-    center: layoutBounds.center.plusXY( 50, 0 )
+    resize: false
   } );
 
   // Swap out the dispose function for one that also removes the Emitter listener
@@ -360,7 +388,14 @@ const demoScrollingChartNode = function( layoutBounds ) {
     emitter.removeListener( listener );
     panelDispose();
   };
-  return panel;
+
+  const contentVBox = new VBox( {
+    children: [ panel, styleSwitch ],
+    spacing: 15,
+    center: layoutBounds.center.plusXY( 25, 0 )
+  } );
+
+  return contentVBox;
 };
 
 const demoSeismographNode = layoutBounds => {
@@ -416,36 +451,79 @@ const demoXYCursorPlot = layoutBounds => {
   const maxTime = 10;
   const plotRange = new Range( -1, 1 );
 
+  const timeProperty = new NumberProperty( 0 );
+
+  const modelViewTransformProperty = new Property( ModelViewTransform2.createRectangleInvertedYMapping(
+    new Bounds2( 0, plotRange.min, maxTime, plotRange.max ),
+    new Bounds2( 0, 0, plotWidth, plotHeight )
+  ) );
+
   const dataSeries = new DynamicSeries();
 
-  const plotNode = new XYCursorPlot( {
+  // while dragging,
+  let dragging = false;
+
+  const plotNode = new XYCursorPlot( timeProperty, {
     width: plotWidth,
     height: plotHeight,
+    modelViewTransformProperty: modelViewTransformProperty,
     maxX: maxTime,
     showAxis: false,
     minY: plotRange.min,
     maxY: plotRange.max,
-    lineDash: [ 4, 4 ]
+    lineDash: [ 4, 4 ],
+
+    verticalAxisLabelNode: new Text( 'Value', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
+    horizontalAxisLabelNode: new Text( 'Time (s)', { fill: 'white' } ),
+
+    cursorOptions: {
+      drag: () => {
+        dragging = true;
+      },
+      endDrag: () => {
+        dragging = false;
+      }
+    }
   } );
-  plotNode.center = layoutBounds.center;
+  plotNode.addDynamicSeries( dataSeries );
 
-  plotNode.addSeries( dataSeries );
+  const plotPanel = new Panel( plotNode, {
+    fill: 'grey',
+    center: layoutBounds.center,
+    resize: false
+  } );
 
-  let time = 0;
   const listener = dt => {
 
-    // Increment the model time
-    time += dt;
-    console.log( time );
+    // no recording if we are dragging the cursor
+    if ( !dragging ) {
 
-    // Sample new data
-    dataSeries.addXYDataPoint( time, Math.sin( time ) );
+      // Increment the model time
+      timeProperty.set( timeProperty.get() + dt );
 
-    plotNode.setCursorValue( time );
+      // Sample new data
+      dataSeries.addXYDataPoint( timeProperty.get(), Math.sin( timeProperty.get() ) );
+
+      // time has gone beyond the initial max time, so update the transform to pan data so that the new points
+      // are in view
+      if ( timeProperty.get() > maxTime ) {
+        modelViewTransformProperty.set( ModelViewTransform2.createRectangleInvertedYMapping(
+          new Bounds2( timeProperty.get() - maxTime, plotRange.min, timeProperty.get(), plotRange.max ),
+          new Bounds2( 0, 0, plotWidth, plotHeight )
+        ) );
+      }
+
+      // Data that does not fall within the displayed window should be removed.
+      while ( dataSeries.getDataPoint( 0 ).x < timeProperty.value - maxTime ) {
+        dataSeries.shiftData();
+      }
+
+      plotNode.setCursorValue( timeProperty.get() );
+    }
   };
   emitter.addListener( listener );
 
-  return plotNode;
+  return plotPanel;
 };
 
 griddle.register( 'GriddleDemoScreenView', GriddleDemoScreenView );

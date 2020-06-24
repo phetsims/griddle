@@ -40,11 +40,9 @@ class ScrollingChartNode extends Node {
   /**
    * @param {NumberProperty} valueProperty - indicates the passage of horizontal value in the same units as the model.
    *                                      - This may be seconds or another unit depending on the model.
-   * @param {DynamicSeries[]} dynamicSeriesArray - data to be plotted. The client is responsible for pruning data as
-   *                                             - it leaves the visible window.
    * @param {Object} [options]
    */
-  constructor( valueProperty, dynamicSeriesArray, options ) {
+  constructor( valueProperty, options ) {
     super();
 
     options = merge( {
@@ -62,6 +60,9 @@ class ScrollingChartNode extends Node {
 
       // {Node} - label for the horizontal axis
       horizontalAxisLabelNode: null,
+
+      // {PlotStyle} - Changes how the DynamicSeries data is drawn on the chart
+      plotStyle: DynamicSeriesNode.PlotStyle.LINE,
 
       // default options for the Rectangle on top (to make sure graph lines don't protrude)
       graphPanelOverlayOptions: {
@@ -103,6 +104,7 @@ class ScrollingChartNode extends Node {
     this.horizontalRangeProperty = options.horizontalRangeProperty;
     this.majorHorizontalLineSpacing = options.majorHorizontalLineSpacing;
     this.majorVerticalLineSpacing = options.majorVerticalLineSpacing;
+    this.plotStyle = options.plotStyle;
 
     // default options to be passed into the graphPanel Rectangle
     options.graphPanelOptions = merge( {
@@ -162,6 +164,9 @@ class ScrollingChartNode extends Node {
 
     const plotWidthWithMargin = this.plotWidth - options.rightGraphMargin;
 
+    // @private - maps a DynamicSeries -> DynamicSeriesNode so that it can be potentially removed later
+    this.dynamicSeriesMap = new Map();
+
     this.addChild( graphPanel );
     this.graphPanel = graphPanel;
 
@@ -172,8 +177,6 @@ class ScrollingChartNode extends Node {
 
     // @private - for disposal
     this.scrollingChartNodeDisposeEmitter = new Emitter();
-
-    dynamicSeriesArray.forEach( this.addDynamicSeries.bind( this ) );
 
     // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
     // This is a faster alternative to clipping.
@@ -224,7 +227,7 @@ class ScrollingChartNode extends Node {
 
   /**
    * Adds a DynamicSeriesNode to this ScrollingChartNode.
-   * @protected
+   * @public
    *
    * @param {DynamicSeries} dynamicSeries
    */
@@ -237,9 +240,33 @@ class ScrollingChartNode extends Node {
       this.valueProperty,
       this.modelViewTransformProperty
     );
+    this.dynamicSeriesMap.set( dynamicSeries, dynamicSeriesNode );
     this.graphPanel.addChild( dynamicSeriesNode );
     this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeriesNode.dispose() );
   }
+
+  /**
+   * Adds serveral DynamicSeries at once, for convenience.
+   * @public
+   *
+   * @param {DynamicSeries[]} dynamicSeriesArray
+   */
+  addDynamicSeriesArray( dynamicSeriesArray ) {
+    dynamicSeriesArray.forEach( this.addDynamicSeries.bind( this ) );
+  }
+
+  /**
+   * Remove a DynamicSeries (and its DynamicSeriesNode)_from this plot.
+   * @public
+   *
+   * @param {DynamicSeries} dynamicSeries
+   */
+  removeDynamicSeries( dynamicSeries ) {
+    assert && assert( this.dynamicSeriesMap.has( dynamicSeries ), 'trying to remove DynamicSeriesNode when one does not exist.' );
+    this.graphPanel.removeChild( this.dynamicSeriesMap.get( dynamicSeries ) );
+    this.dynamicSeriesMap.delete( dynamicSeries );
+  }
+
 
   /**
    * Set line spacings for the grid and labels.
@@ -299,6 +326,20 @@ class ScrollingChartNode extends Node {
       } );
       this.horizontalGridLabelLayer.children = horizontalLabelChildren;
     }
+  }
+
+  /**
+   * Set the plot style for the graph, to be drawn as a line graph or a scatter plot.
+   *
+   * @param {XYDataSeriesNode.PlotStyle} plotStyle - one of plotStyle
+   * @public
+   */
+  setPlotStyle( plotStyle ) {
+    this.plotStyle = plotStyle;
+
+    this.dynamicSeriesMap.forEach( dynamicSeriesNode => {
+      dynamicSeriesNode.setPlotStyle( plotStyle );
+    } );
   }
 
   /**

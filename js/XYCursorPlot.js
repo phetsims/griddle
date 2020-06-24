@@ -15,27 +15,36 @@ import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import Color from '../../scenery/js/util/Color.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import griddle from './griddle.js';
-import XYPlotNode from './XYPlotNode.js';
+import ScrollingChartNode from './ScrollingChartNode.js';
 
 // constants
 const WIDTH_PROPORTION = 0.013; // empirically determined
 const CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
 const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 
-class XYCursorPlot extends XYPlotNode {
+class XYCursorPlot extends ScrollingChartNode {
 
-  constructor( options ) {
-
+  /**
+   * @param {NumberProperty} valueProperty
+   * @param {Object} [options]
+   */
+  constructor( valueProperty, options ) {
     options = merge( {
 
       // options passed on to the chart cursor, see ChartCursor
       cursorOptions: null,
 
+      graphPanelOptions: {
+
+        // so that the cursor is draggable
+        pickable: true
+      },
+
       // phet-io
       tandem: Tandem.OPTIONAL
     }, options );
 
-    super( options );
+    super( valueProperty, options );
 
     // @private {boolean|null} - if set with setCursorVisible, then this will indicate visibility of the cursor
     this._cursorVisibleOverride = null;
@@ -44,56 +53,20 @@ class XYCursorPlot extends XYPlotNode {
     this.cursorValue = 0;
 
     // @private - minimum and maximum recorded value, required by the cursor to limit dragging
-    this.minRecordedValue = 0;
-    this.maxRecordedValue = 0;
+    this.minRecordedXValue = 0;
+    this.maxRecordedXValue = 0;
 
     // @private - Keep track of listeners for each series so the listeners can be removed when the series is removed
     this.valueSeriesListenerMap = new Map();
 
-    // @private
-    this.chartCursor = new ChartCursor( this, options.cursorOptions );
-    this.addChild( this.chartCursor );
+    this.dynamicSeriesList = [];
+
+    // @private {ChartCursor} - draggable Node that shows the cursor value
+    this.chartCursor = new ChartCursor( this, this.modelViewTransformProperty, options.cursorOptions );
+    this.graphPanel.addChild( this.chartCursor );
 
     // initialize position and visibility of the cursor
     this.updateChartCursor();
-  }
-
-  /**
-   * Add a series to the plot, first adding a listener that keeps track of minimum and maximum data values.
-   * @public
-   * @override
-   *
-   * @param {DynamicSeries} series
-   * @param {number} scaleFactor
-   */
-  addSeries( series, scaleFactor ) {
-    super.addSeries( series, scaleFactor );
-
-    // when a point is added, update the min and max recorded values
-    const seriesListener = () => {
-
-      // update min/max domain of the plotted data
-      this.updateMinMaxXValues();
-
-      // if all data has been removed from the plot, update cursor visibility
-      this.updateChartCursor();
-    };
-
-    // save to map so that listener can be found again for disposal
-    this.valueSeriesListenerMap.set( series, seriesListener );
-    series.addDynamicSeriesListener( seriesListener );
-  }
-
-  /**
-   * Remove a series from the plot and dispose of the plot specific series listener.
-   * @public
-   *
-   * @param {DynamicSeries} series - to remove
-   */
-  removeSeries( series ) {
-    series.removeDynamicSeriesListener( this.valueSeriesListenerMap.get( series ) );
-    this.valueSeriesListenerMap.delete( series );
-    super.removeSeries( series );
   }
 
   /**
@@ -105,6 +78,20 @@ class XYCursorPlot extends XYPlotNode {
   setCursorValue( value ) {
     this.cursorValue = value;
     this.updateChartCursor();
+  }
+
+  /**
+   * Remove a series from the plot and dispose of the plot specific series listener.
+   * @public
+   *
+   * @param {DynamicSeries} dynamicSeries - to remove
+   */
+  removeDynamicSeries( dynamicSeries ) {
+    const seriesIndex = this.dynamicSeriesList.indexOf( dynamicSeries );
+    this.dynamicSeriesList.splice( seriesIndex, 1 );
+
+    dynamicSeries.removeDynamicSeriesListener( this.valueSeriesListenerMap.get( dynamicSeries ) );
+    this.valueSeriesListenerMap.delete( dynamicSeries );
   }
 
   /**
@@ -145,9 +132,7 @@ class XYCursorPlot extends XYPlotNode {
    * @private
    */
   updateChartCursorPos() {
-    const recordingStartValue = this.getMinRecordedValue();
-    const recordingCurrentValue = this.cursorValue;
-    this.moveChartCursorToValue( recordingCurrentValue - recordingStartValue );
+    this.moveChartCursorToValue( this.cursorValue );
   }
 
   /**
@@ -160,34 +145,61 @@ class XYCursorPlot extends XYPlotNode {
       this.chartCursor.setVisible( this._cursorVisibleOverride );
     }
     else {
-      const valueOnChart = ( this.cursorValue - this.getMinRecordedValue() );
-      const isCurrentValueOnChart = ( valueOnChart >= 0 ) && ( valueOnChart <= this.maxX );
+
+      const maxX = this.modelViewTransformProperty.get().viewToModelX( this.plotWidth + this.chartCursor.width / 2 );
+      const minX = this.modelViewTransformProperty.get().viewToModelX( 0 );
+
+      const isCurrentValueOnChart = ( this.cursorValue >= minX ) && ( this.cursorValue <= maxX );
       const dataExists = this.getDataExists();
       const chartCursorVisible = isCurrentValueOnChart && dataExists;
+
       this.chartCursor.setVisible( chartCursorVisible );
     }
   }
 
   /**
-   * Get the chart value for the given position in view coordinates, relative tot the parent coordinate frame.
-   * @private
-   *
-   * @param {number} position
-   * @returns {number}
+   * Add a Dynamic series to the XYCursorPlot.
+   * @override
+   * @public
+   * @param dynamicSeries
    */
-  positionToValue( position ) {
-    return position * ( this.maxX - this.minX ) / this.plotPath.width;
+  addDynamicSeries( dynamicSeries ) {
+    super.addDynamicSeries( dynamicSeries );
+
+    this.dynamicSeriesList.push( dynamicSeries );
+
+    // when a point is added, update the min and max recorded values
+    const seriesListener = () => {
+
+      // update the
+      this.updateMinMaxRecordedValues();
+
+      // if all data has been removed from the plot, update cursor visibility
+      this.updateChartCursor();
+    };
+
+    // save to map so that listener can be found again for disposal
+    this.valueSeriesListenerMap.set( dynamicSeries, seriesListener );
+    dynamicSeries.addDynamicSeriesListener( seriesListener );
   }
 
   /**
-   * Get the position on the chart from the provided value.
-   * @private
-   *
-   * @param {number} value
-   * @returns {number}
+   * Returns true if any data is attached to this plot.
+   * @returns {boolean}
+   * @public
    */
-  valueToPosition( value ) {
-    return value * this.plotPath.width / ( this.maxX - this.minX );
+  getDataExists() {
+    let dataExists = false;
+    this.valueSeriesListenerMap.forEach( ( listener, dataSeries, map ) => {
+      dataExists = dataSeries.hasData();
+
+      // break early
+      if ( dataExists ) {
+        return;
+      }
+    } );
+
+    return dataExists;
   }
 
   /**
@@ -197,59 +209,39 @@ class XYCursorPlot extends XYPlotNode {
    * @param {number} value
    */
   moveChartCursorToValue( value ) {
+    const viewPosition = this.modelViewTransformProperty.get().modelToViewX( value );
 
-    // origin of cursor is at the center
-    const xPosition = value * this.plotPath.width / ( this.maxX - this.minX );
-    this.chartCursor.centerX = Utils.clamp( xPosition, 0, this.plotPath.width );
-    this.chartCursor.centerY = this.plotPath.centerY;
+    // keep the cursor within the grid bounds
+    this.chartCursor.centerX = Utils.clamp( viewPosition, 0, this.plotWidth );
+    this.chartCursor.centerY = this.gridNode.centerY;
   }
 
   /**
-   * Get the minimum X data value in the data series lists. Returns zero if no data has been added yet. This value
-   * is updated whenever data is added to the list.
-   *
-   * @returns {number}
-   * @public
-   */
-  getMinRecordedValue() {
-    return !this.getDataExists() ? 0 : this.minRecordedValue;
-  }
-
-  /**
-   * Get the maximum X data value in the data series lists. Returns zero if no data has been added yet.  This value
-   * is updated whenever data is added to the data series list.
-   *
-   * @returns {number}
-   * @public
-   */
-  getMaxRecordedValue() {
-    return !this.getDataExists() ? 0 : this.maxRecordedValue;
-  }
-
-  /**
-   * Update the minimum/maximum plotted domain of the data recorded on this plot. This information is used
-   * to determine selected cursor values. If no data is associated with this plot, extrema are represented by
-   * min = infinity, max = negative infinity.
+   * From the existing data, update the min and max recorded X values from all of the dynamicSeries of this plot,
+   * so that the cursor can be limited to the recorded data.
    * @private
    */
-  updateMinMaxXValues() {
-    this.minRecordedValue = Number.POSITIVE_INFINITY;
-    this.maxRecordedValue = Number.NEGATIVE_INFINITY;
-    for ( let i = 0; i < this.dataSeriesList.length; i++ ) {
-      const dataSeries = this.dataSeriesList[ i ];
-      for ( let j = 0; j < dataSeries.getLength(); j++ ) {
-        const xValue = dataSeries.getDataPoint( j ).x;
-
-        if ( xValue > this.maxRecordedValue ) {
-          this.maxRecordedValue = xValue;
+  updateMinMaxRecordedValues() {
+    let minValue = Number.POSITIVE_INFINITY;
+    let maxValue = Number.NEGATIVE_INFINITY;
+    this.dynamicSeriesList.forEach( dynamicSeries => {
+      if ( dynamicSeries.getLength() > 0 ) {
+        const seriesMinValue = dynamicSeries.getDataPoint( 0 ).x;
+        const seriesMaxValue = dynamicSeries.getDataPoint( dynamicSeries.getLength() - 1 ).x;
+        if ( seriesMinValue < minValue ) {
+          minValue = seriesMinValue;
         }
-        if ( xValue < this.minRecordedValue ) {
-          this.minRecordedValue = xValue;
+        if ( seriesMaxValue > maxValue ) {
+          maxValue = seriesMaxValue;
         }
       }
-    }
+    } );
+
+    this.minRecordedXValue = minValue;
+    this.maxRecordedXValue = maxValue;
   }
 }
+
 
 /**
  * Rectangular cursor that indicates a current or selected value on the chart.
@@ -258,9 +250,10 @@ class ChartCursor extends Rectangle {
 
   /**
    * @param {XYPlotNode} plot
-   * @param {number} options
+   * @param {Property.<ModelViewTransform2>} modelViewTransformProperty
+   * @param {Object} [options]
    */
-  constructor( plot, options ) {
+  constructor( plot, modelViewTransformProperty, options ) {
 
     options = merge( {
       startDrag: () => {},
@@ -271,8 +264,8 @@ class ChartCursor extends Rectangle {
       tandem: Tandem.OPTIONAL
     }, options );
 
-    const width = plot.plotPath.width * WIDTH_PROPORTION;
-    const height = plot.plotPath.height;
+    const width = plot.plotWidth * WIDTH_PROPORTION;
+    const height = plot.plotHeight;
 
     // Set the shape. Origin is at the center top of the rectangle.
     super( 0, -height, width, height, 0, 0, {
@@ -284,6 +277,7 @@ class ChartCursor extends Rectangle {
     } );
 
     this.plot = plot;
+    this.modelViewTransformProperty = modelViewTransformProperty;
 
     // Make it easier to grab this cursor by giving it expanded mouse and touch areas.
     this.mouseArea = this.localBounds.dilatedX( 12 );
@@ -307,10 +301,10 @@ class ChartCursor extends Rectangle {
       },
       drag: ( event, listener ) => {
         const parentX = listener.parentPoint.x;
-        let newValue = this.plot.positionToValue( parentX );
+        let newValue = this.modelViewTransformProperty.get().viewToModelX( parentX );
 
         // limit cursor to the domain of recorded values
-        newValue = Utils.clamp( newValue, plot.getMinRecordedValue(), plot.getMaxRecordedValue() );
+        newValue = Utils.clamp( newValue, this.plot.minRecordedXValue, this.plot.maxRecordedXValue );
         this.plot.setCursorValue( newValue );
 
         options.drag();

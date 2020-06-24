@@ -188,15 +188,6 @@ inherit( Node, XYPlotNode, {
   },
 
   /**
-   * Returns true if any data is attached to this plot.
-   * @returns {boolean}
-   * @public
-   */
-  getDataExists() {
-    return _.some( this.dataSeriesList, dataSeries => dataSeries.hasData() );
-  },
-
-  /**
    * Set the plot style for the graph, to be drawn as a line graph or a scatter plot.
    *
    * @param {XYDataSeriesNode.PlotStyle} plotStyle - one of plotStyle

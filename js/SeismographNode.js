@@ -64,6 +64,10 @@ class SeismographNode extends ScrollingChartNode {
       // {boolean} - if true, the GridNode will scroll with the data
       scrollGridNode: false,
 
+      gridLabelOptions: {
+        fill: 'white'
+      },
+
       // passed along to the GridNode of ScrollingChartNode
       gridNodeOptions: {
         majorLineOptions: {

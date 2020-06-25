@@ -76,6 +76,9 @@ class ScrollingChartNode extends Node {
       showHorizontalGridLabels: true,
       verticalGridLabelNumberOfDecimalPlaces: 0,
 
+      // options passed to both vertical and horizontal label text
+      gridLabelOptions: {},
+
       // line spacing, in model coordinates
       majorVerticalLineSpacing: 1,
       majorHorizontalLineSpacing: 1,
@@ -105,6 +108,7 @@ class ScrollingChartNode extends Node {
     this.majorHorizontalLineSpacing = options.majorHorizontalLineSpacing;
     this.majorVerticalLineSpacing = options.majorVerticalLineSpacing;
     this.plotStyle = options.plotStyle;
+    this.gridLabelOptions = options.gridLabelOptions;
 
     // default options to be passed into the graphPanel Rectangle
     options.graphPanelOptions = merge( {
@@ -298,10 +302,9 @@ class ScrollingChartNode extends Node {
         const viewY = this.modelViewTransformProperty.get().modelToViewY( yPosition );
         const labelPoint = this.graphPanel.localToParentPoint( new Vector2( this.gridNode.bounds.left, viewY ) );
 
-        const labelText = new Text( Utils.toFixed( yPosition, this.verticalGridLabelNumberOfDecimalPlaces ), {
-          fill: 'white',
+        const labelText = new Text( Utils.toFixed( yPosition, this.verticalGridLabelNumberOfDecimalPlaces ), merge( {
           rightCenter: labelPoint.plusXY( -3, 0 )
-        } );
+        }, this.gridLabelOptions ) );
 
         verticalLabelChildren.push( labelText );
       } );
@@ -317,10 +320,9 @@ class ScrollingChartNode extends Node {
         const viewX = this.modelViewTransformProperty.get().modelToViewX( xPosition );
         const labelPoint = this.graphPanel.localToParentPoint( new Vector2( viewX, this.gridNode.bounds.bottom ) );
 
-        const labelText = new Text( Utils.toFixed( xPosition, this.verticalGridLabelNumberOfDecimalPlaces ), {
-          fill: 'white',
+        const labelText = new Text( Utils.toFixed( xPosition, this.verticalGridLabelNumberOfDecimalPlaces ), merge( {
           centerTop: labelPoint.plusXY( 0, 3 )
-        } );
+        }, this.gridLabelOptions ) );
 
         horizontalLabelChildren.push( labelText );
       } );

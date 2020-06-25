@@ -131,15 +131,19 @@ class DynamicSeries {
    * Remove a point in the data series with the provided x value. Does not remove duplicates, only the first
    * occurrence of the value starting at the beginning of the xPoints list.
    * @param {number} x
-   * @param {boolean} withRedraw - if false, points can be removed without emitting to redraw (for performance)
+   * @param {boolean} [withoutRedraw] - if true, points are removed without emitting to redraw (for performance)
    * @public
    */
-  removePointAtX( x ) {
+  removePointAtX( x, withoutRedraw ) {
+
     for ( let i = 0; i < this.data.length; i++ ) {
       const point = this.data[ i ];
       if ( point.x === x ) {
         this.data.splice( i, 1 );
-        this.emitter.emit();
+
+        if ( !withoutRedraw ) {
+          this.emitter.emit();
+        }
         break;
       }
     }

@@ -52,19 +52,27 @@ class DynamicSeriesNode extends Node {
     // prevent bounds computations during main loop
     this.pathNode.computeShapeBounds = () => bounds;
 
+    // set visible with Property, handle saved for disposal
+    const visibilityListener = dynamicSeries.visibleProperty.linkAttribute( this.pathNode, 'visible' );
+
     // redraw data
     const dynamicSeriesListener = () => {
-      if ( this.plotStyle === PlotStyle.LINE ) {
-        this.drawDataLine();
-      }
-      else {
-        this.drawDataScatter();
+      if ( dynamicSeries.visibleProperty.get() ) {
+        if ( this.plotStyle === PlotStyle.LINE ) {
+          this.drawDataLine();
+        }
+        else {
+          this.drawDataScatter();
+        }
       }
     };
     dynamicSeries.addDynamicSeriesListener( dynamicSeriesListener );
     modelViewTransformProperty.link( dynamicSeriesListener );
+    dynamicSeries.visibleProperty.link( dynamicSeriesListener );
     this.disposeDynamicSeriesNode = () => {
       dynamicSeries.removeDynamicSeriesListener( dynamicSeriesListener );
+      dynamicSeries.visibleProperty.unlink( visibilityListener );
+      dynamicSeries.visibleProperty.unlink( dynamicSeriesListener );
       modelViewTransformProperty.unlink( dynamicSeriesListener );
     };
   }

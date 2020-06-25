@@ -7,6 +7,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
+import BooleanProperty from '../../axon/js/BooleanProperty.js';
 import Emitter from '../../axon/js/Emitter.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import merge from '../../phet-core/js/merge.js';
@@ -30,7 +31,8 @@ class DynamicSeries {
     options = merge( {
       color: new Color( 'black' ),
       lineWidth: 1,
-      radius: 2
+      radius: 2,
+      visibleProperty: new BooleanProperty( true )
     }, options );
 
     // @public (read-only) {Color}
@@ -41,6 +43,10 @@ class DynamicSeries {
 
     // @public (read-only) {number}
     this.radius = options.radius;
+
+    // @public (read-only) {BooleanProperty} - controls whether or not this DynamicSeries will be visible on its
+    // chart
+    this.visibleProperty = options.visibleProperty;
   }
 
   /**

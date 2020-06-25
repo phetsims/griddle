@@ -87,6 +87,7 @@ class XYCursorPlot extends ScrollingChartNode {
    * @param {DynamicSeries} dynamicSeries - to remove
    */
   removeDynamicSeries( dynamicSeries ) {
+    super.removeDynamicSeries( dynamicSeries );
     const seriesIndex = this.dynamicSeriesList.indexOf( dynamicSeries );
     this.dynamicSeriesList.splice( seriesIndex, 1 );
 

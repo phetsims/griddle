@@ -12,6 +12,7 @@ import Emitter from '../../axon/js/Emitter.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import merge from '../../phet-core/js/merge.js';
 import Color from '../../scenery/js/util/Color.js';
+import ColorDef from '../../scenery/js/util/ColorDef.js';
 import griddle from './griddle.js';
 
 class DynamicSeries {
@@ -29,11 +30,20 @@ class DynamicSeries {
     this.emitter = new Emitter();
 
     options = merge( {
+
+      // {ColorDef} - color for the visualization of the DynamicSeries
       color: new Color( 'black' ),
+
+      // linewidth for the visualization of data, if plotting DynamicSeriesNode.PlotStyle is LINE
       lineWidth: 1,
+
+      // radius for the visualization,  if plotting DynamicSeriesNode.PlotStyle is SCATTER
       radius: 2,
+
+      // {BooleanProperty} - controls visibility of the visualization for the DynamicSeries
       visibleProperty: new BooleanProperty( true )
     }, options );
+    assert && assert( ColorDef.isColorDef( options.color ) );
 
     // @public (read-only) {Color}
     this.color = options.color;

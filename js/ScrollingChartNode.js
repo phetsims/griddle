@@ -239,7 +239,7 @@ class ScrollingChartNode extends Node {
     const dynamicSeriesNode = new DynamicSeriesNode(
       dynamicSeries,
       this.plotWidth - this.rightGraphMargin,
-      this.graphPanel.bounds,
+      new Bounds2( 0, 0,  this.plotWidth, this.plotHeight ),
       this.horizontalRangeProperty.max,
       this.valueProperty,
       this.modelViewTransformProperty

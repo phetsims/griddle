@@ -4,19 +4,19 @@
  * This class renders DynamicSeries data in a ScrollingChartNode and is tightly coupled with ScrollingChartNode
  *
  * @author Sam Reid (PhET Interactive Simulations)
+ * @author Jesse Greenberg
  */
 
-import Shape from '../../kite/js/Shape.js';
-import Node from '../../scenery/js/nodes/Node.js';
-import Path from '../../scenery/js/nodes/Path.js';
-import griddle from './griddle.js';
-import merge from '../../phet-core/js/merge.js';
 import Enumeration from '../../phet-core/js/Enumeration.js';
+import merge from '../../phet-core/js/merge.js';
+import CanvasNode from '../../scenery/js/nodes/CanvasNode.js';
+import Color from '../../scenery/js/util/Color.js';
+import griddle from './griddle.js';
 
 // constants
 const PlotStyle = Enumeration.byKeys( [ 'SCATTER', 'LINE' ] );
 
-class DynamicSeriesNode extends Node {
+class DynamicSeriesNode extends CanvasNode {
 
   /**
    * @param {DynamicSeries} dynamicSeries - the series of data to render
@@ -35,36 +35,23 @@ class DynamicSeriesNode extends Node {
       plotStyle: PlotStyle.LINE
     }, options );
     assert && assert( PlotStyle.includes( options.plotStyle ) );
+    assert && assert( options.canvasBounds === undefined, 'DynamicSeriesNode sets bounds through constructor param' );
 
-    super();
-
-    // @private {Path} - the Path node used to draw the shape of the data
-    this.pathNode = new Path( new Shape(), {
-      lineWidth: dynamicSeries.lineWidth
+    super( {
+      canvasBounds: bounds
     } );
-    this.addChild( this.pathNode );
 
     // @private
     this.modelViewTransformProperty = modelViewTransformProperty;
     this.plotStyle = options.plotStyle;
     this.dynamicSeries = dynamicSeries;
 
-    // prevent bounds computations during main loop
-    this.pathNode.computeShapeBounds = () => bounds;
-
     // set visible with Property, handle saved for disposal
-    const visibilityListener = dynamicSeries.visibleProperty.linkAttribute( this.pathNode, 'visible' );
+    const visibilityListener = dynamicSeries.visibleProperty.linkAttribute( this, 'visible' );
 
     // redraw data
     const dynamicSeriesListener = () => {
-      if ( dynamicSeries.visibleProperty.get() ) {
-        if ( this.plotStyle === PlotStyle.LINE ) {
-          this.drawDataLine();
-        }
-        else {
-          this.drawDataScatter();
-        }
-      }
+      this.invalidatePaint();
     };
     dynamicSeries.addDynamicSeriesListener( dynamicSeriesListener );
     modelViewTransformProperty.link( dynamicSeriesListener );
@@ -78,51 +65,82 @@ class DynamicSeriesNode extends Node {
   }
 
   /**
+   * Used to redraw the CanvasNode. Use CanvasNode.invalidatePaint to signify that
+   * it is time to redraw the canvas.
+   * @protected
+   * @override
+   *
+   * @param {CanvasRenderingContext2D} context
+   */
+  paintCanvas( context ) {
+    if ( this.dynamicSeries.visibleProperty.get() ) {
+      if ( this.plotStyle === PlotStyle.LINE ) {
+        this.drawDataLine( context );
+      }
+      else {
+        this.drawDataScatter( context );
+      }
+    }
+  }
+
+  /**
    * Draw the DynamicSeries data as a scatter plot, each circular dot looks the same.
    * @private
+   *
+   * @param {CanvasRenderingContext2D} context
    */
-  drawDataScatter() {
+  drawDataScatter( context ) {
 
-    // One shape composed of multiple circles
-    const dynamicSeriesPathShape = new Shape();
+    const contextColor = this.dynamicSeries.color instanceof Color ? this.dynamicSeries.color.toCSS() :
+                         this.dynamicSeries.color;
+    context.fillStyle = contextColor;
+
+    // draw a circle at each data point
     for ( let i = 0; i < this.dynamicSeries.getLength(); i++ ) {
+      context.beginPath();
       const viewPosition = this.modelViewTransformProperty.get().modelToViewPosition( this.dynamicSeries.getDataPoint( i ) );
-      dynamicSeriesPathShape.circle( viewPosition.x, viewPosition.y, this.dynamicSeries.radius ).newSubpath();
+      context.arc( viewPosition.x, viewPosition.y, this.dynamicSeries.radius, 0, 2 * Math.PI );
+      context.fill();
     }
-    this.pathNode.shape = dynamicSeriesPathShape;
   }
 
   /**
    * Draw the DynamicSeries data as a continuous line.
+   * @param {CanvasRenderingContext2D} context
+   *
    * @private
    */
-  drawDataLine() {
-    this.moveToNextPoint = true;
+  drawDataLine( context ) {
+    context.beginPath();
 
-    // Draw the graph with line segments
-    const dynamicSeriesPathShape = new Shape();
+    const contextColor = this.dynamicSeries.color instanceof Color ? this.dynamicSeries.color.toCSS() :
+                         this.dynamicSeries.color;
+    context.strokeStyle = contextColor;
+    context.lineWidth = this.dynamicSeries.lineWidth;
+
+    let moveToNextPoint = true;
+    const modelViewTransform = this.modelViewTransformProperty.get();
+
     for ( let i = 0; i < this.dynamicSeries.getLength(); i++ ) {
       const dataPoint = this.dynamicSeries.getDataPoint( i );
+
       if ( isNaN( dataPoint.y ) ) {
-        this.moveToNextPoint = true;
+        moveToNextPoint = true;
       }
       else {
-        const point = this.modelViewTransformProperty.get().modelToViewPosition( dataPoint );
-        if ( this.moveToNextPoint ) {
-          dynamicSeriesPathShape.moveToPoint( point );
+        const point = modelViewTransform.modelToViewPosition( dataPoint );
+        if ( moveToNextPoint ) {
+          context.moveTo( point.x, point.y );
         }
         else {
-          dynamicSeriesPathShape.lineToPoint( point );
+          context.lineTo( point.x, point.y );
         }
 
-        this.moveToNextPoint = false;
+        moveToNextPoint = false;
       }
     }
-    this.pathNode.shape = dynamicSeriesPathShape;
 
-
-    this.pathNode.fill = null;
-    this.pathNode.stroke = this.dynamicSeries.color;
+    context.stroke();
   }
 
   /**
@@ -136,16 +154,7 @@ class DynamicSeriesNode extends Node {
     // only update/redraw if there is a change in style
     if ( plotStyle !== this.plotStyle ) {
       this.plotStyle = plotStyle;
-
-      if ( plotStyle === PlotStyle.LINE ) {
-        this.drawDataLine( this.modelViewTransformProperty.get() );
-      }
-      else {
-        this.drawDataScatter( this.modelViewTransformProperty.get() );
-      }
-
-      this.pathNode.fill = this.dynamicSeries.color;
-      this.pathNode.stroke = null;
+      this.invalidatePaint();
     }
   }
 

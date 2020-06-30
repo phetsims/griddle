@@ -254,20 +254,26 @@ class GridNode extends Node {
    * for decorating the grid with labels or other things.
    * @public
    *
+   * @param {string} lineType
    * @returns {number[]}
    */
-  getMajorVerticalLinePositionsInGrid() {
+  getVerticalLinePositionsInGrid( lineType ) {
+    assert && assert( lineType === 'majorVerticalLineSpacing' || lineType === 'minorVerticalLineSpacing', 'lineType should be one of the vertical line spacings' );
+
+    const spacing = this[ lineType ];
+    assert && assert( spacing && typeof spacing === 'number', `spacing not defined for ${lineType}` );
+
     const modelViewTransform = this.modelViewTransformProperty.get();
 
     const modelGridLeft = modelViewTransform.viewToModelX( 0 );
     const modelWidth = modelViewTransform.viewToModelDeltaX( this.gridWidth );
 
     // distance from left edge of the gridNode to the first vertical line, in model coordinates
-    const remainderToLine = Utils.toFixedNumber( modelGridLeft % this.majorVerticalLineSpacing, 10 );
-    const distanceToGridLine = ( this.majorVerticalLineSpacing - remainderToLine ) % this.majorVerticalLineSpacing;
+    const remainderToLine = Utils.toFixedNumber( modelGridLeft % spacing, 10 );
+    const distanceToGridLine = ( spacing - remainderToLine ) % spacing;
 
     const positions = [];
-    for ( let x = modelGridLeft + distanceToGridLine; x <= modelGridLeft + modelWidth; x += this.majorVerticalLineSpacing ) {
+    for ( let x = modelGridLeft + distanceToGridLine; x <= modelGridLeft + modelWidth; x += spacing ) {
       positions.push( x );
     }
 

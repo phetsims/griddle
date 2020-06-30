@@ -315,7 +315,7 @@ class ScrollingChartNode extends Node {
 
       // draw labels along the horizontal lines
       const horizontalLabelChildren = [];
-      const xPositions = this.gridNode.getMajorVerticalLinePositionsInGrid();
+      const xPositions = this.gridNode.getVerticalLinePositionsInGrid( 'majorVerticalLineSpacing' );
       xPositions.forEach( xPosition => {
         const viewX = this.modelViewTransformProperty.get().modelToViewX( xPosition );
         const labelPoint = this.graphPanel.localToParentPoint( new Vector2( viewX, this.gridNode.bounds.bottom ) );

@@ -142,6 +142,8 @@ class XYCursorPlot extends ScrollingChartNode {
    * @private
    */
   updateChartCursorVisibility() {
+
+    const wasVisible = this.chartCursor.visible;
     if ( typeof this._cursorVisibleOverride === 'boolean' ) {
       this.chartCursor.setVisible( this._cursorVisibleOverride );
     }
@@ -155,6 +157,11 @@ class XYCursorPlot extends ScrollingChartNode {
       const chartCursorVisible = isCurrentValueOnChart && dataExists;
 
       this.chartCursor.setVisible( chartCursorVisible );
+    }
+
+    // if the chart cursor just became invisible, interrupt any active dragging
+    if ( !this.chartCursor.visible && wasVisible ) {
+      this.chartCursor.interruptDrag();
     }
   }
 
@@ -295,7 +302,8 @@ class ChartCursor extends Rectangle {
     grippyNode.center = this.center;
     this.addChild( grippyNode );
 
-    const dragListener = new DragListener( {
+    // @private - so that we can interrupt the DragListener if necessary
+    this.dragListener = new DragListener( {
       start: ( event, listener ) => {
         assert && assert( this.plot.getDataExists(), 'data should exist for the cursor to be draggable' );
         options.startDrag();
@@ -315,7 +323,15 @@ class ChartCursor extends Rectangle {
       },
       tandem: options.tandem.createTandem( 'dragListener' )
     } );
-    this.addInputListener( dragListener );
+    this.addInputListener( this.dragListener );
+  }
+
+  /**
+   * Interrupt dragging of the cursor, useful when ChartCursor visibility changes.
+   * @public
+   */
+  interruptDrag() {
+    this.dragListener.interrupt();
   }
 }
 

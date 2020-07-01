@@ -144,25 +144,44 @@ class DynamicSeries {
   }
 
   /**
-   * Remove a point in the data series with the provided x value. Does not remove duplicates, only the first
-   * occurrence of the value starting at the beginning of the xPoints list.
-   * @param {number} x
-   * @param {boolean} [withoutRedraw] - if true, points are removed without emitting to redraw (for performance)
+   * Remove many data points of the DynamicSeries at once without notifying listeners, then notify
+   * listeners once all have been removed (or performance).
    * @public
+   *
+   * @param {Vector2[]} dataPoints
    */
-  removePointAtX( x, withoutRedraw ) {
-
-    for ( let i = 0; i < this.data.length; i++ ) {
-      const point = this.data[ i ];
-      if ( point.x === x ) {
-        this.data.splice( i, 1 );
-
-        if ( !withoutRedraw ) {
-          this.emitter.emit();
+  removeDataPoints( dataPoints ) {
+    dataPoints.forEach( pointToRemove => {
+      this.data.slice().forEach( ( dataPoint, index ) => {
+        if ( pointToRemove.equals( dataPoint ) ) {
+          this.data.splice( index, 1 );
         }
-        break;
-      }
-    }
+      } );
+    } );
+
+    // notify to listeners that data has changed
+    this.emitter.emit();
+  }
+
+  /**
+   * Remove a set of data points, removing one at each provided x value. You may have access
+   * to the indepentent variable but not to the y value in the series, this lets you
+   * remove many points at once without getting the y values.
+   * @public
+   *
+   * @param {number[]} xValues
+   */
+  removeDataPointsAtX( xValues ) {
+    xValues.forEach( xValueToRemove => {
+      this.data.slice().forEach( ( dataPoint, index ) => {
+        if ( xValueToRemove === dataPoint.x ) {
+          this.data.splice( index, 1 );
+        }
+      } );
+    } );
+
+    // notify to listeners that data has changed
+    this.emitter.emit();
   }
 }
 

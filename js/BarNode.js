@@ -28,18 +28,7 @@ import griddle from './griddle.js';
  *
  * @param {Array.<Object>} barEntries - Objects of the type {
  *                                        property: {Property.<number>},
- *                                        color: {paint},
- *
- *                                        // Optional, modify the bar height in a custom way, called before the height
- *                                        // is constrained to the totalRangeProperty so bar will still
- *                                        // be within range
- *                                        // @optional
- *                                        // @param {number} value - value of this Bar Property
- *                                        // @param {number} scale - value of the scale Property
- *                                        // @returns {number}
- *                                        modifyBarHeight: function( value, scale ) {
- *                                          return value * height;
- *                                        }
+ *                                        color: {paint}
  *                                      }
  * @param {Property.<Range>} totalRangeProperty - Range of visual values displayed (note negative values for min are
  *                           supported).
@@ -182,12 +171,6 @@ inherit( Node, BarNode, {
     // range and the remaining entries are hidden. Also the color of the composite bar is updated.
     if ( hasNegative && this.barEntries.length > 1 ) {
 
-      // optionally further modify the bar height
-      const barEntry = this.barEntries[ 0 ];
-      if ( barEntry.modifyBarHeight ) {
-        currentY = barEntry.modifyBarHeight( barEntry.property.value, scale );
-      }
-
       // Use only the first entry to display the effective range
       currentY = effectiveRange.constrainValue( total );
       const firstBar = this.bars[ 0 ];
@@ -207,14 +190,9 @@ inherit( Node, BarNode, {
         const barEntry = this.barEntries[ i ];
         const bar = this.bars[ i ];
         bar.fill = barEntry.color;
-        let barValue = barEntry.property.value * scale;
-
-        // optionally further modify the bar height
-        if ( barEntry.modifyBarHeight ) {
-          barValue = barEntry.modifyBarHeight( barEntry.property.value, scale );
-        }
 
         // The bar would be displayed between currentY and nextY
+        const barValue = barEntry.property.value * scale;
         const nextY = effectiveRange.constrainValue( currentY + barValue );
 
         // Set the bar to the next stacked position

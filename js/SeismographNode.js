@@ -91,6 +91,9 @@ class SeismographNode extends ScrollingChartNode {
 
     super( valueProperty, options );
 
+    // @private {number} - margin for the 'pen' circle on the seismograph
+    this.rightGraphMargin = options.rightGraphMargin;
+
     this.addDynamicSeriesArray( dynamicSeriesArray );
 
     const zoomLevelIndexProperty = new Property( options.initialVerticalRangeIndex, {

@@ -48,7 +48,6 @@ class ScrollingChartNode extends Node {
     options = merge( {
       width: 500,  // dimensions, in view coordinates
       height: 300, // dimensions, in view coordinates
-      rightGraphMargin: 0,
       cornerRadius: 5,
       seriesLineWidth: 2,
       topMargin: 10,
@@ -102,7 +101,6 @@ class ScrollingChartNode extends Node {
     this.showHorizontalGridLabels = options.showHorizontalGridLabels;
     this.verticalGridLabelNumberOfDecimalPlaces = options.verticalGridLabelNumberOfDecimalPlaces;
     this.valueProperty = valueProperty;
-    this.rightGraphMargin = options.rightGraphMargin;
     this.verticalRangeProperty = options.verticalRangeProperty;
     this.horizontalRangeProperty = options.horizontalRangeProperty;
     this.majorHorizontalLineSpacing = options.majorHorizontalLineSpacing;
@@ -146,7 +144,7 @@ class ScrollingChartNode extends Node {
     // transform the plot (zoom or pan data). Default transform puts origin at bottom left of the plot.
     this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createRectangleInvertedYMapping(
       new Bounds2( options.horizontalRangeProperty.get().min, this.verticalRangeProperty.get().min, options.horizontalRangeProperty.get().max, this.verticalRangeProperty.get().max ),
-      new Bounds2( 0, 0, this.plotWidth - options.rightGraphMargin, this.plotHeight )
+      new Bounds2( 0, 0, this.plotWidth, this.plotHeight )
     ) );
 
     const gridNodeOptions = merge( {
@@ -166,7 +164,7 @@ class ScrollingChartNode extends Node {
     this.addChild( this.verticalGridLabelLayer );
     this.addChild( this.horizontalGridLabelLayer );
 
-    const plotWidthWithMargin = this.plotWidth - options.rightGraphMargin;
+    const plotWidthWithMargin = this.plotWidth;
 
     // @private - maps a DynamicSeries -> DynamicSeriesNode so that it can be potentially removed later
     this.dynamicSeriesMap = new Map();
@@ -238,7 +236,7 @@ class ScrollingChartNode extends Node {
   addDynamicSeries( dynamicSeries ) {
     const dynamicSeriesNode = new DynamicSeriesNode(
       dynamicSeries,
-      this.plotWidth - this.rightGraphMargin,
+      this.plotWidth,
       new Bounds2( 0, 0,  this.plotWidth, this.plotHeight ),
       this.horizontalRangeProperty.max,
       this.valueProperty,

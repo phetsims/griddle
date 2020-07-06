@@ -1,9 +1,8 @@
 // Copyright 2018-2020, University of Colorado Boulder
 
 /**
- * A scrolling graph component.  Like a seismograph, it has pens on the right hand side that record data, and the paper
- * scrolls to the left.  It is currently sized accordingly to be used in a small draggable sensor, like the ones in Wave
- * Interference, Bending Light or Circuit Construction Kit: AC. It would typically be embedded in a Panel.
+ * A graph that supports "scrolling" of model data with a ModelViewTransform2 so you can display
+ * different ranges of data.
  *
  * Please see the demo in http://localhost/griddle/griddle_en.html
  *
@@ -16,6 +15,7 @@
 import Emitter from '../../axon/js/Emitter.js';
 import Property from '../../axon/js/Property.js';
 import Bounds2 from '../../dot/js/Bounds2.js';
+import Range from '../../dot/js/Range.js';
 import Utils from '../../dot/js/Utils.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import Shape from '../../kite/js/Shape.js';
@@ -49,6 +49,18 @@ class ScrollingChartNode extends Node {
       // dimensions for the plot, in view coordinates
       width: 500,
       height: 300,
+
+      // {Property.<ModelViewTransform> - model-view transform for the data, null because default transform
+      // is determined by default optional ranges defaultModelXRange and defaultModelYRange. Plot data is
+      // in model coordinates and you can scale or translate the plot by modifying this Property. See
+      // createRectangularModelViewTransform for typical and default chart transform.
+      modelViewTransformProperty: null,
+
+      // Default ranges in model coordinates for the model-view transform - the plot will display
+      // these ranges of data within the view dimensions of width and height specified above.
+      // These have no impact if you provide your own modelViewTransformProperty.
+      defaultModelXRange: new Range( 0, 4 ),
+      defaultModelYRange: new Range( -1, 1 ),
 
       // corner radius for the panel containing the plot
       cornerRadius: 5,
@@ -134,10 +146,7 @@ class ScrollingChartNode extends Node {
     // @public {Property.<ModelViewTransform2} - Observable model-view transformation for the data, set to
     // transform the plot (zoom or pan data). Default transform puts origin at bottom left of the plot with
     // x ranging from 0-4 and y ranging from -1 to 1
-    this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createRectangleInvertedYMapping(
-      new Bounds2( 0, -1, 4, 1 ),
-      new Bounds2( 0, 0, this.plotWidth, this.plotHeight )
-    ) );
+    this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( this.createRectangularModelViewTransform( options.defaultModelXRange, options.defaultModelYRange ) );
 
     const gridNodeOptions = merge( {
       majorHorizontalLineSpacing: this.majorHorizontalLineSpacing,
@@ -282,7 +291,8 @@ class ScrollingChartNode extends Node {
   }
 
   /**
-   * Redraws labels for when line spacing or transform changes.
+   * Redraws labels for when line spacing or transform changes. Labels are only drawn along the major
+   * grid lines.
    *
    * @protected
    */
@@ -334,6 +344,23 @@ class ScrollingChartNode extends Node {
     this.dynamicSeriesMap.forEach( dynamicSeriesNode => {
       dynamicSeriesNode.setPlotStyle( plotStyle );
     } );
+  }
+
+  /**
+   * Create a typical ModelViewTransform2 for the plot that spans the widthRange and heightRange in model coordinates
+   * so that those ranges are contained within and fill the ScrollingChartNode view bounds. Also inverts y so that
+   * +y points up on the chart. Other transformms may be used, but this is the most common.
+   * @public
+   *
+   * @param {Range} widthRange - in model coordinates
+   * @param {Range} heightRange - in model coordinates
+   * @returns {ModelViewTransform2}
+   */
+  createRectangularModelViewTransform( widthRange, heightRange ) {
+    return ModelViewTransform2.createRectangleInvertedYMapping(
+      new Bounds2( widthRange.min, heightRange.min, widthRange.max, heightRange.max ),
+      new Bounds2( 0, 0, this.plotWidth, this.plotHeight )
+    );
   }
 
   /**

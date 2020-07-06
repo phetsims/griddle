@@ -53,8 +53,6 @@ class ScrollingChartNode extends Node {
 
       // corner radius for the panel containing the plot
       cornerRadius: 5,
-      topMargin: 10,
-      rightMargin: 10,
 
       // {Node} - label for the vertical axis, should already be rotated if necessary
       verticalAxisLabelNode: null,
@@ -112,8 +110,7 @@ class ScrollingChartNode extends Node {
 
       // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
       stroke: 'black',
-      right: this.plotWidth - options.rightMargin,
-      top: options.topMargin,
+      right: this.plotWidth,
       pickable: false
     }, options.graphPanelOptions );
 

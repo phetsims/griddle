@@ -212,7 +212,6 @@ class SeismographNode extends ScrollingChartNode {
       dynamicSeries,
       this.plotWidth - this.rightGraphMargin,
       new Bounds2( 0, 0, this.plotWidth, this.plotHeight ),
-      0,
       this.valueProperty,
       this.modelViewTransformProperty
     );

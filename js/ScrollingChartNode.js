@@ -228,7 +228,6 @@ class ScrollingChartNode extends Node {
       dynamicSeries,
       this.plotWidth,
       new Bounds2( 0, 0, this.plotWidth, this.plotHeight ),
-      0,
       this.valueProperty,
       this.modelViewTransformProperty
     );

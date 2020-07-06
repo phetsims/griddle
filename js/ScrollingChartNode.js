@@ -46,12 +46,14 @@ class ScrollingChartNode extends Node {
     super();
 
     options = merge( {
-      width: 500,  // dimensions, in view coordinates
-      height: 300, // dimensions, in view coordinates
+
+      // dimensions for the plot, in view coordinates
+      width: 500,
+      height: 300,
+
+      // corner radius for the panel containing the plot
       cornerRadius: 5,
-      seriesLineWidth: 2,
       topMargin: 10,
-      numberVerticalDashes: 12,
       rightMargin: 10,
 
       // {Node} - label for the vertical axis, should already be rotated if necessary
@@ -63,11 +65,6 @@ class ScrollingChartNode extends Node {
       // {PlotStyle} - Changes how the DynamicSeries data is drawn on the chart
       plotStyle: DynamicSeriesNode.PlotStyle.LINE,
 
-      // default options for the Rectangle on top (to make sure graph lines don't protrude)
-      graphPanelOverlayOptions: {
-        stroke: 'black',
-        pickable: false
-      },
       graphPanelOptions: null, // filled in below because some defaults are based on other options
       gridLineOptions: null, // filled in below because some defaults are based on other options
 
@@ -111,6 +108,7 @@ class ScrollingChartNode extends Node {
     // default options to be passed into the graphPanel Rectangle
     options.graphPanelOptions = merge( {
       fill: 'white',
+      lineWidth: 1,
 
       // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
       stroke: 'black',
@@ -180,9 +178,13 @@ class ScrollingChartNode extends Node {
     // @private - for disposal
     this.scrollingChartNodeDisposeEmitter = new Emitter();
 
-    // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke.
-    // This is a faster alternative to clipping.
-    graphPanel.addChild( new Rectangle( 0, 0, this.plotWidth, this.plotHeight, options.cornerRadius, options.cornerRadius, options.graphPanelOverlayOptions ) );
+    // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke,
+    // and so the GridNode appears below the panel stroke as well.
+    graphPanel.addChild( new Rectangle( 0, 0, this.plotWidth, this.plotHeight, options.cornerRadius, options.cornerRadius, {
+      stroke: graphPanel.stroke,
+      lineWidth: graphPanel.lineWidth,
+      pickable: false
+    } ) );
 
     /* -------------------------------------------
      * Optional decorations
@@ -237,7 +239,7 @@ class ScrollingChartNode extends Node {
     const dynamicSeriesNode = new DynamicSeriesNode(
       dynamicSeries,
       this.plotWidth,
-      new Bounds2( 0, 0,  this.plotWidth, this.plotHeight ),
+      new Bounds2( 0, 0, this.plotWidth, this.plotHeight ),
       this.horizontalRangeProperty.max,
       this.valueProperty,
       this.modelViewTransformProperty

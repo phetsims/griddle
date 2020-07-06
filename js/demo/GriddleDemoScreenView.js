@@ -422,6 +422,8 @@ const demoSeismographNode = layoutBounds => {
   const seismographNode = new SeismographNode( timeProperty, [ series1 ], new Text( '1 s', { fill: 'white' } ), {
     width: 200,
     height: 150,
+    verticalGridLabelNumberOfDecimalPlaces: 1,
+    horizontalGridLabelNumberOfDecimalPlaces: 1,
     verticalAxisLabelNode: new Text( 'Height (m)', {
       rotation: 3 * Math.PI / 2,
       fill: 'white'

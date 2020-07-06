@@ -66,9 +66,13 @@ class ScrollingChartNode extends Node {
       // DynamicSeriesNodes.
       graphPanelOptions: null, // filled in below because some defaults are based on other options
 
+      // {boolean} - whether or not labels indicating numeric value of major grid lines are shown
       showVerticalGridLabels: true,
       showHorizontalGridLabels: true,
+
+      // {number} - number of decimal places for the labels along grid lines
       verticalGridLabelNumberOfDecimalPlaces: 0,
+      horizontalGridLabelNumberOfDecimalPlaces: 0,
 
       // options passed to both vertical and horizontal label text
       gridLabelOptions: {},
@@ -94,6 +98,7 @@ class ScrollingChartNode extends Node {
     this.showVerticalGridLabels = options.showVerticalGridLabels;
     this.showHorizontalGridLabels = options.showHorizontalGridLabels;
     this.verticalGridLabelNumberOfDecimalPlaces = options.verticalGridLabelNumberOfDecimalPlaces;
+    this.horizontalGridLabelNumberOfDecimalPlaces = options.horizontalGridLabelNumberOfDecimalPlaces;
     this.valueProperty = valueProperty;
     this.majorHorizontalLineSpacing = options.majorHorizontalLineSpacing;
     this.majorVerticalLineSpacing = options.majorVerticalLineSpacing;
@@ -307,7 +312,7 @@ class ScrollingChartNode extends Node {
         const viewX = this.modelViewTransformProperty.get().modelToViewX( xPosition );
         const labelPoint = this.graphPanel.localToParentPoint( new Vector2( viewX, this.gridNode.bounds.bottom ) );
 
-        const labelText = new Text( Utils.toFixed( xPosition, this.verticalGridLabelNumberOfDecimalPlaces ), merge( {
+        const labelText = new Text( Utils.toFixed( xPosition, this.horizontalGridLabelNumberOfDecimalPlaces ), merge( {
           centerTop: labelPoint.plusXY( 0, 3 )
         }, this.gridLabelOptions ) );
 

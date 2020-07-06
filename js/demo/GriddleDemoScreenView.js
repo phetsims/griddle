@@ -201,7 +201,10 @@ const demoGridNode = layoutBounds => {
     majorVerticalLineSpacing: defaultMajorSpacing,
     minorHorizontalLineSpacing: defaultMinorSpacing,
     minorVerticalLineSpacing: defaultMinorSpacing,
-    modelViewTransformProperty: modelViewTransformProperty
+    modelViewTransformProperty: modelViewTransformProperty,
+    minorLineOptions: {
+      lineDash: [ 5, 5 ]
+    }
   } );
 
   // creates a NumberSpinner with a text label that controls grid spacing

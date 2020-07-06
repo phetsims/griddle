@@ -5,9 +5,13 @@
  * and "minor" lines which break the major lines into further subdivisions. Origin is at the top left of the grid,
  * and lines are drawn with desired spacing between the origin and grid width/height.
  *
+ * Line spacings are in model coordinates. My providing an optional Property.<ModelViewTransform2> you can
+ * manipulate the line spacings for scale/translation in view coordinates. Arbitrary rotation is not supported.
+ *
  * @author Jesse Greenberg
  */
 
+import Enumeration from '../../phet-core/js/Enumeration.js';
 import merge from '../../phet-core/js/merge.js';
 import Path from '../../scenery/js/nodes/Path.js';
 import griddle from './griddle.js';
@@ -16,6 +20,9 @@ import Property from '../../axon/js/Property.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import Shape from '../../kite/js/Shape.js';
 import Utils from '../../dot/js/Utils.js';
+
+// Contains the types of lines that can be drawn on this grid
+const LineType = Enumeration.byKeys( [ 'MINOR_VERTICAL', 'MAJOR_VERTICAL', 'MINOR_HORIZONTAL', 'MAJOR_HORIZONTAL' ] );
 
 class GridNode extends Node {
 
@@ -73,14 +80,14 @@ class GridNode extends Node {
     // @private {Property.<ModelViewTransform2>} - model-view transform for the grid
     this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createIdentity() );
 
-    // @private {Path} - Path for minor lines
-    this.minorLines = new Path( null, options.minorLineOptions );
-
-    // @private {Path} - path for major lines
-    this.majorLines = new Path( null, options.majorLineOptions );
+    // @private - Paths for each of the sets of lines
+    this.minorHorizontalLines = new Path( null, options.minorLineOptions );
+    this.minorVerticalLines = new Path( null, options.minorLineOptions );
+    this.majorHorizontalLines = new Path( null, options.majorLineOptions );
+    this.majorVerticalLines = new Path( null, options.majorLineOptions );
 
     assert && assert( !options.children, 'GridNode sets children' );
-    this.children = [ this.minorLines, this.majorLines ];
+    this.children = [ this.minorHorizontalLines, this.minorVerticalLines, this.majorHorizontalLines, this.majorVerticalLines ];
 
     // redraw lines when the transform changes
     const transformListener = this.drawAllLines.bind( this );
@@ -176,7 +183,8 @@ class GridNode extends Node {
    * @private
    */
   drawMinorLines() {
-    this.drawLines( this.minorHorizontalLineSpacing, this.minorVerticalLineSpacing, this.minorLines );
+    this.drawVerticalLines( this.minorVerticalLineSpacing, LineType.MINOR_VERTICAL, this.minorVerticalLines );
+    this.drawHorizontalLines( this.minorHorizontalLineSpacing, LineType.MINOR_HORIZONTAL, this.minorHorizontalLines );
   }
 
   /**
@@ -184,7 +192,55 @@ class GridNode extends Node {
    * @private
    */
   drawMajorLines() {
-    this.drawLines( this.majorHorizontalLineSpacing, this.majorVerticalLineSpacing, this.majorLines );
+    this.drawVerticalLines( this.majorVerticalLineSpacing, LineType.MAJOR_VERTICAL, this.majorVerticalLines );
+    this.drawHorizontalLines( this.majorHorizontalLineSpacing, LineType.MAJOR_HORIZONTAL, this.majorHorizontalLines );
+  }
+
+  /**
+   * Draw vertical lines with the provided spacing. A shape is drawn and set to the provided Path.
+   * @private
+   *
+   * @param {number} lineSpacing
+   * @param {LineType} lineType
+   * @param {Path} linesPath
+   */
+  drawVerticalLines( lineSpacing, lineType, linesPath ) {
+    const shape = new Shape();
+    const modelViewTransform = this.modelViewTransformProperty.get();
+
+    const xPositions = this.getVerticalLinePositionsInGrid( lineType );
+    xPositions.forEach( xPosition => {
+      const viewPosition = modelViewTransform.modelToViewX( xPosition );
+      shape.moveTo( viewPosition, 0 );
+      shape.lineTo( viewPosition, this.gridHeight );
+    } );
+
+    // in case the Path has a line dash, they should appear to move with the grid
+    linesPath.lineDashOffset = -modelViewTransform.modelToViewY( 0 );
+    linesPath.shape = shape;
+  }
+
+  /**
+   * Draws horizontal lines with the provided spacing. A shape is drawn and set to the provided Path.
+   * @private
+   * @param {number} lineSpacing
+   * @param {LineType} lineType
+   * @param {Path} linesPath
+   */
+  drawHorizontalLines( lineSpacing, lineType, linesPath ) {
+    const shape = new Shape();
+    const modelViewTransform = this.modelViewTransformProperty.get();
+
+    const yPosition = this.getHorizontalLinePositionsInGrid( lineType );
+    yPosition.forEach( yPosition => {
+      const viewPosition = modelViewTransform.modelToViewY( yPosition );
+      shape.moveTo( 0, viewPosition );
+      shape.lineTo( this.gridWidth, viewPosition );
+    } );
+
+    // in case the Path has a line dash, they should appear to move with the grid
+    linesPath.lineDashOffset = -modelViewTransform.modelToViewX( 0 );
+    linesPath.shape = shape;
   }
 
   /**
@@ -197,56 +253,28 @@ class GridNode extends Node {
   }
 
   /**
-   * Redraw lines and set the resultant shape to the Path.
-   * @private
+   * Get the line spacing for the provided line type. If spacing is not defined for the provided lineType, returns null.
+   * @public
    *
-   * @param {number|null} horizontalSpacing - horizontal lines not drawn if null
-   * @param {number|null} verticalSpacing - vertical lines not drawn if null
-   * @param {Path} linesPath - line shape is drawn with this Path
+   * @param {LineType} lineType
+   * @returns {null|number}
    */
-  drawLines( horizontalSpacing, verticalSpacing, linesPath ) {
-    const shape = new Shape();
-    const modelViewTransform = this.modelViewTransformProperty.get();
-
-    if ( verticalSpacing ) {
-
-      // model postion of left of grid Node, we will start drawing lines here
-      const modelGridLeft = modelViewTransform.viewToModelX( 0 );
-
-      // distance from left edge of the gridNode to the first vertical line
-      const remainderToLine = Utils.toFixedNumber( modelGridLeft % verticalSpacing, 10 );
-      const distanceToGridLine = ( verticalSpacing - remainderToLine ) % verticalSpacing;
-
-      const viewSpacing = modelViewTransform.modelToViewDeltaX( verticalSpacing );
-      for ( let x = 0; x <= this.gridWidth; x += viewSpacing ) {
-        const offsetPosition = x + modelViewTransform.modelToViewDeltaX( distanceToGridLine );
-        if ( offsetPosition >= 0 && offsetPosition <= this.gridWidth ) {
-          shape.moveTo( offsetPosition, 0 );
-          shape.lineTo( offsetPosition, this.gridHeight );
-        }
-      }
+  getSpacingFromLineType( lineType ) {
+    let lineSpacing = null;
+    if ( lineType === LineType.MAJOR_VERTICAL ) {
+      lineSpacing = this.majorVerticalLineSpacing;
+    }
+    else if ( lineType === LineType.MAJOR_HORIZONTAL ) {
+      lineSpacing = this.majorHorizontalLineSpacing;
+    }
+    else if ( lineType === LineType.MINOR_VERTICAL ) {
+      lineSpacing = this.minorVerticalLineSpacing;
+    }
+    else if ( lineType === LineType.MINOR_HORIZONTAL ) {
+      lineSpacing = this.minorHorizontalLineSpacing;
     }
 
-    if ( horizontalSpacing ) {
-
-      // model position of the top of gridNode
-      const modelGridBottom = modelViewTransform.viewToModelY( 0 );
-
-      // distance from top edge of the gridNode to the first horizontal line
-      const remainderToGridLine = Utils.toFixedNumber( modelGridBottom % horizontalSpacing, 10 );
-      const distanceToGridLine = ( horizontalSpacing - remainderToGridLine ) % horizontalSpacing;
-
-      const viewSpacing = Math.abs( modelViewTransform.modelToViewDeltaY( horizontalSpacing ) );
-      for ( let y = 0; y <= this.gridHeight; y += viewSpacing ) {
-        const offsetPosition = y + modelViewTransform.modelToViewDeltaY( distanceToGridLine );
-        if ( offsetPosition >= 0 && offsetPosition <= this.gridHeight ) {
-          shape.moveTo( 0, offsetPosition );
-          shape.lineTo( this.gridWidth, offsetPosition );
-        }
-      }
-    }
-
-    linesPath.shape = shape;
+    return lineSpacing;
   }
 
   /**
@@ -258,10 +286,17 @@ class GridNode extends Node {
    * @returns {number[]}
    */
   getVerticalLinePositionsInGrid( lineType ) {
-    assert && assert( lineType === 'majorVerticalLineSpacing' || lineType === 'minorVerticalLineSpacing', 'lineType should be one of the vertical line spacings' );
+    assert && assert( lineType === LineType.MAJOR_VERTICAL || lineType === LineType.MINOR_VERTICAL, 'lineType should be one of the vertical line spacings' );
 
-    const spacing = this[ lineType ];
-    assert && assert( spacing && typeof spacing === 'number', `spacing not defined for ${lineType}` );
+    const spacing = this.getSpacingFromLineType( lineType );
+    assert && assert( spacing === null || typeof spacing === 'number', `spacing not defined for ${lineType}` );
+
+    const positions = [];
+
+    // no lines of this line type in grid, return empty array
+    if ( spacing === null ) {
+      return positions;
+    }
 
     const modelViewTransform = this.modelViewTransformProperty.get();
 
@@ -272,7 +307,6 @@ class GridNode extends Node {
     const remainderToLine = Utils.toFixedNumber( modelGridLeft % spacing, 10 );
     const distanceToGridLine = ( spacing - remainderToLine ) % spacing;
 
-    const positions = [];
     for ( let x = modelGridLeft + distanceToGridLine; x <= modelGridLeft + modelWidth; x += spacing ) {
       positions.push( x );
     }
@@ -289,10 +323,17 @@ class GridNode extends Node {
    * @returns {[]}
    */
   getHorizontalLinePositionsInGrid( lineType ) {
-    assert && assert( lineType === 'majorHorizontalLineSpacing' || lineType === 'minorHorizontalLineSpacing', 'lineType should be one of the horizontal line spacings' );
+    assert && assert( lineType === LineType.MAJOR_HORIZONTAL || lineType === LineType.MINOR_HORIZONTAL, 'lineType should be one of the horizontal line spacings' );
 
-    const spacing = this[ lineType ];
-    assert && assert( spacing && typeof spacing === 'number', `spacing not defined for ${lineType}` );
+    const spacing = this.getSpacingFromLineType( lineType );
+    assert && assert( spacing === null || typeof spacing === 'number', `spacing not defined for ${lineType}` );
+
+    const positions = [];
+
+    // no lines of this LineType in grid, return empty array
+    if ( spacing === null ) {
+      return positions;
+    }
 
     const modelViewTransform = this.modelViewTransformProperty.get();
     const modelGridBottom = modelViewTransform.viewToModelY( 0 );
@@ -302,8 +343,6 @@ class GridNode extends Node {
     // distance from top edge of the gridNode to the first horizontal line
     const remainderToGridLine = Utils.toFixedNumber( modelGridBottom % spacing, 10 );
     const distanceToGridLine = ( spacing - remainderToGridLine ) % spacing;
-
-    const positions = [];
 
     // check to see if model-view transform flipped relative bottom and top due to an inverse vertical transformation
     if ( modelGridBottom < modelGridTop ) {
@@ -327,6 +366,10 @@ class GridNode extends Node {
     this.disposeGridNode();
   }
 }
+
+// @public
+// @static
+GridNode.LineType = LineType;
 
 griddle.register( 'GridNode', GridNode );
 

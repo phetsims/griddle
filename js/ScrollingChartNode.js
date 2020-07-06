@@ -297,7 +297,7 @@ class ScrollingChartNode extends Node {
   redrawLabels() {
     if ( this.showVerticalGridLabels ) {
       const verticalLabelChildren = [];
-      const yPositions = this.gridNode.getHorizontalLinePositionsInGrid( 'majorHorizontalLineSpacing' );
+      const yPositions = this.gridNode.getHorizontalLinePositionsInGrid( GridNode.LineType.MAJOR_HORIZONTAL );
       yPositions.forEach( yPosition => {
         const viewY = this.modelViewTransformProperty.get().modelToViewY( yPosition );
         const labelPoint = this.graphPanel.localToParentPoint( new Vector2( this.gridNode.bounds.left, viewY ) );
@@ -315,7 +315,7 @@ class ScrollingChartNode extends Node {
 
       // draw labels along the horizontal lines
       const horizontalLabelChildren = [];
-      const xPositions = this.gridNode.getVerticalLinePositionsInGrid( 'majorVerticalLineSpacing' );
+      const xPositions = this.gridNode.getVerticalLinePositionsInGrid( GridNode.LineType.MAJOR_VERTICAL );
       xPositions.forEach( xPosition => {
         const viewX = this.modelViewTransformProperty.get().modelToViewX( xPosition );
         const labelPoint = this.graphPanel.localToParentPoint( new Vector2( viewX, this.gridNode.bounds.bottom ) );

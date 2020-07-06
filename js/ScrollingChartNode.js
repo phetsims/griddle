@@ -63,8 +63,9 @@ class ScrollingChartNode extends Node {
       // {PlotStyle} - Changes how the DynamicSeries data is drawn on the chart
       plotStyle: DynamicSeriesNode.PlotStyle.LINE,
 
+      // {Object|null} - Options for the Rectangle that contains chart content, including GridNode and
+      // DynamicSeriesNodes.
       graphPanelOptions: null, // filled in below because some defaults are based on other options
-      gridLineOptions: null, // filled in below because some defaults are based on other options
 
       showVerticalGridLabels: true,
       showHorizontalGridLabels: true,
@@ -82,7 +83,13 @@ class ScrollingChartNode extends Node {
       verticalRangeProperty: new Property( new Range( -1, 1 ) ),
       horizontalRangeProperty: new Property( new Range( 0, 4 ) ),
 
-      gridNodeOptions: null,
+      // options passed to gridNode
+      gridNodeOptions: {
+        majorLineOptions: {
+          stroke: 'lightGray',
+          lineWidth: 0.8
+        }
+      },
 
       initialVerticalRangeIndex: 0,
 
@@ -114,12 +121,6 @@ class ScrollingChartNode extends Node {
       pickable: false
     }, options.graphPanelOptions );
 
-    // default options for the horizontal and vertical grid lines
-    options.gridLineOptions = merge( {
-      stroke: 'lightGray',
-      lineWidth: 0.8
-    }, options.gridLineOptions );
-
     // White panel with gridlines that shows the data
     options.graphPanelOptions = merge( {
 
@@ -145,7 +146,6 @@ class ScrollingChartNode extends Node {
     const gridNodeOptions = merge( {
       majorHorizontalLineSpacing: this.majorHorizontalLineSpacing,
       majorVerticalLineSpacing: this.majorVerticalLineSpacing,
-      majorLineOptions: options.gridLineOptions,
       modelViewTransformProperty: this.modelViewTransformProperty
     }, options.gridNodeOptions );
 

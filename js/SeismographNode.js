@@ -50,6 +50,9 @@ class SeismographNode extends ScrollingChartNode {
       // {number} - index of verticalRanges above to initially use
       initialVerticalRangeIndex: 0,
 
+      verticalRangeProperty: new Property( new Range( -1, 1 ) ),
+      horizontalRangeProperty: new Property( new Range( 0, 4 ) ),
+
       // number of grid lines in the seismograph, including lines along the min and max (edges of plot)
       numberHorizontalLines: 5,
       numberVerticalLines: 5,
@@ -93,6 +96,9 @@ class SeismographNode extends ScrollingChartNode {
 
     // @private {number} - margin for the 'pen' circle on the seismograph
     this.rightGraphMargin = options.rightGraphMargin;
+
+    this.verticalRangeProperty = options.verticalRangeProperty;
+    this.horizontalRangeProperty = options.horizontalRangeProperty;
 
     this.addDynamicSeriesArray( dynamicSeriesArray );
 
@@ -206,7 +212,7 @@ class SeismographNode extends ScrollingChartNode {
       dynamicSeries,
       this.plotWidth - this.rightGraphMargin,
       new Bounds2( 0, 0, this.plotWidth, this.plotHeight ),
-      this.horizontalRangeProperty.max,
+      0,
       this.valueProperty,
       this.modelViewTransformProperty
     );

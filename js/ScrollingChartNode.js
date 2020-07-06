@@ -16,7 +16,6 @@
 import Emitter from '../../axon/js/Emitter.js';
 import Property from '../../axon/js/Property.js';
 import Bounds2 from '../../dot/js/Bounds2.js';
-import Range from '../../dot/js/Range.js';
 import Utils from '../../dot/js/Utils.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import Shape from '../../kite/js/Shape.js';
@@ -78,11 +77,6 @@ class ScrollingChartNode extends Node {
       majorVerticalLineSpacing: 1,
       majorHorizontalLineSpacing: 1,
 
-      // {Range} ranges in model coordinates of plotted data
-      // TODO: The range changes with modelViewTransformProperty, lets get rid of these, see #46
-      verticalRangeProperty: new Property( new Range( -1, 1 ) ),
-      horizontalRangeProperty: new Property( new Range( 0, 4 ) ),
-
       // options passed to gridNode
       gridNodeOptions: {
         majorLineOptions: {
@@ -90,8 +84,6 @@ class ScrollingChartNode extends Node {
           lineWidth: 0.8
         }
       },
-
-      initialVerticalRangeIndex: 0,
 
       tandem: Tandem.OPTIONAL
     }, options );
@@ -103,8 +95,6 @@ class ScrollingChartNode extends Node {
     this.showHorizontalGridLabels = options.showHorizontalGridLabels;
     this.verticalGridLabelNumberOfDecimalPlaces = options.verticalGridLabelNumberOfDecimalPlaces;
     this.valueProperty = valueProperty;
-    this.verticalRangeProperty = options.verticalRangeProperty;
-    this.horizontalRangeProperty = options.horizontalRangeProperty;
     this.majorHorizontalLineSpacing = options.majorHorizontalLineSpacing;
     this.majorVerticalLineSpacing = options.majorVerticalLineSpacing;
     this.plotStyle = options.plotStyle;
@@ -137,9 +127,10 @@ class ScrollingChartNode extends Node {
     );
 
     // @public {Property.<ModelViewTransform2} - Observable model-view transformation for the data, set to
-    // transform the plot (zoom or pan data). Default transform puts origin at bottom left of the plot.
+    // transform the plot (zoom or pan data). Default transform puts origin at bottom left of the plot with
+    // x ranging from 0-4 and y ranging from -1 to 1
     this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createRectangleInvertedYMapping(
-      new Bounds2( options.horizontalRangeProperty.get().min, this.verticalRangeProperty.get().min, options.horizontalRangeProperty.get().max, this.verticalRangeProperty.get().max ),
+      new Bounds2( 0, -1, 4, 1 ),
       new Bounds2( 0, 0, this.plotWidth, this.plotHeight )
     ) );
 
@@ -237,7 +228,7 @@ class ScrollingChartNode extends Node {
       dynamicSeries,
       this.plotWidth,
       new Bounds2( 0, 0, this.plotWidth, this.plotHeight ),
-      this.horizontalRangeProperty.max,
+      0,
       this.valueProperty,
       this.modelViewTransformProperty
     );

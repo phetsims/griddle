@@ -70,13 +70,16 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Set the cursor value.
+   * Set the cursor value. The value of the cursor is constrained to be within plot bounds.
    * @public
    *
    * @param {number} value
    */
   setCursorValue( value ) {
-    this.cursorValue = value;
+    const modelViewTransform = this.modelViewTransformProperty.get();
+    const minX = modelViewTransform.viewToModelX( 0 );
+    const maxX = modelViewTransform.viewToModelX( this.plotWidth + this.chartCursor.width / 2 );
+    this.cursorValue = Utils.clamp( value, minX, maxX );
     this.updateChartCursor();
   }
 

@@ -212,7 +212,13 @@ const demoGridNode = layoutBounds => {
     const label = new Text( labelString, { font: new PhetFont( 15 ) } );
     const spinner = new NumberSpinner( numberProperty, new Property( numberProperty.range ), {
       deltaValue: valueDelta,
-      enabledProperty: enabledProperty
+      enabledProperty: enabledProperty,
+      numberDisplayOptions: {
+        align: 'center',
+        xMargin: 5,
+        yMargin: 3,
+        textOptions: { font: new PhetFont( 28 )  }
+      }
     } );
     return new HBox( {
       children: [ label, spinner ],

@@ -9,7 +9,6 @@
 
 import NumberProperty from '../../axon/js/NumberProperty.js';
 import Range from '../../dot/js/Range.js';
-import Utils from '../../dot/js/Utils.js';
 import inherit from '../../phet-core/js/inherit.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
@@ -226,7 +225,7 @@ inherit( Node, BarNode, {
       this.offScaleArrow.visible = false;
     }
 
-    setBarYValues( this.borderRectangle, 0, currentY + this.borderWidth * Utils.sign( currentY ) );
+    setBarYValues( this.borderRectangle, 0, currentY + this.borderWidth * Math.sign( currentY ) );
     this.borderRectangle.visible = currentY !== 0;
   }
 } );

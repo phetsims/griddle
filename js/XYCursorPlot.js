@@ -8,6 +8,7 @@
 
 import Utils from '../../dot/js/Utils.js';
 import merge from '../../phet-core/js/merge.js';
+import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import DragListener from '../../scenery/js/listeners/DragListener.js';
 import Circle from '../../scenery/js/nodes/Circle.js';
 import Node from '../../scenery/js/nodes/Node.js';
@@ -21,6 +22,8 @@ import ScrollingChartNode from './ScrollingChartNode.js';
 const WIDTH_PROPORTION = 0.013; // empirically determined
 const CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
 const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
+const ARROW_CUE_FILL_COLOR = new Color( 180, 180, 230 );
+const ARROW_CUE_STROKE_COLOR = Color.DARK_GRAY;
 
 class XYCursorPlot extends ScrollingChartNode {
 
@@ -96,6 +99,14 @@ class XYCursorPlot extends ScrollingChartNode {
 
     dynamicSeries.removeDynamicSeriesListener( this.valueSeriesListenerMap.get( dynamicSeries ) );
     this.valueSeriesListenerMap.delete( dynamicSeries );
+  }
+
+  /**
+   * Reset the ChartCursor on this XYCursorPlot.
+   * @public
+   */
+  resetCursor() {
+    this.chartCursor.reset();
   }
 
   /**
@@ -271,6 +282,11 @@ class ChartCursor extends Rectangle {
       endDrag: () => {},
       drag: () => {},
 
+      // {boolean} - if true, a double headed arrow will be shown to indicate
+      // that the cursor is draggable - becomes invisible after first
+      // drag
+      includeDragCue: false,
+
       // phet-io
       tandem: Tandem.OPTIONAL
     }, options );
@@ -293,6 +309,24 @@ class ChartCursor extends Rectangle {
     // Make it easier to grab this cursor by giving it expanded mouse and touch areas.
     this.mouseArea = this.localBounds.dilatedX( 12 );
     this.touchArea = this.localBounds.dilatedX( 12 );
+
+    this.includeDragCue = options.includeDragCue;
+
+    if ( this.includeDragCue ) {
+
+      // @private - indicates to the user that the cursor is draggable, only created
+      // and added if necessary
+      this.dragCueArrowNode = new ArrowNode( -width * 2, 0, width * 2, 0, {
+        doubleHead: true,
+        headWidth: 12,
+        headHeight: 10,
+        fill: ARROW_CUE_FILL_COLOR,
+        stroke: ARROW_CUE_STROKE_COLOR,
+        center: this.center.plusXY( 0, height * 0.4 )
+      } );
+
+      this.addChild( this.dragCueArrowNode );
+    }
 
     // Add the indentations that are intended to convey the idea of "gripability".
     const grippyNode = new Node();
@@ -323,6 +357,11 @@ class ChartCursor extends Rectangle {
       },
       end: ( event, listener ) => {
         options.endDrag();
+
+        // no need to show arrow after user successfully drags the cursor
+        if ( this.includeDragCue ) {
+          this.dragCueArrowNode.visible = false;
+        }
       },
       tandem: options.tandem.createTandem( 'dragListener' )
     } );
@@ -335,6 +374,17 @@ class ChartCursor extends Rectangle {
    */
   interruptDrag() {
     this.dragListener.interrupt();
+  }
+
+  /**
+   * Reset the ChartCursor to its initial state. Note that this does not modify data
+   * or the cursor position (cursorValue), only aspects of the view for the cursor itself.
+   * @public
+   */
+  reset() {
+    if ( this.includeDragCue ) {
+      this.dragCueArrowNode.visible = true;
+    }
   }
 }
 

@@ -46,15 +46,15 @@ class GridNode extends Node {
       // {number|null} spacing between minor vertical lines, in model coordinates - no minor vertical lines if null
       minorVerticalLineSpacing: null,
 
+      // {null|Property.<ModelViewTransform2>} - model-view transform for the grid for line spacings and other
+      // transformations
+      modelViewTransformProperty: null,
+
       // {Object} - passed to the Path for minor lines
       minorLineOptions: {
         stroke: 'grey',
         lineWidth: 1
       },
-
-      // {null|Property.<ModelViewTransform2>} - model-view transform for the grid for line spacings and other
-      // transformations
-      modelViewTransformProperty: null,
 
       // {Object} - passed to the Path for major lines
       majorLineOptions: {

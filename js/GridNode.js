@@ -344,16 +344,10 @@ class GridNode extends Node {
     const remainderToGridLine = Utils.toFixedNumber( modelGridBottom % spacing, 10 );
     const distanceToGridLine = ( spacing - remainderToGridLine ) % spacing;
 
-    // check to see if model-view transform flipped relative bottom and top due to an inverse vertical transformation
-    if ( modelGridBottom < modelGridTop ) {
-      for ( let y = modelGridBottom + distanceToGridLine; y <= modelGridBottom + modelHeight; y += spacing ) {
-        positions.push( y );
-      }
-    }
-    else {
-      for ( let y = modelGridTop + distanceToGridLine; y <= modelGridTop + modelHeight; y += spacing ) {
-        positions.push( y );
-      }
+    // the model-view transform may have flipped relative bottom and top with an inverse vertical transformation,
+    // make sure we start the array with lower values
+    for ( let y = Math.min( modelGridBottom, modelGridTop ) + distanceToGridLine; y <= Math.min( modelGridBottom, modelGridTop ) + modelHeight; y += spacing ) {
+      positions.push( y );
     }
 
     return positions;

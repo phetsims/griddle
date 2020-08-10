@@ -319,8 +319,8 @@ class GridNode extends Node {
    * by transform. This is useful if you need to decorate the GridNode with labels or other things.
    * @public
    *
-   * @param {string} lineType
-   * @returns {[]}
+   * @param {LineType} lineType
+   * @returns {number[]}
    */
   getHorizontalLinePositionsInGrid( lineType ) {
     assert && assert( lineType === LineType.MAJOR_HORIZONTAL || lineType === LineType.MINOR_HORIZONTAL, 'lineType should be one of the horizontal line spacings' );

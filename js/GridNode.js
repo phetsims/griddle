@@ -315,7 +315,8 @@ class GridNode extends Node {
       modelMax = modelViewTransform.viewToModelY( this.gridHeight );
     }
 
-    // distance from top edge of the gridNode to the first horizontal line
+    // distance from top edge of the gridNode to the first horizontal line, rounded to account for precision
+    // errors with IEEE floating point values
     const remainderToGridLine = Utils.toFixedNumber( modelMin % spacing, 10 );
     const distanceToGridLine = ( spacing - remainderToGridLine ) % spacing;
 

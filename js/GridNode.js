@@ -160,7 +160,7 @@ class GridNode extends Node {
    * Set the width of the grid, relative to the origin (left top).
    * @public
    *
-   * @param width
+   * @param {number} width
    */
   setGridWidth( width ) {
     this.gridWidth = width;
@@ -171,7 +171,7 @@ class GridNode extends Node {
    * Set the height of the grid relative to the origin (left top).
    * @public
    *
-   * @param height
+   * @param {number} height
    */
   setGridHeight( height ) {
     this.gridHeight = height;

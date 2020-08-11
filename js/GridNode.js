@@ -208,7 +208,7 @@ class GridNode extends Node {
     const shape = new Shape();
     const modelViewTransform = this.modelViewTransformProperty.get();
 
-    const xPositions = this.getVerticalLinePositionsInGrid( lineType );
+    const xPositions = this.getLinePositionsInGrid( lineType );
     xPositions.forEach( xPosition => {
       const viewPosition = modelViewTransform.modelToViewX( xPosition );
       shape.moveTo( viewPosition, 0 );
@@ -231,7 +231,7 @@ class GridNode extends Node {
     const shape = new Shape();
     const modelViewTransform = this.modelViewTransformProperty.get();
 
-    const yPosition = this.getHorizontalLinePositionsInGrid( lineType );
+    const yPosition = this.getLinePositionsInGrid( lineType );
     yPosition.forEach( yPosition => {
       const viewPosition = modelViewTransform.modelToViewY( yPosition );
       shape.moveTo( 0, viewPosition );
@@ -282,11 +282,11 @@ class GridNode extends Node {
    * for decorating the grid with labels or other things.
    * @public
    *
-   * @param {string} lineType
+   * @param {LineType} lineType
    * @returns {number[]}
    */
-  getVerticalLinePositionsInGrid( lineType ) {
-    assert && assert( lineType === LineType.MAJOR_VERTICAL || lineType === LineType.MINOR_VERTICAL, 'lineType should be one of the vertical line spacings' );
+  getLinePositionsInGrid( lineType ) {
+    assert && assert( LineType.includes( lineType ), 'provided lineType should be one of LineType' );
 
     const spacing = this.getSpacingFromLineType( lineType );
     assert && assert( spacing === null || typeof spacing === 'number', `spacing not defined for ${lineType}` );
@@ -300,53 +300,28 @@ class GridNode extends Node {
 
     const modelViewTransform = this.modelViewTransformProperty.get();
 
-    const modelGridLeft = modelViewTransform.viewToModelX( 0 );
-    const modelWidth = modelViewTransform.viewToModelDeltaX( this.gridWidth );
+    let modelMin;
+    let modelSpan;
+    let modelMax;
 
-    // distance from left edge of the gridNode to the first vertical line, in model coordinates
-    const remainderToLine = Utils.toFixedNumber( modelGridLeft % spacing, 10 );
-    const distanceToGridLine = ( spacing - remainderToLine ) % spacing;
-
-    for ( let x = modelGridLeft + distanceToGridLine; x <= modelGridLeft + modelWidth; x += spacing ) {
-      positions.push( x );
+    if ( lineType === LineType.MAJOR_VERTICAL || lineType === LineType.MINOR_VERTICAL ) {
+      modelMin = modelViewTransform.viewToModelX( 0 );
+      modelSpan = Math.abs( modelViewTransform.viewToModelDeltaX( this.gridWidth ) );
+      modelMax = modelViewTransform.viewToModelX( this.gridWidth );
     }
-
-    return positions;
-  }
-
-  /**
-   * Returns an array of positions in model coordinates of lines that are within grid view bounds, modified
-   * by transform. This is useful if you need to decorate the GridNode with labels or other things.
-   * @public
-   *
-   * @param {LineType} lineType
-   * @returns {number[]}
-   */
-  getHorizontalLinePositionsInGrid( lineType ) {
-    assert && assert( lineType === LineType.MAJOR_HORIZONTAL || lineType === LineType.MINOR_HORIZONTAL, 'lineType should be one of the horizontal line spacings' );
-
-    const spacing = this.getSpacingFromLineType( lineType );
-    assert && assert( spacing === null || typeof spacing === 'number', `spacing not defined for ${lineType}` );
-
-    const positions = [];
-
-    // no lines of this LineType in grid, return empty array
-    if ( spacing === null ) {
-      return positions;
+    else if ( lineType === LineType.MAJOR_HORIZONTAL || lineType === LineType.MINOR_HORIZONTAL ) {
+      modelMin = modelViewTransform.viewToModelY( 0 );
+      modelSpan = Math.abs( modelViewTransform.viewToModelDeltaY( this.gridHeight ) );
+      modelMax = modelViewTransform.viewToModelY( this.gridHeight );
     }
-
-    const modelViewTransform = this.modelViewTransformProperty.get();
-    const modelGridBottom = modelViewTransform.viewToModelY( 0 );
-    const modelGridTop = modelViewTransform.viewToModelY( this.gridHeight );
-    const modelHeight = Math.abs( modelViewTransform.viewToModelDeltaY( this.gridHeight ) );
 
     // distance from top edge of the gridNode to the first horizontal line
-    const remainderToGridLine = Utils.toFixedNumber( modelGridBottom % spacing, 10 );
+    const remainderToGridLine = Utils.toFixedNumber( modelMin % spacing, 10 );
     const distanceToGridLine = ( spacing - remainderToGridLine ) % spacing;
 
     // the model-view transform may have flipped relative bottom and top with an inverse vertical transformation,
     // make sure we start the array with lower values
-    for ( let y = Math.min( modelGridBottom, modelGridTop ) + distanceToGridLine; y <= Math.min( modelGridBottom, modelGridTop ) + modelHeight; y += spacing ) {
+    for ( let y = Math.min( modelMin, modelMax ) + distanceToGridLine; y <= Math.min( modelMin, modelMax ) + modelSpan; y += spacing ) {
       positions.push( y );
     }
 

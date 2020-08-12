@@ -80,7 +80,8 @@ class GridNode extends Node {
     // @private {Property.<ModelViewTransform2>} - model-view transform for the grid
     this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createIdentity() );
 
-    // @private - Paths for each of the sets of lines
+    // @private - Paths for each of the sets of lines.  They cannot be combined because they may each have different dash
+    // patterns or other options
     this.minorHorizontalLines = new Path( null, options.minorLineOptions );
     this.minorVerticalLines = new Path( null, options.minorLineOptions );
     this.majorHorizontalLines = new Path( null, options.majorLineOptions );

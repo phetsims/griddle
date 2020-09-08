@@ -3,6 +3,8 @@
 /**
  * Displays scatter or line data via DynamicSeries on an xy chart.
  *
+ * @deprecated - please use ScrollingChartNode for new code
+ *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Aadish Gupta (PhET Interactive Simulations)
  */

@@ -272,7 +272,6 @@ class ScrollingChartNode extends Node {
     this.dynamicSeriesMap.delete( dynamicSeries );
   }
 
-
   /**
    * Set line spacings for the grid and labels.
    * @public
@@ -307,7 +306,7 @@ class ScrollingChartNode extends Node {
   redrawLabels() {
     if ( this.showVerticalGridLabels ) {
       const verticalLabelChildren = [];
-      const yPositions = this.gridNode.getLinePositionsInGrid( GridNode.LineType.MAJOR_HORIZONTAL );
+      const yPositions = this.gridNode.getLinePositionsInGrid( this.majorHorizontalLineSpacing, GridNode.LineType.MAJOR_HORIZONTAL );
       yPositions.forEach( yPosition => {
         const viewY = this.modelViewTransformProperty.get().modelToViewY( yPosition );
         const labelPoint = this.graphPanel.localToParentPoint( new Vector2( this.gridNode.bounds.left, viewY ) );
@@ -325,7 +324,7 @@ class ScrollingChartNode extends Node {
 
       // draw labels along the horizontal lines
       const horizontalLabelChildren = [];
-      const xPositions = this.gridNode.getLinePositionsInGrid( GridNode.LineType.MAJOR_VERTICAL );
+      const xPositions = this.gridNode.getLinePositionsInGrid( this.majorVerticalLineSpacing, GridNode.LineType.MAJOR_VERTICAL );
       xPositions.forEach( xPosition => {
         const viewX = this.modelViewTransformProperty.get().modelToViewX( xPosition );
         const labelPoint = this.graphPanel.localToParentPoint( new Vector2( viewX, this.gridNode.bounds.bottom ) );

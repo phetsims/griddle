@@ -222,7 +222,7 @@ class GridNode extends Node {
     const shape = new Shape();
     const modelViewTransform = this.modelViewTransformProperty.get();
 
-    const xPositions = this.getLinePositionsInGrid( lineType );
+    const xPositions = this.getLinePositionsInGrid( lineSpacing, lineType );
     xPositions.forEach( xPosition => {
       const viewPosition = modelViewTransform.modelToViewX( xPosition );
       shape.moveTo( viewPosition, 0 );
@@ -237,6 +237,7 @@ class GridNode extends Node {
   /**
    * Draws horizontal lines with the provided spacing. A shape is drawn and set to the provided Path.
    * @private
+   *
    * @param {number} lineSpacing
    * @param {LineType} lineType
    * @param {Path} linesPath
@@ -245,7 +246,7 @@ class GridNode extends Node {
     const shape = new Shape();
     const modelViewTransform = this.modelViewTransformProperty.get();
 
-    const yPosition = this.getLinePositionsInGrid( lineType );
+    const yPosition = this.getLinePositionsInGrid( lineSpacing, lineType );
     yPosition.forEach( yPosition => {
       const viewPosition = modelViewTransform.modelToViewY( yPosition );
       shape.moveTo( 0, viewPosition );
@@ -267,42 +268,16 @@ class GridNode extends Node {
   }
 
   /**
-   * Get the line spacing for the provided line type. If spacing is not defined for the provided lineType, returns null.
-   * @public
-   *
-   * @param {LineType} lineType
-   * @returns {null|number}
-   */
-  getSpacingFromLineType( lineType ) {
-    let lineSpacing = null;
-    if ( lineType === LineType.MAJOR_VERTICAL ) {
-      lineSpacing = this.majorVerticalLineSpacing;
-    }
-    else if ( lineType === LineType.MAJOR_HORIZONTAL ) {
-      lineSpacing = this.majorHorizontalLineSpacing;
-    }
-    else if ( lineType === LineType.MINOR_VERTICAL ) {
-      lineSpacing = this.minorVerticalLineSpacing;
-    }
-    else if ( lineType === LineType.MINOR_HORIZONTAL ) {
-      lineSpacing = this.minorHorizontalLineSpacing;
-    }
-
-    return lineSpacing;
-  }
-
-  /**
    * Returns an array of positions of grid lines in model coordinates, within the view bounds of the grid. Useful
    * for decorating the grid with labels or other things.
    * @public
    *
+   * @param {number|null} spacing
    * @param {LineType} lineType
    * @returns {number[]}
    */
-  getLinePositionsInGrid( lineType ) {
+  getLinePositionsInGrid( spacing, lineType ) {
     assert && assert( LineType.includes( lineType ), 'provided lineType should be one of LineType' );
-
-    const spacing = this.getSpacingFromLineType( lineType );
     assert && assert( spacing === null || typeof spacing === 'number', `spacing not defined for ${lineType}` );
 
     const positions = [];

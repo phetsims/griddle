@@ -122,7 +122,8 @@ class GridNode extends Node {
 
     config = merge( {
 
-      // {number|null} - at least one of these is required
+      // {number|null} - at least one of these is required, major spacings must be a multiple
+      // of minor spacings
       majorVerticalLineSpacing: null,
       minorVerticalLineSpacing: null,
       majorHorizontalLineSpacing: null,

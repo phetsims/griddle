@@ -113,7 +113,7 @@ class GridNode extends Node {
   }
 
   /**
-   * Set the line spacings for all major and minor lines
+   * Set the line spacings for all major and minor lines.
    * @public
    *
    * @param {Object} config

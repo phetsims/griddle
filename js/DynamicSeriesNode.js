@@ -115,6 +115,7 @@ class DynamicSeriesNode extends CanvasNode {
                          this.dynamicSeries.color;
     context.strokeStyle = contextColor;
     context.lineWidth = this.dynamicSeries.lineWidth;
+    context.lineJoin = this.dynamicSeries.lineJoin;
 
     let moveToNextPoint = true;
     const modelViewTransform = this.modelViewTransformProperty.get();

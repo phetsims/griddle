@@ -34,10 +34,11 @@ class DynamicSeries {
       // {ColorDef} - color for the visualization of the DynamicSeries
       color: new Color( 'black' ),
 
-      // linewidth for the visualization of data, if plotting DynamicSeriesNode.PlotStyle is LINE
-      lineWidth: 1,
+      // options for visualization of the data when plot style is DynamicSeriesNode.PlotStyle.LINE
+      lineWidth: 1, // {number}
+      lineJoin: 'miter', // {string} - one of the CanvasRenderingContext2D.lineJoin values
 
-      // radius for the visualization,  if plotting DynamicSeriesNode.PlotStyle is SCATTER
+      // options for visualization of the data when plot style is DynamicSeriesNode.PlotStyle.SCATTER
       radius: 2,
 
       // {BooleanProperty} - controls visibility of the visualization for the DynamicSeries
@@ -50,6 +51,7 @@ class DynamicSeries {
 
     // @public (read-only) {number}
     this.lineWidth = options.lineWidth;
+    this.lineJoin = options.lineJoin;
 
     // @public (read-only) {number}
     this.radius = options.radius;

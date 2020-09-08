@@ -342,7 +342,7 @@ class ScrollingChartNode extends Node {
   /**
    * Set the plot style for the graph, to be drawn as a line graph or a scatter plot.
    *
-   * @param {XYDataSeriesNode.PlotStyle} plotStyle - one of plotStyle
+   * @param {DynamicSeriesNode.PlotStyle} plotStyle - one of plotStyle
    * @public
    */
   setPlotStyle( plotStyle ) {

@@ -217,7 +217,7 @@ const demoGridNode = layoutBounds => {
         align: 'center',
         xMargin: 5,
         yMargin: 3,
-        textOptions: { font: new PhetFont( 28 )  }
+        textOptions: { font: new PhetFont( 28 ) }
       }
     } );
     return new HBox( {
@@ -278,7 +278,12 @@ const demoGridNode = layoutBounds => {
     const majorHorizontalLineSpacing = horizontalVisible ? majorHorizontalLineSpacingProperty.get() : null;
     const minorHorizontalLineSpacing = horizontalVisible ? minorHorizontalLineSpacingProperty.get() : null;
 
-    gridNode.setLineSpacings( majorVerticalLineSpacing, majorHorizontalLineSpacing, minorVerticalLineSpacing, minorHorizontalLineSpacing );
+    gridNode.setLineSpacings( {
+      majorVerticalLineSpacing: majorVerticalLineSpacing,
+      majorHorizontalLineSpacing: majorHorizontalLineSpacing,
+      minorVerticalLineSpacing: minorVerticalLineSpacing,
+      minorHorizontalLineSpacing: minorHorizontalLineSpacing
+    } );
 
     // disable the other button, cant have both sets hidden at once
     hideHorizontalLinesButton.enabled = verticalVisible;
@@ -286,7 +291,14 @@ const demoGridNode = layoutBounds => {
   } );
 
   Property.multilink( [ majorVerticalLineSpacingProperty, majorHorizontalLineSpacingProperty, minorHorizontalLineSpacingProperty, minorVerticalLineSpacingProperty ],
-    gridNode.setLineSpacings.bind( gridNode )
+    ( majorVerticalLineSpacing, majorHorizontalLineSpacing, minorVerticalLineSpacing, minorHorizontalLineSpacing ) => {
+      gridNode.setLineSpacings( {
+        majorVerticalLineSpacing: majorVerticalLineSpacing,
+        majorHorizontalLineSpacing: majorHorizontalLineSpacing,
+        minorVerticalLineSpacing: minorVerticalLineSpacing,
+        minorHorizontalLineSpacing: minorHorizontalLineSpacing
+      } );
+    }
   );
 
   let offset = 0;

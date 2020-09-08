@@ -277,16 +277,24 @@ class ScrollingChartNode extends Node {
    * Set line spacings for the grid and labels.
    * @public
    *
-   * @param {number} majorVerticalLineSpacing
-   * @param {number} majorHorizontalLineSpacing
-   * @param {number} minorVerticalLineSpacing
-   * @param {number} minorHorizontalLineSpacing
+   * @param {Object} config
    */
-  setLineSpacings( majorVerticalLineSpacing, majorHorizontalLineSpacing, minorVerticalLineSpacing, minorHorizontalLineSpacing ) {
-    this.majorHorizontalLineSpacing = majorHorizontalLineSpacing;
-    this.majorVerticalLineSpacing = majorVerticalLineSpacing;
+  setLineSpacings( config ) {
 
-    this.gridNode.setLineSpacings( majorVerticalLineSpacing, majorHorizontalLineSpacing, minorVerticalLineSpacing, minorHorizontalLineSpacing );
+    config = merge( {
+
+      // @param {number|null} - at least one spacing is required and values must
+      // conform to requirements of line spacings in GridNode
+      majorVerticalLineSpacing: null,
+      majorHorizontalLineSpacing: null,
+      minorVerticalLineSpacing: null,
+      minorHorizontalLineSpacing: null
+    }, config );
+
+    this.majorHorizontalLineSpacing = config.majorHorizontalLineSpacing;
+    this.majorVerticalLineSpacing = config.majorVerticalLineSpacing;
+
+    this.gridNode.setLineSpacings( config );
     this.redrawLabels();
   }
 

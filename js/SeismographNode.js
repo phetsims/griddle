@@ -185,7 +185,10 @@ class SeismographNode extends ScrollingChartNode {
     this.verticalRangeProperty.link( verticalRange => {
       const majorHorizontalSpacing = ( verticalRange.getLength() ) / ( options.numberHorizontalLines - 1 );
       const majorVerticalLineSpacing = this.horizontalRangeProperty.get().getLength() / ( options.numberVerticalLines - 1 );
-      this.setLineSpacings( majorVerticalLineSpacing, majorHorizontalSpacing, null, null );
+      this.setLineSpacings( {
+        majorVerticalLineSpacing: majorVerticalLineSpacing,
+        majorHorizontalSpacing: majorHorizontalSpacing
+      } );
     } );
 
     // @private

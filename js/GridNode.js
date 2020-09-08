@@ -95,7 +95,12 @@ class GridNode extends Node {
     this.modelViewTransformProperty.lazyLink( transformListener );
 
     // set spacings and draw the grid
-    this.setLineSpacings( options.majorVerticalLineSpacing, options.majorHorizontalLineSpacing, options.minorVerticalLineSpacing, options.minorHorizontalLineSpacing );
+    this.setLineSpacings( {
+      majorVerticalLineSpacing: options.majorVerticalLineSpacing,
+      majorHorizontalLineSpacing: options.majorHorizontalLineSpacing,
+      minorVerticalLineSpacing: options.minorVerticalLineSpacing,
+      minorHorizontalLineSpacing: options.minorHorizontalLineSpacing
+    } );
 
     // mutate with Node options after grid is drawn so that bounds are defined
     this.mutate( options );
@@ -108,28 +113,36 @@ class GridNode extends Node {
   }
 
   /**
-   * Set the spacing for all major and minor lines.
+   * Set the line spacings for all major and minor lines
    * @public
    *
-   * @param {number|null} majorVerticalLineSpacing
-   * @param {number|null} majorHorizontalLineSpacing
-   * @param {number|null} minorVerticalLineSpacing
-   * @param {number|null} minorHorizontalLineSpacing
+   * @param {Object} config
    */
-  setLineSpacings( majorVerticalLineSpacing, majorHorizontalLineSpacing, minorVerticalLineSpacing, minorHorizontalLineSpacing ) {
-    this.validateMajorMinorPair( majorVerticalLineSpacing, minorVerticalLineSpacing );
-    this.validateMajorMinorPair( majorHorizontalLineSpacing, minorHorizontalLineSpacing );
+  setLineSpacings( config ) {
 
-    if ( this.majorVerticalLineSpacing !== majorVerticalLineSpacing || this.majorHorizontalLineSpacing !== majorHorizontalLineSpacing ) {
-      this.majorVerticalLineSpacing = majorVerticalLineSpacing;
-      this.majorHorizontalLineSpacing = majorHorizontalLineSpacing;
+    config = merge( {
+
+      // {number|null} - at least one of these is required
+      majorVerticalLineSpacing: null,
+      minorVerticalLineSpacing: null,
+      majorHorizontalLineSpacing: null,
+      minorHorizontalLineSpacing: null
+    }, config );
+
+    assert && assert( !_.every( config, spacing => spacing === null ), 'at least one spacing must be used' );
+    this.validateMajorMinorPair( config.majorVerticalLineSpacing, config.minorVerticalLineSpacing );
+    this.validateMajorMinorPair( config.majorHorizontalLineSpacing, config.minorHorizontalLineSpacing );
+
+    if ( this.majorVerticalLineSpacing !== config.majorVerticalLineSpacing || this.majorHorizontalLineSpacing !== config.majorHorizontalLineSpacing ) {
+      this.majorVerticalLineSpacing = config.majorVerticalLineSpacing;
+      this.majorHorizontalLineSpacing = config.majorHorizontalLineSpacing;
 
       this.drawMajorLines();
     }
 
-    if ( this.minorVerticalLineSpacing !== minorVerticalLineSpacing || this.minorHorizontalLineSpacing !== minorHorizontalLineSpacing ) {
-      this.minorVerticalLineSpacing = minorVerticalLineSpacing;
-      this.minorHorizontalLineSpacing = minorHorizontalLineSpacing;
+    if ( this.minorVerticalLineSpacing !== config.minorVerticalLineSpacing || this.minorHorizontalLineSpacing !== config.minorHorizontalLineSpacing ) {
+      this.minorVerticalLineSpacing = config.minorVerticalLineSpacing;
+      this.minorHorizontalLineSpacing = config.minorHorizontalLineSpacing;
 
       this.drawMinorLines();
     }

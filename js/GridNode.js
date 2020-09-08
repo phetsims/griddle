@@ -165,8 +165,8 @@ class GridNode extends Node {
       assert && assert( majorSpacing > minorSpacing, 'major spacing must be greater than minor spacing' );
 
       // allow for precision errors, see phetsims/scenery-phet#601
-      assert && assert( Utils.equalsEpsilon( majorSpacing % minorSpacing, 0, 1E10 ) ||
-                        Utils.equalsEpsilon( majorSpacing % minorSpacing - minorSpacing, 0, 1E10 ), 'minor spacing must be a multiple of major spacing' );
+      assert && assert( Utils.equalsEpsilon( majorSpacing % minorSpacing, 0, 1E-10 ) ||
+                        Utils.equalsEpsilon( majorSpacing % minorSpacing - minorSpacing, 0, 1E-10 ), 'minor spacing must be a multiple of major spacing' );
     }
   }
 

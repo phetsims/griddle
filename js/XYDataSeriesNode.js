@@ -3,6 +3,8 @@
 /**
  * Node that depicts an DynamicSeries as a line or scatterplot on a canvas, created internally by XYPlotNode.
  *
+ * @deprecated - please use DynamicSeriesNode and ScrollingChartNode in new code.
+ *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author Aadish Gupta (PhET Interactive Simulations)

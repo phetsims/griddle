@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * An XYPlotNode that includes a draggable cursor that allows the user to scrub or play back through the data.
+ * An ScrollingChartNode that includes a draggable cursor that allows the user to scrub or play back through the data.
  *
  * @author Jesse Greenberg
  */
@@ -271,7 +271,7 @@ class XYCursorPlot extends ScrollingChartNode {
 class ChartCursor extends Rectangle {
 
   /**
-   * @param {XYPlotNode} plot
+   * @param {ScrollingChartNode} plot
    * @param {Property.<ModelViewTransform2>} modelViewTransformProperty
    * @param {Object} [options]
    */

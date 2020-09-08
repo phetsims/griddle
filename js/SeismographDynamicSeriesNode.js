@@ -14,11 +14,10 @@ class SeismographDynamicSeriesNode extends DynamicSeriesNode {
    * @param {DynamicSeries} dynamicSeries - the data to plot
    * @param {number} plotWidth
    * @param {Bounds2} bounds - bounds for rendering, includes area to the right of the pens
-   * @param {Property.<number>} timeProperty
    * @param {Property.<ModelViewTransform2>}modelViewTransformProperty
    */
-  constructor( dynamicSeries, plotWidth, bounds, timeProperty, modelViewTransformProperty ) {
-    super( dynamicSeries, plotWidth, bounds, timeProperty, modelViewTransformProperty );
+  constructor( dynamicSeries, plotWidth, bounds, modelViewTransformProperty ) {
+    super( dynamicSeries, plotWidth, bounds, modelViewTransformProperty );
 
     // Create the pen which draws the data at the right side of the graph
     const penNode = new Circle( 4.5, {

@@ -37,11 +37,9 @@ const VERTICAL_AXIS_LABEL_MARGIN = 8;
 class ScrollingChartNode extends Node {
 
   /**
-   * @param {NumberProperty} valueProperty - indicates the passage of horizontal value in the same units as the model.
-   *                                      - This may be seconds or another unit depending on the model.
    * @param {Object} [options]
    */
-  constructor( valueProperty, options ) {
+  constructor( options ) {
     super();
 
     options = merge( {
@@ -111,7 +109,6 @@ class ScrollingChartNode extends Node {
     this.showHorizontalGridLabels = options.showHorizontalGridLabels;
     this.verticalGridLabelNumberOfDecimalPlaces = options.verticalGridLabelNumberOfDecimalPlaces;
     this.horizontalGridLabelNumberOfDecimalPlaces = options.horizontalGridLabelNumberOfDecimalPlaces;
-    this.valueProperty = valueProperty;
     this.majorHorizontalLineSpacing = options.majorHorizontalLineSpacing;
     this.majorVerticalLineSpacing = options.majorVerticalLineSpacing;
     this.plotStyle = options.plotStyle;

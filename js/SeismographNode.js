@@ -92,7 +92,7 @@ class SeismographNode extends ScrollingChartNode {
     assert && assert( options.gridNodeOptions.modelViewTransformProperty === undefined, 'SeismographNode sets transform for GridNode' );
     options.gridNodeOptions.modelViewTransformProperty = gridTransformProperty;
 
-    super( valueProperty, options );
+    super( options );
 
     // @private {number} - margin for the 'pen' circle on the seismograph
     this.rightGraphMargin = options.rightGraphMargin;

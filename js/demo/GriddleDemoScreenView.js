@@ -383,7 +383,7 @@ const demoScrollingChartNode = function( layoutBounds ) {
     }
   };
   emitter.addListener( listener );
-  const scrollingChartNode = new ScrollingChartNode( timeProperty, {
+  const scrollingChartNode = new ScrollingChartNode( {
     width: plotWidth,
     height: plotHeight,
     verticalAxisLabelNode: new Text( 'Height (m)', { fill: 'white', rotation: 3 * Math.PI / 2 } ),

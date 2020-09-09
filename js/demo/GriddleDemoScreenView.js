@@ -486,7 +486,7 @@ const demoXYCursorPlot = layoutBounds => {
   // while dragging,
   let dragging = false;
 
-  const plotNode = new XYCursorPlot( timeProperty, {
+  const plotNode = new XYCursorPlot( {
     width: plotWidth,
     height: plotHeight,
     modelViewTransformProperty: modelViewTransformProperty,

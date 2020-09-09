@@ -28,10 +28,9 @@ const ARROW_CUE_STROKE_COLOR = Color.DARK_GRAY;
 class XYCursorPlot extends ScrollingChartNode {
 
   /**
-   * @param {NumberProperty} valueProperty
    * @param {Object} [options]
    */
-  constructor( valueProperty, options ) {
+  constructor( options ) {
     options = merge( {
 
       // options passed on to the chart cursor, see ChartCursor
@@ -47,7 +46,7 @@ class XYCursorPlot extends ScrollingChartNode {
       tandem: Tandem.OPTIONAL
     }, options );
 
-    super( valueProperty, options );
+    super( options );
 
     // @private {boolean|null} - if set with setCursorVisible, then this will indicate visibility of the cursor
     this._cursorVisibleOverride = null;

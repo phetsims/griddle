@@ -130,10 +130,15 @@ class SeismographNode extends ScrollingChartNode {
       else {
 
         // if grid isn't scrolling don't pan it with value variable, but still transform with vertical range
-        gridTransformProperty.set( ModelViewTransform2.createRectangleInvertedYMapping(
+        const newTransform = ModelViewTransform2.createRectangleInvertedYMapping(
           new Bounds2( 0, verticalRange.min, 4, verticalRange.max ),
           new Bounds2( 0, 0, widthWithMargin, this.plotHeight )
-        ) );
+        );
+
+        // only redraw if vertical range has changed
+        if ( !newTransform.matrix.equals( gridTransformProperty.get().matrix ) ) {
+          gridTransformProperty.set( newTransform );
+        }
       }
     } );
 

@@ -25,7 +25,6 @@ import HBox from '../../../scenery/js/nodes/HBox.js';
 import Node from '../../../scenery/js/nodes/Node.js';
 import Text from '../../../scenery/js/nodes/Text.js';
 import VBox from '../../../scenery/js/nodes/VBox.js';
-import Color from '../../../scenery/js/util/Color.js';
 import ABSwitch from '../../../sun/js/ABSwitch.js';
 import BooleanRectangularStickyToggleButton from '../../../sun/js/buttons/BooleanRectangularStickyToggleButton.js';
 import BooleanRectangularToggleButton from '../../../sun/js/buttons/BooleanRectangularToggleButton.js';
@@ -41,7 +40,6 @@ import GridNode from '../GridNode.js';
 import ScrollingChartNode from '../ScrollingChartNode.js';
 import SeismographNode from '../SeismographNode.js';
 import XYCursorPlot from '../XYCursorPlot.js';
-import XYPlotNode from '../XYPlotNode.js';
 
 // constants - this is a hack to enable components to animate from the animation loop
 const emitter = new Emitter( { parameters: [ { valueType: 'number' } ] } );
@@ -61,8 +59,7 @@ class GriddleDemoScreenView extends DemosScreenView {
       { label: 'GridNode', createNode: demoGridNode },
       { label: 'ScrollingChartNode', createNode: demoScrollingChartNode },
       { label: 'SeismographNode', createNode: demoSeismographNode },
-      { label: 'XYCursorPlot', createNode: demoXYCursorPlot },
-      { label: 'XYPlotNode', createNode: demoXYPlotNode }
+      { label: 'XYCursorPlot', createNode: demoXYCursorPlot }
     ], {
       selectedDemoLabel: sceneryPhetQueryParameters.component
     } );
@@ -77,45 +74,6 @@ class GriddleDemoScreenView extends DemosScreenView {
     emitter.emit( dt );
   }
 }
-
-// Creates a demo for the XYPlotNode
-const demoXYPlotNode = function( layoutBounds ) {
-
-  let time = 0;
-  const plot = new XYPlotNode( { backgroundFill: '#efecd9' } );
-  const plotPanel = new Panel( plot, {
-    fill: '#efecd9',
-    xMargin: 10,
-    yMargin: 10,
-    center: layoutBounds.center
-  } );
-  const series = new DynamicSeries( { color: Color.BLUE } );
-  plot.addSeries( series, false );
-  let forward = true;
-  let count = 0;
-  const listener = function( dt ) {
-    series.addXYDataPoint( time, -Math.abs( -Math.sin( time / 100 + count ) * 400 * 0.8 ) );
-    time = time + ( forward ? 1 : -1 );
-
-    if ( time > 400 ) {
-      forward = false;
-      count++;
-    }
-    if ( time < 0 ) {
-      forward = true;
-      count++;
-    }
-  };
-  emitter.addListener( listener );
-
-  // Swap out the dispose function for one that also removes the Emitter listener
-  const plotPanelDispose = plotPanel.dispose.bind( plotPanel );
-  plotPanel.dispose = function() {
-    emitter.removeListener( listener );
-    plotPanelDispose();
-  };
-  return plotPanel;
-};
 
 // Creates a demo for the BarChartNode
 const demoBarChart = function( layoutBounds ) {

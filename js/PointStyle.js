@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * A collection of styles that can be applied to a single point of a scatter styled XYPlotNode. Can control things like
+ * A collection of styles that can be applied to a single point of a scatter styled plot. Can control things like
  * point visibility, stroke, size, and opacity for an individual point.
  *
  * @author Jesse Greenberg
@@ -32,7 +32,7 @@ class PointStyle {
       // {number} - lineWidth for the stroke, only relevant if strokeStyle is provided
       lineWidth: 1,
 
-      // {number|null} - radius of the data point, if null the radius will be determined by XYDataSeriesNode
+      // {number|null} - radius of the data point, if null the radius will be determined by the container
       radius: null
     }, options );
 

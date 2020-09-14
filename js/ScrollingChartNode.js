@@ -229,6 +229,15 @@ class ScrollingChartNode extends Node {
   }
 
   /**
+   * @param {number} verticalGridLabelNumberOfDecimalPlaces
+   * @public
+   */
+  setVerticalGridLabelNumberOfDecimalPlaces( verticalGridLabelNumberOfDecimalPlaces ) {
+    this.verticalGridLabelNumberOfDecimalPlaces = verticalGridLabelNumberOfDecimalPlaces;
+    this.redrawLabels();
+  }
+
+  /**
    * Adds a DynamicSeriesNode to this ScrollingChartNode.
    * @public
    *

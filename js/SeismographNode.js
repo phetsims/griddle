@@ -97,6 +97,7 @@ class SeismographNode extends ScrollingChartNode {
     // @private {number} - margin for the 'pen' circle on the seismograph
     this.rightGraphMargin = options.rightGraphMargin;
 
+    // @public (listen-only)
     this.verticalRangeProperty = options.verticalRangeProperty;
     this.horizontalRangeProperty = options.horizontalRangeProperty;
 

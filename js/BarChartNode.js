@@ -8,7 +8,6 @@
  * @author Denzell Barnett (PhET Interactive Simulations)
  */
 
-import inherit from '../../phet-core/js/inherit.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../scenery-phet/js/PhetFont.js';
@@ -22,164 +21,163 @@ import Panel from '../../sun/js/Panel.js';
 import BarNode from './BarNode.js';
 import griddle from './griddle.js';
 
-/**
- * @constructor
- *
- * NOTE: update() should be called manually to update the view of this Node. For performance, it doesn't update on
- * every change.
- *
- * @param {Array.<Object>} bars - Entries of the format:
- *   {
- *     entries: {Array.<{ property: {Property.<number>}, color: {paint} }>}
- *     [labelString]: {string} formatted for RichText
- *     [labelColor]: {PaintDef} if provided, sets color of the bar label, otherwise label match color of bar
- *     [labelNode]: {node} displayed below the label string if the label string exist
- *     [offScaleArrowFill]: {paint} - If provided, allows bar-specific arrow fills (that are different than the color)
- *   }
- * @param {Property.<Range>} rangeProperty
- * @param {Object} [options]
- */
-function BarChartNode( bars, rangeProperty, options ) {
-  Node.call( this );
-  const self = this;
-  options = merge( {
+class BarChartNode extends Node {
+  /**
+   * NOTE: update() should be called manually to update the view of this Node. For performance, it doesn't update on
+   * every change.
+   *
+   * @param {Array.<Object>} bars - Entries of the format:
+   *   {
+   *     entries: {Array.<{ property: {Property.<number>}, color: {paint} }>}
+   *     [labelString]: {string} formatted for RichText
+   *     [labelColor]: {PaintDef} if provided, sets color of the bar label, otherwise label match color of bar
+   *     [labelNode]: {node} displayed below the label string if the label string exist
+   *     [offScaleArrowFill]: {paint} - If provided, allows bar-specific arrow fills (that are different than the color)
+   *   }
+   * @param {Property.<Range>} rangeProperty
+   * @param {Object} [options]
+   */
+  constructor( bars, rangeProperty, options ) {
 
-    // {number} - Space in-between each bar
-    barSpacing: 12,
+    options = merge( {
 
-    // provided to the x-axis Line
-    xAxisOptions: {
-      stroke: 'black',
-      lineWidth: 1,
+      // {number} - Space in-between each bar
+      barSpacing: 12,
 
-      minPadding: 8,
-      maxExtension: 5
-    },
-    barOptions: {
-      // See BarNode's options.
-    },
+      // provided to the x-axis Line
+      xAxisOptions: {
+        stroke: 'black',
+        lineWidth: 1,
 
-    // {*|null} - options for the bar RichText labels, see extended options below
-    barLabelOptions: null,
+        minPadding: 8,
+        maxExtension: 5
+      },
+      barOptions: {
+        // See BarNode's options.
+      },
 
-    // {Color}  Color of the background behind the labels
-    labelBackgroundColor: Color.TRANSPARENT
-  }, options );
+      // {*|null} - options for the bar RichText labels, see extended options below
+      barLabelOptions: null,
 
-  // @private {Array.<Object>}
-  this.bars = bars;
+      // {Color}  Color of the background behind the labels
+      labelBackgroundColor: Color.TRANSPARENT
+    }, options );
 
-  // For vertical orientation
-  options.barOptions = merge( {}, options.barOptions, {
-    rotation: Math.PI
-  } );
+    super();
 
-  // passed along to the RichText
-  options.barLabelOptions = merge( {
-    font: new PhetFont( { size: 12, weight: 'bold' } ),
+    // @private {Array.<Object>}
+    this.bars = bars;
 
-    // good for vertical bars that are close to each other
-    rotation: -Math.PI / 2,
+    // For vertical orientation
+    options.barOptions = merge( {}, options.barOptions, {
+      rotation: Math.PI
+    } );
 
-    // chosen by inspection, good for short labels
-    maxWidth: 40
-  }, options.barLabelOptions );
+    // passed along to the RichText
+    options.barLabelOptions = merge( {
+      font: new PhetFont( { size: 12, weight: 'bold' } ),
 
-  assert && assert( options.barLabelOptions.fill === undefined, 'label fill set by entries, see constructor' );
+      // good for vertical bars that are close to each other
+      rotation: -Math.PI / 2,
 
-  // @private {Array.<BarNode>} Initializing barNodes.
-  this.barNodes = bars.map( function( bar ) {
-    assert && assert( bar.entries && Array.isArray( bar.entries ) );
-    const barOptions = merge( {
-      offScaleArrowFill: bar.offScaleArrowFill === undefined ? ( bar.entries.length > 1 ? '#bbb' : bar.entries[ 0 ].color ) : bar.offScaleArrowFill
-    }, options.barOptions );
-    return new BarNode( bar.entries, rangeProperty, barOptions );
-  } );
+      // chosen by inspection, good for short labels
+      maxWidth: 40
+    }, options.barLabelOptions );
 
-  // @private {Array.<Node>}
-  this.barLabelNodes = bars.map( function( bar ) {
-    const barLabelVBox = new VBox( { spacing: 4 } );
-    if ( bar.labelString ) {
+    assert && assert( options.barLabelOptions.fill === undefined, 'label fill set by entries, see constructor' );
 
-      const labelText = new RichText( bar.labelString, merge( {}, options.barLabelOptions, {
-        fill: bar.labelColor || 'black'
-      } ) );
+    // @private {Array.<BarNode>} Initializing barNodes.
+    this.barNodes = bars.map( function( bar ) {
+      assert && assert( bar.entries && Array.isArray( bar.entries ) );
+      const barOptions = merge( {
+        offScaleArrowFill: bar.offScaleArrowFill === undefined ? ( bar.entries.length > 1 ? '#bbb' : bar.entries[ 0 ].color ) : bar.offScaleArrowFill
+      }, options.barOptions );
+      return new BarNode( bar.entries, rangeProperty, barOptions );
+    } );
 
-      // Transparent background for each label, used to make the label standout against bar if the bar falls beneath the x-Axis.
-      const valuePanel = new Panel( labelText, {
-        stroke: null,
-        fill: options.labelBackgroundColor, // put transparency in the color so that the children aren't transparent
-        cornerRadius: 3,
-        xMargin: 0,
-        yMargin: 2
-      } );
-      barLabelVBox.addChild( valuePanel );
+    // @private {Array.<Node>}
+    this.barLabelNodes = bars.map( function( bar ) {
+      const barLabelVBox = new VBox( { spacing: 4 } );
+      if ( bar.labelString ) {
+
+        const labelText = new RichText( bar.labelString, merge( {}, options.barLabelOptions, {
+          fill: bar.labelColor || 'black'
+        } ) );
+
+        // Transparent background for each label, used to make the label standout against bar if the bar falls beneath the x-Axis.
+        const valuePanel = new Panel( labelText, {
+          stroke: null,
+          fill: options.labelBackgroundColor, // put transparency in the color so that the children aren't transparent
+          cornerRadius: 3,
+          xMargin: 0,
+          yMargin: 2
+        } );
+        barLabelVBox.addChild( valuePanel );
+      }
+      if ( bar.labelNode ) {
+        barLabelVBox.addChild( bar.labelNode );
+      }
+      return barLabelVBox;
+    } );
+
+    // Adding barNodes into HBox
+    const barBox = new HBox( {
+      spacing: options.barSpacing,
+      align: 'origin',
+      children: this.barNodes
+    } );
+
+    // Adding barNode labels into Node.
+    const labelBox = new Node( {
+      children: this.barLabelNodes
+    } );
+
+    // Manual positioning of labels to match position of barNodes in HBox.
+    for ( let i = 0; i < bars.length; i++ ) {
+
+      // Checks if the labelBox's VBox has any children.
+      if ( typeof ( labelBox.children[ i ].children[ 0 ] ) !== 'undefined' ) {
+        labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;
+        labelBox.children[ i ].top = 3;
+      }
     }
-    if ( bar.labelNode ) {
-      barLabelVBox.addChild( bar.labelNode );
-    }
-    return barLabelVBox;
-  } );
+    this.addChild( barBox );
+    this.addChild( labelBox );
 
-  // Adding barNodes into HBox
-  const barBox = new HBox( {
-    spacing: options.barSpacing,
-    align: 'origin',
-    children: this.barNodes
-  } );
+    // Initializing xAxis
+    const xAxis = new Line( -options.xAxisOptions.minPadding, 0, barBox.width + options.xAxisOptions.maxExtension, 0, options.xAxisOptions );
+    this.addChild( xAxis );
 
-  // Adding barNode labels into Node.
-  const labelBox = new Node( {
-    children: this.barLabelNodes
-  } );
+    // Initializing yAxis
+    const yAxis = new ArrowNode( 0, 0, 0, -rangeProperty.value.max, {
+      tailWidth: 0.5,
+      headHeight: 9,
+      headWidth: 8
+    } );
+    rangeProperty.link( function( range ) {
+      yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );
+    } );
+    this.addChild( yAxis );
 
-  // Manual positioning of labels to match position of barNodes in HBox.
-  for ( let i = 0; i < bars.length; i++ ) {
+    // Update localBounds to the correct value
+    rangeProperty.link( range => {
+      this.localBounds = this.localBounds.withMinY( Math.min( yAxis.bottom, -range.max ) )
+        .withMaxY( Math.max( options.xAxisOptions.lineWidth / 2, -range.min, labelBox.bottom ) );
+    } );
 
-    // Checks if the labelBox's VBox has any children.
-    if ( typeof ( labelBox.children[ i ].children[ 0 ] ) !== 'undefined' ) {
-      labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;
-      labelBox.children[ i ].top = 3;
-    }
+    this.mutate( options );
   }
-  this.addChild( barBox );
-  this.addChild( labelBox );
 
-  // Initializing xAxis
-  const xAxis = new Line( -options.xAxisOptions.minPadding, 0, barBox.width + options.xAxisOptions.maxExtension, 0, options.xAxisOptions );
-  this.addChild( xAxis );
-
-  // Initializing yAxis
-  const yAxis = new ArrowNode( 0, 0, 0, -rangeProperty.value.max, {
-    tailWidth: 0.5,
-    headHeight: 9,
-    headWidth: 8
-  } );
-  rangeProperty.link( function( range ) {
-    yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );
-  } );
-  this.addChild( yAxis );
-
-  // Update localBounds to the correct value
-  rangeProperty.link( function( range ) {
-    self.localBounds = self.localBounds.withMinY( Math.min( yAxis.bottom, -range.max ) )
-      .withMaxY( Math.max( options.xAxisOptions.lineWidth / 2, -range.min, labelBox.bottom ) );
-  } );
-  this.mutate( options );
-}
-
-griddle.register( 'BarChartNode', BarChartNode );
-
-inherit( Node, BarChartNode, {
   /**
    * Updates all of the bar nodes.
    * @public
    */
-  update: function() {
+  update() {
     for ( let i = 0; i < this.barNodes.length; i++ ) {
       this.barNodes[ i ].update();
     }
   }
-} );
+}
 
+griddle.register( 'BarChartNode', BarChartNode );
 export default BarChartNode;

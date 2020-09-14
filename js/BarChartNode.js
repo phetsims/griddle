@@ -22,6 +22,7 @@ import BarNode from './BarNode.js';
 import griddle from './griddle.js';
 
 class BarChartNode extends Node {
+
   /**
    * NOTE: update() should be called manually to update the view of this Node. For performance, it doesn't update on
    * every change.
@@ -34,10 +35,10 @@ class BarChartNode extends Node {
    *     [labelNode]: {node} displayed below the label string if the label string exist
    *     [offScaleArrowFill]: {paint} - If provided, allows bar-specific arrow fills (that are different than the color)
    *   }
-   * @param {Property.<Range>} rangeProperty
+   * @param {Property.<Range>} yRangeProperty - range of the y axis
    * @param {Object} [options]
    */
-  constructor( bars, rangeProperty, options ) {
+  constructor( bars, yRangeProperty, options ) {
 
     options = merge( {
 
@@ -92,7 +93,7 @@ class BarChartNode extends Node {
       const barOptions = merge( {
         offScaleArrowFill: bar.offScaleArrowFill === undefined ? ( bar.entries.length > 1 ? '#bbb' : bar.entries[ 0 ].color ) : bar.offScaleArrowFill
       }, options.barOptions );
-      return new BarNode( bar.entries, rangeProperty, barOptions );
+      return new BarNode( bar.entries, yRangeProperty, barOptions );
     } );
 
     // @private {Array.<Node>}
@@ -149,23 +150,38 @@ class BarChartNode extends Node {
     this.addChild( xAxis );
 
     // Initializing yAxis
-    const yAxis = new ArrowNode( 0, 0, 0, -rangeProperty.value.max, {
+    const yAxis = new ArrowNode( 0, 0, 0, -yRangeProperty.value.max, {
       tailWidth: 0.5,
       headHeight: 9,
       headWidth: 8
     } );
-    rangeProperty.link( function( range ) {
-      yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );
-    } );
     this.addChild( yAxis );
 
-    // Update localBounds to the correct value
-    rangeProperty.link( range => {
+    const rangeObserver = range => {
+
+      yAxis.setTailAndTip( -options.xAxisOptions.minPadding, 0, -options.xAxisOptions.minPadding, -range.max );
+
+      // Update localBounds to the correct value
       this.localBounds = this.localBounds.withMinY( Math.min( yAxis.bottom, -range.max ) )
         .withMaxY( Math.max( options.xAxisOptions.lineWidth / 2, -range.min, labelBox.bottom ) );
-    } );
+    };
+    yRangeProperty.link( rangeObserver );
 
     this.mutate( options );
+
+    // @private
+    this.disposeBarChartNode = () => {
+      yRangeProperty.unlink( rangeObserver );
+    };
+  }
+
+  /**
+   * @public
+   * @override
+   */
+  dispose() {
+    this.disposeBarChartNode();
+    super.dispose();
   }
 
   /**

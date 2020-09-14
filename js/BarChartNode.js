@@ -88,7 +88,7 @@ class BarChartNode extends Node {
     assert && assert( options.barLabelOptions.fill === undefined, 'label fill set by entries, see constructor' );
 
     // @private {Array.<BarNode>} Initializing barNodes.
-    this.barNodes = bars.map( function( bar ) {
+    this.barNodes = bars.map( bar => {
       assert && assert( bar.entries && Array.isArray( bar.entries ) );
       const barOptions = merge( {
         offScaleArrowFill: bar.offScaleArrowFill === undefined ? ( bar.entries.length > 1 ? '#bbb' : bar.entries[ 0 ].color ) : bar.offScaleArrowFill
@@ -97,7 +97,7 @@ class BarChartNode extends Node {
     } );
 
     // @private {Array.<Node>}
-    this.barLabelNodes = bars.map( function( bar ) {
+    this.barLabelNodes = bars.map( bar => {
       const barLabelVBox = new VBox( { spacing: 4 } );
       if ( bar.labelString ) {
 

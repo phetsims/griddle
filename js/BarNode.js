@@ -9,128 +9,113 @@
 
 import NumberProperty from '../../axon/js/NumberProperty.js';
 import Range from '../../dot/js/Range.js';
-import inherit from '../../phet-core/js/inherit.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import griddle from './griddle.js';
 
-/**
- * @constructor
- *
- * NOTE: This is provided in the "mathematical" coordinate frame, where +y is up. For visual handling, rotate it by
- * Math.PI.
- *
- * NOTE: update() should be called between when the bars change and a Display.updateDisplay(). This node does not
- * otherwise update its view.
- *
- * @param {Array.<Object>} barEntries - Objects of the type {
- *                                        property: {Property.<number>},
- *                                        color: {paint}
- *                                      }
- * @param {Property.<Range>} totalRangeProperty - Range of visual values displayed (note negative values for min are
- *                           supported).
- * @param {Object} [options]
- */
-function BarNode( barEntries, totalRangeProperty, options ) {
-  assert && assert( barEntries.length > 0 );
+class BarNode extends Node {
 
-  options = merge( {
-    // {paint} - The color of the border (along the sides and top of the bar)
-    borderColor: 'black',
+  /**
+   * NOTE: This is provided in the "mathematical" coordinate frame, where +y is up. For visual handling, rotate it by
+   * Math.PI.
+   *
+   * NOTE: update() should be called between when the bars change and a Display.updateDisplay(). This node does not
+   * otherwise update its view.
+   *
+   * @param {Array.<Object>} barEntries - Objects of the type {
+   *                                        property: {Property.<number>},
+   *                                        color: {paint}
+   *                                      }
+   * @param {Property.<Range>} totalRangeProperty - Range of visual values displayed (note negative values for min are
+   *                           supported).
+   * @param {Object} [options]
+   */
+  constructor( barEntries, totalRangeProperty, options ) {
+    assert && assert( barEntries.length > 0 );
 
-    // {number} - Width of the border (along the sides and top of the bar)
-    borderWidth: 1,
+    options = merge( {
+      // {paint} - The color of the border (along the sides and top of the bar)
+      borderColor: 'black',
 
-    // {number} - The visual width of the bar (excluding the stroke)
-    barWidth: 15,
+      // {number} - Width of the border (along the sides and top of the bar)
+      borderWidth: 1,
 
-    // {boolean} - Whether off-scale arrows should be shown
-    showOffScaleArrow: true,
+      // {number} - The visual width of the bar (excluding the stroke)
+      barWidth: 15,
 
-    // {paint} - Fill for the off-scale arrows
-    offScaleArrowFill: '#bbb',
+      // {boolean} - Whether off-scale arrows should be shown
+      showOffScaleArrow: true,
 
-    // {number} - Distance between the top of a bar and the bottom of the off-scale arrow
-    offScaleArrowOffset: 5,
+      // {paint} - Fill for the off-scale arrows
+      offScaleArrowFill: '#bbb',
 
-    // {paint} - If any of the bar properties are negative (and this is non-null) and we have multiple bars, this
-    // color will be used instead.
-    invalidBarColor: 'gray',
+      // {number} - Distance between the top of a bar and the bottom of the off-scale arrow
+      offScaleArrowOffset: 5,
 
-    // {Property.<number>} - If provided, the given entries' values will be scaled by this number before display.
-    scaleProperty: new NumberProperty( 1 )
-  }, options );
+      // {paint} - If any of the bar properties are negative (and this is non-null) and we have multiple bars, this
+      // color will be used instead.
+      invalidBarColor: 'gray',
 
-  // @private {Array.<BarProperty>}
-  this.barEntries = barEntries;
+      // {Property.<number>} - If provided, the given entries' values will be scaled by this number before display.
+      scaleProperty: new NumberProperty( 1 )
+    }, options );
 
-  // @private {Property.<Range>}
-  this.totalRangeProperty = totalRangeProperty;
+    super();
 
-  // @private
-  this.borderWidth = options.borderWidth;
-  this.scaleProperty = options.scaleProperty;
-  this.showOffScaleArrow = options.showOffScaleArrow;
-  this.offScaleArrowOffset = options.offScaleArrowOffset;
-  this.invalidBarColor = options.invalidBarColor;
+    // @private {Array.<BarProperty>}
+    this.barEntries = barEntries;
 
-  // @private {Array.<Rectangle>}
-  this.bars = this.barEntries.map( function( barEntry ) {
-    return new Rectangle( 0, 0, options.barWidth, 0, {
+    // @private {Property.<Range>}
+    this.totalRangeProperty = totalRangeProperty;
+
+    // @private
+    this.borderWidth = options.borderWidth;
+    this.scaleProperty = options.scaleProperty;
+    this.showOffScaleArrow = options.showOffScaleArrow;
+    this.offScaleArrowOffset = options.offScaleArrowOffset;
+    this.invalidBarColor = options.invalidBarColor;
+
+    // @private {Array.<Rectangle>}
+    this.bars = this.barEntries.map( barEntry => {
+      return new Rectangle( 0, 0, options.barWidth, 0, {
+        centerX: 0
+      } );
+    } );
+
+    // @private {Rectangle}
+    this.borderRectangle = new Rectangle( 0, 0, options.barWidth + 2 * options.borderWidth, 0, {
+      fill: options.borderColor,
       centerX: 0
     } );
-  } );
 
-  // @private {Rectangle}
-  this.borderRectangle = new Rectangle( 0, 0, options.barWidth + 2 * options.borderWidth, 0, {
-    fill: options.borderColor,
-    centerX: 0
-  } );
+    // @private {ArrowNode}
+    this.offScaleArrow = new ArrowNode( 0, 0, 0, options.barWidth, {
+      fill: options.offScaleArrowFill,
+      stroke: 'black',
+      headHeight: options.barWidth / 2,
+      headWidth: options.barWidth,
+      tailWidth: options.barWidth * 3 / 5,
+      centerX: 0
+    } );
 
-  // @private {ArrowNode}
-  this.offScaleArrow = new ArrowNode( 0, 0, 0, options.barWidth, {
-    fill: options.offScaleArrowFill,
-    stroke: 'black',
-    headHeight: options.barWidth / 2,
-    headWidth: options.barWidth,
-    tailWidth: options.barWidth * 3 / 5,
-    centerX: 0
-  } );
+    const children = [ this.borderRectangle ].concat( this.bars );
+    if ( options.showOffScaleArrow ) {
+      children.push( this.offScaleArrow );
+    }
+    options.children = children;
 
-  const children = [ this.borderRectangle ].concat( this.bars );
-  if ( options.showOffScaleArrow ) {
-    children.push( this.offScaleArrow );
+    this.mutate( options );
+
+    this.update();
   }
-  options.children = children;
 
-  Node.call( this, options );
-
-  this.update();
-}
-
-griddle.register( 'BarNode', BarNode );
-
-/**
- * Sets a rectangle's y and height such that it goes between the two y values given.
- *
- * @param {Rectangle} rectangle
- * @param {number} y1
- * @param {number} y2
- */
-function setBarYValues( rectangle, y1, y2 ) {
-  rectangle.rectY = Math.min( y1, y2 );
-  rectangle.rectHeight = Math.abs( y1 - y2 );
-}
-
-inherit( Node, BarNode, {
   /**
    * Updates all of the bars to the correct values.
    * @public
    */
-  update: function() {
-    let i;
+  update() {
     const scale = this.scaleProperty.value;
 
     // How much of our "range" we need to take away, to be able to show an out-of-scale arrow.
@@ -154,7 +139,7 @@ inherit( Node, BarNode, {
     let hasNegative = false;
 
     // Check for whether we have an "invalid bar" case with the total and hasNegative
-    for ( i = 0; i < this.barEntries.length; i++ ) {
+    for ( let i = 0; i < this.barEntries.length; i++ ) {
       const value = this.barEntries[ i ].property.value * scale;
       if ( value < 0 ) {
         hasNegative = true;
@@ -180,12 +165,12 @@ inherit( Node, BarNode, {
       firstBar.visible = true;
 
       // Hide the other bars
-      for ( i = 1; i < this.barEntries.length; i++ ) {
+      for ( let i = 1; i < this.barEntries.length; i++ ) {
         this.bars[ i ].visible = false;
       }
     }
     else {
-      for ( i = 0; i < this.barEntries.length; i++ ) {
+      for ( let i = 0; i < this.barEntries.length; i++ ) {
         const barEntry = this.barEntries[ i ];
         const bar = this.bars[ i ];
         bar.fill = barEntry.color;
@@ -228,6 +213,19 @@ inherit( Node, BarNode, {
     setBarYValues( this.borderRectangle, 0, currentY + this.borderWidth * Math.sign( currentY ) );
     this.borderRectangle.visible = currentY !== 0;
   }
-} );
+}
 
+/**
+ * Sets a rectangle's y and height such that it goes between the two y values given.
+ *
+ * @param {Rectangle} rectangle
+ * @param {number} y1
+ * @param {number} y2
+ */
+function setBarYValues( rectangle, y1, y2 ) {
+  rectangle.rectY = Math.min( y1, y2 );
+  rectangle.rectHeight = Math.abs( y1 - y2 );
+}
+
+griddle.register( 'BarNode', BarNode );
 export default BarNode;

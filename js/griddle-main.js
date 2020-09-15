@@ -10,8 +10,6 @@ import simLauncher from '../../joist/js/simLauncher.js';
 import GriddleDemoScreenView from './demo/GriddleDemoScreenView.js';
 import griddleStrings from './griddleStrings.js';
 
-const griddleTitleString = griddleStrings.griddle.title;
-
 const simOptions = {
   credits: {
     leadDesign: 'PhET'
@@ -19,10 +17,11 @@ const simOptions = {
 };
 
 simLauncher.launch( function() {
-  // Create and start the sim
-  new Sim( griddleTitleString, [
-    new Screen( function() {return {};}, function() {return new GriddleDemoScreenView();}, {
-      name: 'Griddle Demo'
-    } )
+  new Sim( griddleStrings.griddle.title, [
+    new Screen(
+      function() { return {}; },
+      function() { return new GriddleDemoScreenView(); },
+      { name: 'Griddle Demo' }
+    )
   ], simOptions ).start();
 } );

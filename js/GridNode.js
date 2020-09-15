@@ -50,6 +50,11 @@ class GridNode extends Node {
       // transformations
       modelViewTransformProperty: null,
 
+      // {null|number} - Precision for the placement of grid lines, in model coordinates. null value
+      // will not use any precision. GridNode will calculate line positions based on spacings and the model view
+      // transform. But this is susceptible to IEEE precision errors, ocassionally resulting in missed lines.
+      gridLinePrecision: null,
+
       // {Object} - passed to the Path for minor lines
       minorLineOptions: {
         stroke: 'grey',
@@ -76,6 +81,7 @@ class GridNode extends Node {
     this.minorVerticalLineSpacing = null;
     this.majorVerticalLineSpacing = null;
     this.majorHorizontalLineSpacing = null;
+    this.gridLinePrecision = options.gridLinePrecision;
 
     // @private {Property.<ModelViewTransform2>} - model-view transform for the grid
     this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( ModelViewTransform2.createIdentity() );
@@ -110,6 +116,20 @@ class GridNode extends Node {
       this.modelViewTransformProperty.unlink( transformListener );
       ownsModelViewTransformProperty && this.modelViewTransformProperty.dispose();
     };
+  }
+
+  /**
+   * Sets the precisin for calculating locations of the grid lines, in model coordinates.
+   * null value will calculate positions with IEEE floating point values. This usually works
+   * but sometimes results in floating point errors that mean some grid lines are lost. Set
+   * precision to keep grid lines exact.
+   * @public
+   *
+   * @param {null|number} precision
+   */
+  setGridLinePrecision( precision ) {
+    this.gridLinePrecision = precision;
+    this.drawAllLines();
   }
 
   /**
@@ -312,7 +332,15 @@ class GridNode extends Node {
 
     // the model-view transform may have flipped relative bottom and top with an inverse vertical transformation,
     // make sure we start the array with lower values
-    for ( let y = Math.min( modelMin, modelMax ) + distanceToGridLine; y <= Math.min( modelMin, modelMax ) + modelSpan; y += spacing ) {
+    let minPosition = Math.min( modelMin, modelMax ) + distanceToGridLine;
+    let maxPosition = Math.min( modelMin, modelMax ) + modelSpan;
+
+    if ( this.gridLinePrecision !== null ) {
+      minPosition = Utils.toFixedNumber( minPosition, this.gridLinePrecision );
+      maxPosition = Utils.toFixedNumber( maxPosition, this.gridLinePrecision );
+    }
+
+    for ( let y = minPosition; y <= maxPosition; y += spacing ) {
       positions.push( y );
     }
 

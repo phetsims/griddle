@@ -229,11 +229,20 @@ class ScrollingChartNode extends Node {
   }
 
   /**
-   * @param {number} verticalGridLabelNumberOfDecimalPlaces
    * @public
+   * @param {number} verticalGridLabelNumberOfDecimalPlaces
    */
   setVerticalGridLabelNumberOfDecimalPlaces( verticalGridLabelNumberOfDecimalPlaces ) {
     this.verticalGridLabelNumberOfDecimalPlaces = verticalGridLabelNumberOfDecimalPlaces;
+    this.redrawLabels();
+  }
+
+  /**
+   * @public
+   * @param {number} horizontalGridLabelNumberOfDecimalPlaces
+   */
+  setHorizontalGridLabelNumberOfDecimalPlaces( horizontalGridLabelNumberOfDecimalPlaces ) {
+    this.horizontalGridLabelNumberOfDecimalPlaces = horizontalGridLabelNumberOfDecimalPlaces;
     this.redrawLabels();
   }
 
@@ -300,6 +309,18 @@ class ScrollingChartNode extends Node {
 
     this.gridNode.setLineSpacings( config );
     this.redrawLabels();
+  }
+
+  /**
+   * Set the precision for determining location of lines for GridNode. Precision is not limited if value is null.
+   * GridNode calculates placement of lines based on spacings and model view transform, but this is susceptible
+   * to IEEE floating point precision errors, ocassionally resulting in lost lines.
+   * @public
+   *
+   * @param {null|number} precision
+   */
+  setGridLinePrecision( precision ) {
+    this.gridNode.setGridLinePrecision( precision );
   }
 
   /**

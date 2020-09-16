@@ -171,8 +171,32 @@ class ScrollingChartNode extends Node {
 
     this.redrawLabels();
 
-    const transformListener = this.redrawLabels.bind( this );
-    this.modelViewTransformProperty.link( transformListener );
+    /**
+     * Redraw the horizontal and vertical labels if the transform changes in such a way
+     * that each set of labels needs to be redrawn.
+     *
+     * @param {Transform3} transform
+     * @param {Transform3} oldTransform
+     */
+    const transformListener = ( transform, oldTransform ) => {
+      const differenceMatrix = transform.matrix.minus( oldTransform.matrix );
+
+      const scaleVector = differenceMatrix.scaleVector;
+      const translationVector = differenceMatrix.translation;
+
+      const horizontalDirty = scaleVector.x !== 0 || translationVector.x !== 0;
+      const verticalDirty = scaleVector.y !== 0 || translationVector.y !== 0;
+
+      if ( verticalDirty ) {
+        this.redrawVerticalLabels();
+      }
+      if ( horizontalDirty ) {
+        this.redrawHorizontalLabels();
+      }
+    };
+
+    // linked lazily because listener needs old transform to determine changes
+    this.modelViewTransformProperty.lazyLink( transformListener );
 
     // @private - for disposal
     this.scrollingChartNodeDisposeEmitter = new Emitter();
@@ -234,7 +258,7 @@ class ScrollingChartNode extends Node {
    */
   setVerticalGridLabelNumberOfDecimalPlaces( verticalGridLabelNumberOfDecimalPlaces ) {
     this.verticalGridLabelNumberOfDecimalPlaces = verticalGridLabelNumberOfDecimalPlaces;
-    this.redrawLabels();
+    this.redrawVerticalLabels();
   }
 
   /**
@@ -243,7 +267,7 @@ class ScrollingChartNode extends Node {
    */
   setHorizontalGridLabelNumberOfDecimalPlaces( horizontalGridLabelNumberOfDecimalPlaces ) {
     this.horizontalGridLabelNumberOfDecimalPlaces = horizontalGridLabelNumberOfDecimalPlaces;
-    this.redrawLabels();
+    this.redrawHorizontalLabels();
   }
 
   /**
@@ -324,12 +348,10 @@ class ScrollingChartNode extends Node {
   }
 
   /**
-   * Redraws labels for when line spacing or transform changes. Labels are only drawn along the major
-   * grid lines.
-   *
+   * Redraw labels along the vertical lines.
    * @protected
    */
-  redrawLabels() {
+  redrawVerticalLabels() {
     if ( this.showVerticalGridLabels ) {
       const verticalLabelChildren = [];
       const yPositions = this.gridNode.getLinePositionsInGrid( this.majorHorizontalLineSpacing, GridNode.LineType.MAJOR_HORIZONTAL );
@@ -345,7 +367,13 @@ class ScrollingChartNode extends Node {
       } );
       this.verticalGridLabelLayer.children = verticalLabelChildren;
     }
+  }
 
+  /**
+   * Redraw labels along the horizontal grid lines.
+   * @protected
+   */
+  redrawHorizontalLabels() {
     if ( this.showHorizontalGridLabels ) {
 
       // draw labels along the horizontal lines
@@ -363,6 +391,17 @@ class ScrollingChartNode extends Node {
       } );
       this.horizontalGridLabelLayer.children = horizontalLabelChildren;
     }
+  }
+
+  /**
+   * Redraws labels for when line spacing or transform changes. Labels are only drawn along the major
+   * grid lines.
+   *
+   * @protected
+   */
+  redrawLabels() {
+    this.redrawVerticalLabels();
+    this.redrawHorizontalLabels();
   }
 
   /**

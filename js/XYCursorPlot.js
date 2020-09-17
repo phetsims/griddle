@@ -86,6 +86,32 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
+   * Add a Dynamic series to the XYCursorPlot.
+   * @override
+   * @public
+   * @param dynamicSeries
+   */
+  addDynamicSeries( dynamicSeries ) {
+    super.addDynamicSeries( dynamicSeries );
+
+    this.dynamicSeriesList.push( dynamicSeries );
+
+    // when a point is added, update the min and max recorded values
+    const seriesListener = () => {
+
+      // update the
+      this.updateMinMaxRecordedValues();
+
+      // if all data has been removed from the plot, update cursor visibility
+      this.updateChartCursor();
+    };
+
+    // save to map so that listener can be found again for disposal
+    this.valueSeriesListenerMap.set( dynamicSeries, seriesListener );
+    dynamicSeries.addDynamicSeriesListener( seriesListener );
+  }
+
+  /**
    * Remove a series from the plot and dispose of the plot specific series listener.
    * @public
    *
@@ -179,32 +205,6 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Add a Dynamic series to the XYCursorPlot.
-   * @override
-   * @public
-   * @param dynamicSeries
-   */
-  addDynamicSeries( dynamicSeries ) {
-    super.addDynamicSeries( dynamicSeries );
-
-    this.dynamicSeriesList.push( dynamicSeries );
-
-    // when a point is added, update the min and max recorded values
-    const seriesListener = () => {
-
-      // update the
-      this.updateMinMaxRecordedValues();
-
-      // if all data has been removed from the plot, update cursor visibility
-      this.updateChartCursor();
-    };
-
-    // save to map so that listener can be found again for disposal
-    this.valueSeriesListenerMap.set( dynamicSeries, seriesListener );
-    dynamicSeries.addDynamicSeriesListener( seriesListener );
-  }
-
-  /**
    * Returns true if any data is attached to this plot.
    * @returns {boolean}
    * @public
@@ -216,7 +216,7 @@ class XYCursorPlot extends ScrollingChartNode {
 
       // break early
       if ( dataExists ) {
-        return;
+        return true;
       }
     } );
 

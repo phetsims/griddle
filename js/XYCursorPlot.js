@@ -54,7 +54,7 @@ class XYCursorPlot extends ScrollingChartNode {
     // @private {number} - value for the cursor, determines cursor positioning
     this.cursorValue = 0;
 
-    // @private - minimum and maximum recorded value, required by the cursor to limit dragging
+    // @public (read-only) - minimum and maximum recorded value, required by the cursor to limit dragging
     this.minRecordedXValue = 0;
     this.maxRecordedXValue = 0;
 

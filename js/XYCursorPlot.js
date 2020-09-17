@@ -275,7 +275,7 @@ class XYCursorPlot extends ScrollingChartNode {
 class ChartCursor extends Rectangle {
 
   /**
-   * @param {ScrollingChartNode} plot
+   * @param {XYCursorPlot} plot
    * @param {Property.<ModelViewTransform2>} modelViewTransformProperty
    * @param {Object} [options]
    */

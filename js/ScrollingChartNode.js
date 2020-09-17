@@ -102,9 +102,11 @@ class ScrollingChartNode extends Node {
       tandem: Tandem.OPTIONAL
     }, options );
 
+    // @public (read-only)
+    this.chartWidth = options.width;
+    this.chartHeight = options.height;
+
     // @private
-    this.plotWidth = options.width;
-    this.plotHeight = options.height;
     this.showVerticalGridLabels = options.showVerticalGridLabels;
     this.showHorizontalGridLabels = options.showHorizontalGridLabels;
     this.verticalGridLabelNumberOfDecimalPlaces = options.verticalGridLabelNumberOfDecimalPlaces;
@@ -121,7 +123,7 @@ class ScrollingChartNode extends Node {
 
       // This stroke is covered by the front panel stroke, only included here to make sure the bounds align
       stroke: 'black',
-      right: this.plotWidth,
+      right: this.chartWidth,
       pickable: false
     }, options.graphPanelOptions );
 
@@ -129,14 +131,14 @@ class ScrollingChartNode extends Node {
     options.graphPanelOptions = merge( {
 
       // Prevent data from being plotted outside the graph
-      clipArea: Shape.roundedRectangleWithRadii( 0, 0, this.plotWidth, this.plotHeight, {
+      clipArea: Shape.roundedRectangleWithRadii( 0, 0, this.chartWidth, this.chartHeight, {
         topLeft: options.cornerRadius,
         topRight: options.cornerRadius,
         bottomLeft: options.cornerRadius,
         bottomRight: options.cornerRadius
       } )
     }, options.graphPanelOptions );
-    const graphPanel = new Rectangle( 0, 0, this.plotWidth, this.plotHeight, options.cornerRadius, options.cornerRadius,
+    const graphPanel = new Rectangle( 0, 0, this.chartWidth, this.chartHeight, options.cornerRadius, options.cornerRadius,
       options.graphPanelOptions
     );
 
@@ -151,7 +153,7 @@ class ScrollingChartNode extends Node {
       modelViewTransformProperty: this.modelViewTransformProperty
     }, options.gridNodeOptions );
 
-    this.gridNode = new GridNode( this.plotWidth, this.plotHeight, gridNodeOptions );
+    this.gridNode = new GridNode( this.chartWidth, this.chartHeight, gridNodeOptions );
 
     graphPanel.addChild( this.gridNode );
 
@@ -161,7 +163,7 @@ class ScrollingChartNode extends Node {
     this.addChild( this.verticalGridLabelLayer );
     this.addChild( this.horizontalGridLabelLayer );
 
-    const plotWidthWithMargin = this.plotWidth;
+    const chartWidthWithMargin = this.chartWidth;
 
     // @private Map.<DynamicSeries,DynamicSeriesNode> maps a series the Node that displays it
     this.dynamicSeriesMap = new Map();
@@ -205,7 +207,7 @@ class ScrollingChartNode extends Node {
 
     // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke,
     // and so the GridNode appears below the panel stroke as well.
-    graphPanel.addChild( new Rectangle( 0, 0, this.plotWidth, this.plotHeight, options.cornerRadius, options.cornerRadius, {
+    graphPanel.addChild( new Rectangle( 0, 0, this.chartWidth, this.chartHeight, options.cornerRadius, options.cornerRadius, {
       stroke: graphPanel.stroke,
       lineWidth: graphPanel.lineWidth,
       pickable: false
@@ -237,7 +239,7 @@ class ScrollingChartNode extends Node {
       const labelTop = this.showHorizontalGridLabels ? this.horizontalGridLabelLayer.bottom + LABEL_GRAPH_MARGIN : graphPanel.bottom + LABEL_GRAPH_MARGIN;
       options.horizontalAxisLabelNode.mutate( {
         top: labelTop,
-        centerX: plotWidthWithMargin / 2 + graphPanel.bounds.minX
+        centerX: chartWidthWithMargin / 2 + graphPanel.bounds.minX
       } );
       if ( options.horizontalAxisLabelNode.left < HORIZONTAL_AXIS_LABEL_MARGIN ) {
         options.horizontalAxisLabelNode.left = HORIZONTAL_AXIS_LABEL_MARGIN;
@@ -281,8 +283,8 @@ class ScrollingChartNode extends Node {
   addDynamicSeries( dynamicSeries ) {
     const dynamicSeriesNode = new DynamicSeriesNode(
       dynamicSeries,
-      this.plotWidth,
-      new Bounds2( 0, 0, this.plotWidth, this.plotHeight ),
+      this.chartWidth,
+      new Bounds2( 0, 0, this.chartWidth, this.chartHeight ),
       this.modelViewTransformProperty
     );
     this.dynamicSeriesMap.set( dynamicSeries, dynamicSeriesNode );
@@ -433,7 +435,7 @@ class ScrollingChartNode extends Node {
   createRectangularModelViewTransform( widthRange, heightRange ) {
     return ModelViewTransform2.createRectangleInvertedYMapping(
       new Bounds2( widthRange.min, heightRange.min, widthRange.max, heightRange.max ),
-      new Bounds2( 0, 0, this.plotWidth, this.plotHeight )
+      new Bounds2( 0, 0, this.chartWidth, this.chartHeight )
     );
   }
 

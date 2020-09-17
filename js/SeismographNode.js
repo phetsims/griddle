@@ -112,13 +112,13 @@ class SeismographNode extends ScrollingChartNode {
     };
     zoomLevelIndexProperty.link( zoomListener );
 
-    const widthWithMargin = this.plotWidth - options.rightGraphMargin;
+    const widthWithMargin = this.chartWidth - options.rightGraphMargin;
 
     // update the transform if vertical ranges change
     const dataMappingLink = Property.multilink( [ valueProperty, this.verticalRangeProperty ], ( value, verticalRange ) => {
       const transform = ModelViewTransform2.createRectangleInvertedYMapping(
         new Bounds2( value - 4, verticalRange.min, value, verticalRange.max ),
-        new Bounds2( 0, 0, widthWithMargin, this.plotHeight )
+        new Bounds2( 0, 0, widthWithMargin, this.chartHeight )
       );
       this.modelViewTransformProperty.set( transform );
 
@@ -132,7 +132,7 @@ class SeismographNode extends ScrollingChartNode {
         // if grid isn't scrolling don't pan it with value variable, but still transform with vertical range
         const newTransform = ModelViewTransform2.createRectangleInvertedYMapping(
           new Bounds2( 0, verticalRange.min, 4, verticalRange.max ),
-          new Bounds2( 0, 0, widthWithMargin, this.plotHeight )
+          new Bounds2( 0, 0, widthWithMargin, this.chartHeight )
         );
 
         // only redraw if vertical range has changed
@@ -219,8 +219,8 @@ class SeismographNode extends ScrollingChartNode {
   addDynamicSeries( dynamicSeries ) {
     const dynamicSeriesNode = new SeismographDynamicSeriesNode(
       dynamicSeries,
-      this.plotWidth - this.rightGraphMargin,
-      new Bounds2( 0, 0, this.plotWidth, this.plotHeight ),
+      this.chartWidth - this.rightGraphMargin,
+      new Bounds2( 0, 0, this.chartWidth, this.chartHeight ),
       this.modelViewTransformProperty
     );
     this.graphPanel.addChild( dynamicSeriesNode );

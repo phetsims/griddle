@@ -126,7 +126,7 @@ class XYCursorPlot extends ScrollingChartNode {
   setCursorValue( value ) {
     const modelViewTransform = this.modelViewTransformProperty.get();
     const minX = modelViewTransform.viewToModelX( 0 );
-    const maxX = modelViewTransform.viewToModelX( this.plotWidth + this.chartCursor.width / 2 );
+    const maxX = modelViewTransform.viewToModelX( this.chartWidth + this.chartCursor.width / 2 );
     this.cursorValue = Utils.clamp( value, minX, maxX );
     this.updateCursor();
   }
@@ -193,7 +193,7 @@ class XYCursorPlot extends ScrollingChartNode {
     }
     else {
 
-      const maxX = this.modelViewTransformProperty.get().viewToModelX( this.plotWidth + this.chartCursor.width / 2 );
+      const maxX = this.modelViewTransformProperty.get().viewToModelX( this.chartWidth + this.chartCursor.width / 2 );
       const minX = this.modelViewTransformProperty.get().viewToModelX( 0 );
 
       const isCurrentValueOnChart = ( this.cursorValue >= minX ) && ( this.cursorValue <= maxX );
@@ -228,7 +228,7 @@ class XYCursorPlot extends ScrollingChartNode {
     const viewPosition = this.modelViewTransformProperty.get().modelToViewX( value );
 
     // keep the cursor within the grid bounds
-    this.chartCursor.centerX = Utils.clamp( viewPosition, 0, this.plotWidth );
+    this.chartCursor.centerX = Utils.clamp( viewPosition, 0, this.chartWidth );
     this.chartCursor.centerY = this.gridNode.centerY;
   }
 
@@ -285,8 +285,8 @@ class ChartCursor extends Rectangle {
       tandem: Tandem.OPTIONAL
     }, options );
 
-    const width = plot.plotWidth * WIDTH_PROPORTION;
-    const height = plot.plotHeight;
+    const width = plot.chartWidth * WIDTH_PROPORTION;
+    const height = plot.chartHeight;
 
     // Set the shape. Origin is at the center top of the rectangle.
     super( 0, -height, width, height, 0, 0, {

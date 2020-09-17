@@ -63,7 +63,7 @@ class XYCursorPlot extends ScrollingChartNode {
     this.dynamicSeriesListenerMap = new Map();
 
     // @protected (read-only) {DynamicSeries[]}
-    this.dynamicSeriesList = [];
+    this.dynamicSeriesArray = [];
 
     // @private {ChartCursor} - draggable Node that shows the cursor value
     this.chartCursor = new ChartCursor( this, this.modelViewTransformProperty, options.cursorOptions );
@@ -83,7 +83,7 @@ class XYCursorPlot extends ScrollingChartNode {
   addDynamicSeries( dynamicSeries ) {
     super.addDynamicSeries( dynamicSeries );
 
-    this.dynamicSeriesList.push( dynamicSeries );
+    this.dynamicSeriesArray.push( dynamicSeries );
 
     // when a point is added, update the min and max recorded values
     const dynamicSeriesListener = () => {
@@ -110,8 +110,8 @@ class XYCursorPlot extends ScrollingChartNode {
   removeDynamicSeries( dynamicSeries ) {
     super.removeDynamicSeries( dynamicSeries );
 
-    const seriesIndex = this.dynamicSeriesList.indexOf( dynamicSeries );
-    this.dynamicSeriesList.splice( seriesIndex, 1 );
+    const seriesIndex = this.dynamicSeriesArray.indexOf( dynamicSeries );
+    this.dynamicSeriesArray.splice( seriesIndex, 1 );
 
     dynamicSeries.removeDynamicSeriesListener( this.dynamicSeriesListenerMap.get( dynamicSeries ) );
     this.dynamicSeriesListenerMap.delete( dynamicSeries );
@@ -250,7 +250,7 @@ class XYCursorPlot extends ScrollingChartNode {
   updateMinMaxRecordedValues() {
     let minValue = Number.POSITIVE_INFINITY;
     let maxValue = Number.NEGATIVE_INFINITY;
-    this.dynamicSeriesList.forEach( dynamicSeries => {
+    this.dynamicSeriesArray.forEach( dynamicSeries => {
       if ( dynamicSeries.getLength() > 0 ) {
         const seriesMinValue = dynamicSeries.getDataPoint( 0 ).x;
         const seriesMaxValue = dynamicSeries.getDataPoint( dynamicSeries.getLength() - 1 ).x;

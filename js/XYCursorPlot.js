@@ -197,8 +197,8 @@ class XYCursorPlot extends ScrollingChartNode {
       const minX = this.modelViewTransformProperty.get().viewToModelX( 0 );
 
       const isCurrentValueOnChart = ( this.cursorValue >= minX ) && ( this.cursorValue <= maxX );
-      const dataExists = this.getDataExists();
-      const chartCursorVisible = isCurrentValueOnChart && dataExists;
+      const hasData = this.hasData();
+      const chartCursorVisible = isCurrentValueOnChart && hasData;
 
       this.chartCursor.setVisible( chartCursorVisible );
     }
@@ -210,22 +210,12 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Returns true if any data is attached to this plot.
+   * Returns true if any DynamicSeries associated with this chart has data.
    * @returns {boolean}
    * @public
    */
-  getDataExists() {
-    let dataExists = false;
-    this.dynamicSeriesListenerMap.forEach( ( listener, dataSeries, map ) => {
-      dataExists = dataSeries.hasData();
-
-      // break early
-      if ( dataExists ) {
-        return true;
-      }
-    } );
-
-    return dataExists;
+  hasData() {
+    return _.some( this.dynamicSeriesArray, dynamicSeries => dynamicSeries.hasData() );
   }
 
   /**
@@ -346,7 +336,7 @@ class ChartCursor extends Rectangle {
     // @private - so that we can interrupt the DragListener if necessary
     this.dragListener = new DragListener( {
       start: ( event, listener ) => {
-        assert && assert( this.plot.getDataExists(), 'data should exist for the cursor to be draggable' );
+        assert && assert( this.plot.hasData(), 'plot should have data for the cursor to be draggable' );
         options.startDrag();
       },
       drag: ( event, listener ) => {

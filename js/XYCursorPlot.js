@@ -77,7 +77,8 @@ class XYCursorPlot extends ScrollingChartNode {
    * Add a Dynamic series to the XYCursorPlot.
    * @override
    * @public
-   * @param dynamicSeries
+   *
+   * @param {DynamicSeries} dynamicSeries
    */
   addDynamicSeries( dynamicSeries ) {
     super.addDynamicSeries( dynamicSeries );
@@ -101,6 +102,7 @@ class XYCursorPlot extends ScrollingChartNode {
 
   /**
    * Remove a series from the plot and dispose of the plot specific series listener.
+   * @override
    * @public
    *
    * @param {DynamicSeries} dynamicSeries - to remove

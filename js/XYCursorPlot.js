@@ -58,7 +58,8 @@ class XYCursorPlot extends ScrollingChartNode {
     this.minRecordedXValue = 0;
     this.maxRecordedXValue = 0;
 
-    // @private - Keep track of listeners for each series so the listeners can be removed when the series is removed
+    // @private Map.<DynamicSeries,function> Keep track of the listener for each series, so the listener can be removed
+    // when a series is removed.
     this.dynamicSeriesListenerMap = new Map();
 
     // @protected (read-only)
@@ -69,20 +70,6 @@ class XYCursorPlot extends ScrollingChartNode {
     this.graphPanel.addChild( this.chartCursor );
 
     // initialize position and visibility of the cursor
-    this.updateChartCursor();
-  }
-
-  /**
-   * Set the cursor value. The value of the cursor is constrained to be within plot bounds.
-   * @public
-   *
-   * @param {number} value
-   */
-  setCursorValue( value ) {
-    const modelViewTransform = this.modelViewTransformProperty.get();
-    const minX = modelViewTransform.viewToModelX( 0 );
-    const maxX = modelViewTransform.viewToModelX( this.plotWidth + this.chartCursor.width / 2 );
-    this.cursorValue = Utils.clamp( value, minX, maxX );
     this.updateChartCursor();
   }
 
@@ -128,11 +115,17 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Reset the ChartCursor on this XYCursorPlot.
+   * Set the cursor value. The value of the cursor is constrained to be within plot bounds.
    * @public
+   *
+   * @param {number} value
    */
-  resetCursor() {
-    this.chartCursor.reset();
+  setCursorValue( value ) {
+    const modelViewTransform = this.modelViewTransformProperty.get();
+    const minX = modelViewTransform.viewToModelX( 0 );
+    const maxX = modelViewTransform.viewToModelX( this.plotWidth + this.chartCursor.width / 2 );
+    this.cursorValue = Utils.clamp( value, minX, maxX );
+    this.updateChartCursor();
   }
 
   /**
@@ -143,6 +136,14 @@ class XYCursorPlot extends ScrollingChartNode {
    */
   getCursorValue() {
     return this.cursorValue;
+  }
+
+  /**
+   * Reset the ChartCursor on this XYCursorPlot.
+   * @public
+   */
+  resetCursor() {
+    this.chartCursor.reset();
   }
 
   /**

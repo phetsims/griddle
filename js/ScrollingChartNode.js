@@ -163,7 +163,7 @@ class ScrollingChartNode extends Node {
 
     const plotWidthWithMargin = this.plotWidth;
 
-    // @private - maps a DynamicSeries -> DynamicSeriesNode so that it can be potentially removed later
+    // @private Map.<DynamicSeries,DynamicSeriesNode> maps a series the Node that displays it
     this.dynamicSeriesMap = new Map();
 
     this.addChild( graphPanel );

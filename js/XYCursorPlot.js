@@ -59,8 +59,9 @@ class XYCursorPlot extends ScrollingChartNode {
     this.maxRecordedXValue = 0;
 
     // @private - Keep track of listeners for each series so the listeners can be removed when the series is removed
-    this.valueSeriesListenerMap = new Map();
+    this.dynamicSeriesListenerMap = new Map();
 
+    // @protected (read-only)
     this.dynamicSeriesList = [];
 
     // @private {ChartCursor} - draggable Node that shows the cursor value
@@ -107,7 +108,7 @@ class XYCursorPlot extends ScrollingChartNode {
     };
 
     // save to map so that listener can be found again for disposal
-    this.valueSeriesListenerMap.set( dynamicSeries, seriesListener );
+    this.dynamicSeriesListenerMap.set( dynamicSeries, seriesListener );
     dynamicSeries.addDynamicSeriesListener( seriesListener );
   }
 
@@ -122,8 +123,8 @@ class XYCursorPlot extends ScrollingChartNode {
     const seriesIndex = this.dynamicSeriesList.indexOf( dynamicSeries );
     this.dynamicSeriesList.splice( seriesIndex, 1 );
 
-    dynamicSeries.removeDynamicSeriesListener( this.valueSeriesListenerMap.get( dynamicSeries ) );
-    this.valueSeriesListenerMap.delete( dynamicSeries );
+    dynamicSeries.removeDynamicSeriesListener( this.dynamicSeriesListenerMap.get( dynamicSeries ) );
+    this.dynamicSeriesListenerMap.delete( dynamicSeries );
   }
 
   /**
@@ -211,7 +212,7 @@ class XYCursorPlot extends ScrollingChartNode {
    */
   getDataExists() {
     let dataExists = false;
-    this.valueSeriesListenerMap.forEach( ( listener, dataSeries, map ) => {
+    this.dynamicSeriesListenerMap.forEach( ( listener, dataSeries, map ) => {
       dataExists = dataSeries.hasData();
 
       // break early

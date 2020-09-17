@@ -270,7 +270,7 @@ class XYCursorPlot extends ScrollingChartNode {
 
 
 /**
- * Rectangular cursor that indicates a current or selected value on the chart.
+ * ChartCursor is a rectangular cursor that indicates the current or selected value on the chart.
  */
 class ChartCursor extends Rectangle {
 
@@ -373,7 +373,7 @@ class ChartCursor extends Rectangle {
   }
 
   /**
-   * Interrupt dragging of the cursor, useful when ChartCursor visibility changes.
+   * Interrupts dragging of the cursor, useful when ChartCursor visibility changes.
    * @public
    */
   interruptDrag() {
@@ -381,7 +381,7 @@ class ChartCursor extends Rectangle {
   }
 
   /**
-   * Reset the ChartCursor to its initial state. Note that this does not modify data
+   * Resets the ChartCursor to its initial state. Note that this does not modify data
    * or the cursor position (cursorValue), only aspects of the view for the cursor itself.
    * @public
    */
@@ -393,9 +393,9 @@ class ChartCursor extends Rectangle {
 }
 
 /**
- * This node is meant to portray a small round indentation on a surface.  This is a modern user interface paradigm that
- * is intended to convey the concept of "gripability" (sp?), i.e. something that the user can click on and subsequently
- * grab.  This is meant to look somewhat 3D, much like etched borders do.
+ * GrippyIndentNode is a small round indentation on a surface.  This is a modern user interface paradigm that
+ * is intended to convey the concept of "gripability", i.e. something that the user can grab.  This is meant to
+ * look somewhat 3D, much like etched borders do.
  */
 class GrippyIndentNode extends Circle {
 

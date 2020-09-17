@@ -167,6 +167,8 @@ class ScrollingChartNode extends Node {
     this.dynamicSeriesMap = new Map();
 
     this.addChild( graphPanel );
+
+    // @protected
     this.graphPanel = graphPanel;
 
     this.redrawLabels();

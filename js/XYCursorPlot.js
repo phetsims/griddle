@@ -62,7 +62,7 @@ class XYCursorPlot extends ScrollingChartNode {
     // when a series is removed.
     this.dynamicSeriesListenerMap = new Map();
 
-    // @protected (read-only)
+    // @protected (read-only) {DynamicSeries[]}
     this.dynamicSeriesList = [];
 
     // @private {ChartCursor} - draggable Node that shows the cursor value
@@ -74,7 +74,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Add a Dynamic series to the XYCursorPlot.
+   * Adds a DynamicSeries to the XYCursorPlot.
    * @override
    * @public
    *
@@ -101,7 +101,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Remove a series from the plot and dispose of the plot specific series listener.
+   * Removes a DynamicSeries from the plot and disposes of its listener.
    * @override
    * @public
    *
@@ -118,7 +118,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Set the cursor value. The value of the cursor is constrained to be within plot bounds.
+   * Sets the cursor value. The value of the cursor is constrained to be within plot bounds.
    * @public
    *
    * @param {number} value
@@ -132,7 +132,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Get the value currently under the cursor.
+   * Gets the value currently under the cursor.
    * @public
    *
    * @returns {number}
@@ -142,7 +142,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Reset the ChartCursor on this XYCursorPlot.
+   * Resets the ChartCursor on this XYCursorPlot.
    * @public
    */
   resetCursor() {
@@ -150,7 +150,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Override the default behavior for setting cursor visibility. If set to null, cursor visibility will behave as
+   * Overrides the default behavior for setting cursor visibility. If set to null, cursor visibility will behave as
    * described in updateChartCursorVisibility. Otherwise, visibility will equal the boolean value set here.
    * @param {boolean|null} visible
    * @public
@@ -162,7 +162,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Update the chart cursor visibility and position.
+   * Updates the chart cursor visibility and position.
    * @private
    */
   updateChartCursor() {
@@ -173,7 +173,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Update the chart cursor position.
+   * Updates the chart cursor position.
    * @private
    */
   updateChartCursorPos() {
@@ -181,7 +181,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Update the chart cursor visibility. The chart cursor should be visible any time the cursor value is within
+   * Updates the chart cursor visibility. The chart cursor should be visible any time the cursor value is within
    * the recorded value range.
    * @private
    */
@@ -229,7 +229,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Move the chart cursor to the specified value.
+   * Moves the chart cursor to the specified value.
    * @private
    *
    * @param {number} value

@@ -368,13 +368,11 @@ const demoScrollingChartNode = function( layoutBounds ) {
     panelDispose();
   };
 
-  const contentVBox = new VBox( {
+  return new VBox( {
     children: [ panel, styleSwitch ],
     spacing: 15,
     center: layoutBounds.center.plusXY( 25, 0 )
   } );
-
-  return contentVBox;
 };
 
 const demoSeismographNode = layoutBounds => {
@@ -499,7 +497,7 @@ const demoXYCursorPlot = layoutBounds => {
         dataSeries.shiftData();
       }
 
-      plotNode.setCursorValue( timeProperty.get() );
+      plotNode.setChartCursorValue( timeProperty.get() );
     }
   };
   emitter.addListener( listener );

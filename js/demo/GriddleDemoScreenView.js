@@ -497,7 +497,7 @@ const demoXYCursorPlot = layoutBounds => {
         dataSeries.shiftData();
       }
 
-      plotNode.setChartCursorValue( timeProperty.get() );
+      plotNode.setCursorValue( timeProperty.get() );
     }
   };
   emitter.addListener( listener );

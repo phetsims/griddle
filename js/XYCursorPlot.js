@@ -33,7 +33,7 @@ class XYCursorPlot extends ScrollingChartNode {
   constructor( options ) {
     options = merge( {
 
-      // options passed on to the chart cursor, see ChartCursor
+      // options passed on to the cursor, see ChartCursor
       cursorOptions: null,
 
       graphPanelOptions: {
@@ -70,7 +70,7 @@ class XYCursorPlot extends ScrollingChartNode {
     this.graphPanel.addChild( this.chartCursor );
 
     // initialize position and visibility of the cursor
-    this.updateChartCursor();
+    this.updateCursor();
   }
 
   /**
@@ -92,7 +92,7 @@ class XYCursorPlot extends ScrollingChartNode {
       this.updateMinMaxRecordedValues();
 
       // if all data has been removed from the plot, update cursor visibility
-      this.updateChartCursor();
+      this.updateCursor();
     };
 
     // save to map so that listener can be found again for disposal
@@ -128,7 +128,7 @@ class XYCursorPlot extends ScrollingChartNode {
     const minX = modelViewTransform.viewToModelX( 0 );
     const maxX = modelViewTransform.viewToModelX( this.plotWidth + this.chartCursor.width / 2 );
     this.cursorValue = Utils.clamp( value, minX, maxX );
-    this.updateChartCursor();
+    this.updateCursor();
   }
 
   /**
@@ -142,7 +142,7 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Resets the ChartCursor on this XYCursorPlot.
+   * Resets the cursor.
    * @public
    */
   resetCursor() {
@@ -151,41 +151,41 @@ class XYCursorPlot extends ScrollingChartNode {
 
   /**
    * Overrides the default behavior for setting cursor visibility. If set to null, cursor visibility will behave as
-   * described in updateChartCursorVisibility. Otherwise, visibility will equal the boolean value set here.
+   * described in updateCursorVisibility. Otherwise, visibility will equal the boolean value set here.
    * @param {boolean|null} visible
    * @public
    */
   setCursorVisibleOverride( visible ) {
     assert && assert( typeof visible === 'boolean' || visible === null, 'visible must be boolean or null' );
     this._cursorVisibleOverride = visible;
-    this.updateChartCursorVisibility();
+    this.updateCursorVisibility();
   }
 
   /**
-   * Updates the chart cursor visibility and position.
+   * Updates the cursor visibility and position.
    * @private
    */
-  updateChartCursor() {
-    this.updateChartCursorVisibility();
+  updateCursor() {
+    this.updateCursorVisibility();
     if ( this.chartCursor.isVisible() ) {
-      this.updateChartCursorPos();
+      this.updateCursorPos();
     }
   }
 
   /**
-   * Updates the chart cursor position.
+   * Updates the cursor position.
    * @private
    */
-  updateChartCursorPos() {
-    this.moveChartCursorToValue( this.cursorValue );
+  updateCursorPos() {
+    this.moveCursorToValue( this.cursorValue );
   }
 
   /**
-   * Updates the chart cursor visibility. The chart cursor should be visible any time the cursor value is within
+   * Updates the cursor visibility. The cursor should be visible any time the cursor value is within
    * the recorded value range.
    * @private
    */
-  updateChartCursorVisibility() {
+  updateCursorVisibility() {
 
     const wasVisible = this.chartCursor.visible;
     if ( typeof this._cursorVisibleOverride === 'boolean' ) {
@@ -203,7 +203,7 @@ class XYCursorPlot extends ScrollingChartNode {
       this.chartCursor.setVisible( chartCursorVisible );
     }
 
-    // if the chart cursor just became invisible, interrupt any active dragging
+    // if the cursor just became invisible, interrupt any active dragging
     if ( !this.chartCursor.visible && wasVisible ) {
       this.chartCursor.interruptDrag();
     }
@@ -229,12 +229,12 @@ class XYCursorPlot extends ScrollingChartNode {
   }
 
   /**
-   * Moves the chart cursor to the specified value.
+   * Moves the cursor to the specified value.
    * @private
    *
    * @param {number} value
    */
-  moveChartCursorToValue( value ) {
+  moveCursorToValue( value ) {
     const viewPosition = this.modelViewTransformProperty.get().modelToViewX( value );
 
     // keep the cursor within the grid bounds

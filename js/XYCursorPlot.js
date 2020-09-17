@@ -85,7 +85,7 @@ class XYCursorPlot extends ScrollingChartNode {
     this.dynamicSeriesList.push( dynamicSeries );
 
     // when a point is added, update the min and max recorded values
-    const seriesListener = () => {
+    const dynamicSeriesListener = () => {
 
       // update the
       this.updateMinMaxRecordedValues();
@@ -95,8 +95,8 @@ class XYCursorPlot extends ScrollingChartNode {
     };
 
     // save to map so that listener can be found again for disposal
-    this.dynamicSeriesListenerMap.set( dynamicSeries, seriesListener );
-    dynamicSeries.addDynamicSeriesListener( seriesListener );
+    this.dynamicSeriesListenerMap.set( dynamicSeries, dynamicSeriesListener );
+    dynamicSeries.addDynamicSeriesListener( dynamicSeriesListener );
   }
 
   /**
@@ -107,6 +107,7 @@ class XYCursorPlot extends ScrollingChartNode {
    */
   removeDynamicSeries( dynamicSeries ) {
     super.removeDynamicSeries( dynamicSeries );
+
     const seriesIndex = this.dynamicSeriesList.indexOf( dynamicSeries );
     this.dynamicSeriesList.splice( seriesIndex, 1 );
 

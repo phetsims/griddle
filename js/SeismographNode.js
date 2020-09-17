@@ -81,8 +81,8 @@ class SeismographNode extends ScrollingChartNode {
         }
       },
 
-      // gives room for the "pen" of the DynamicSeriesNode
-      rightGraphMargin: 10,
+      // right margin of the chart, gives room for the "pen" of the DynamicSeriesNode
+      rightMargin: 10,
 
       tandem: Tandem.OPTIONAL
     }, options );
@@ -95,7 +95,7 @@ class SeismographNode extends ScrollingChartNode {
     super( options );
 
     // @private {number} - margin for the 'pen' circle on the seismograph
-    this.rightGraphMargin = options.rightGraphMargin;
+    this.rightMargin = options.rightMargin;
 
     // @public (listen-only)
     this.verticalRangeProperty = options.verticalRangeProperty;
@@ -112,7 +112,7 @@ class SeismographNode extends ScrollingChartNode {
     };
     zoomLevelIndexProperty.link( zoomListener );
 
-    const widthWithMargin = this.chartWidth - options.rightGraphMargin;
+    const widthWithMargin = this.chartWidth - options.rightMargin;
 
     // update the transform if vertical ranges change
     const dataMappingLink = Property.multilink( [ valueProperty, this.verticalRangeProperty ], ( value, verticalRange ) => {
@@ -219,7 +219,7 @@ class SeismographNode extends ScrollingChartNode {
   addDynamicSeries( dynamicSeries ) {
     const dynamicSeriesNode = new SeismographDynamicSeriesNode(
       dynamicSeries,
-      this.chartWidth - this.rightGraphMargin,
+      this.chartWidth - this.rightMargin,
       new Bounds2( 0, 0, this.chartWidth, this.chartHeight ),
       this.modelViewTransformProperty
     );

@@ -168,7 +168,7 @@ class XYCursorPlot extends ScrollingChartNode {
   updateCursor() {
     this.updateCursorVisibility();
     if ( this.chartCursor.isVisible() ) {
-      this.updateCursorPos();
+      this.updateCursorPosition();
     }
   }
 
@@ -176,7 +176,7 @@ class XYCursorPlot extends ScrollingChartNode {
    * Updates the cursor position.
    * @private
    */
-  updateCursorPos() {
+  updateCursorPosition() {
     this.moveCursorToValue( this.cursorValue );
   }
 

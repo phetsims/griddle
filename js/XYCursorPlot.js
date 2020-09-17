@@ -36,7 +36,7 @@ class XYCursorPlot extends ScrollingChartNode {
       // options passed on to the cursor, see ChartCursor
       cursorOptions: null,
 
-      graphPanelOptions: {
+      chartPanelOptions: {
 
         // so that the cursor is draggable
         pickable: true
@@ -67,7 +67,7 @@ class XYCursorPlot extends ScrollingChartNode {
 
     // @private {ChartCursor} - draggable Node that shows the cursor value
     this.chartCursor = new ChartCursor( this, this.modelViewTransformProperty, options.cursorOptions );
-    this.graphPanel.addChild( this.chartCursor );
+    this.chartPanel.addChild( this.chartCursor );
 
     // initialize position and visibility of the cursor
     this.updateCursor();

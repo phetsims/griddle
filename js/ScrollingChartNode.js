@@ -74,7 +74,7 @@ class ScrollingChartNode extends Node {
 
       // {Object|null} - Options for the Rectangle that contains chart content, including GridNode and
       // DynamicSeriesNodes.
-      graphPanelOptions: null, // filled in below because some defaults are based on other options
+      chartPanelOptions: null, // filled in below because some defaults are based on other options
 
       // {boolean} - whether or not labels indicating numeric value of major grid lines are shown
       showVerticalGridLabels: true,
@@ -116,8 +116,8 @@ class ScrollingChartNode extends Node {
     this.plotStyle = options.plotStyle;
     this.gridLabelOptions = options.gridLabelOptions;
 
-    // default options to be passed into the graphPanel Rectangle
-    options.graphPanelOptions = merge( {
+    // default options to be passed into the chartPanel Rectangle
+    options.chartPanelOptions = merge( {
       fill: 'white',
       lineWidth: 1,
 
@@ -125,10 +125,10 @@ class ScrollingChartNode extends Node {
       stroke: 'black',
       right: this.chartWidth,
       pickable: false
-    }, options.graphPanelOptions );
+    }, options.chartPanelOptions );
 
     // White panel with gridlines that shows the data
-    options.graphPanelOptions = merge( {
+    options.chartPanelOptions = merge( {
 
       // Prevent data from being plotted outside the graph
       clipArea: Shape.roundedRectangleWithRadii( 0, 0, this.chartWidth, this.chartHeight, {
@@ -137,9 +137,9 @@ class ScrollingChartNode extends Node {
         bottomLeft: options.cornerRadius,
         bottomRight: options.cornerRadius
       } )
-    }, options.graphPanelOptions );
-    const graphPanel = new Rectangle( 0, 0, this.chartWidth, this.chartHeight, options.cornerRadius, options.cornerRadius,
-      options.graphPanelOptions
+    }, options.chartPanelOptions );
+    const chartPanel = new Rectangle( 0, 0, this.chartWidth, this.chartHeight, options.cornerRadius, options.cornerRadius,
+      options.chartPanelOptions
     );
 
     // @public {Property.<ModelViewTransform2} - Observable model-view transformation for the data, set to
@@ -155,7 +155,7 @@ class ScrollingChartNode extends Node {
 
     this.gridNode = new GridNode( this.chartWidth, this.chartHeight, gridNodeOptions );
 
-    graphPanel.addChild( this.gridNode );
+    chartPanel.addChild( this.gridNode );
 
     // @private {Node} - layers for each of the vertical and horizontal labels along grid lines
     this.verticalGridLabelLayer = new Node();
@@ -168,10 +168,10 @@ class ScrollingChartNode extends Node {
     // @private Map.<DynamicSeries,DynamicSeriesNode> maps a series the Node that displays it
     this.dynamicSeriesMap = new Map();
 
-    this.addChild( graphPanel );
+    this.addChild( chartPanel );
 
-    // @protected
-    this.graphPanel = graphPanel;
+    // @public for adding addition components and doing relative layout
+    this.chartPanel = chartPanel;
 
     this.redrawLabels();
 
@@ -207,9 +207,9 @@ class ScrollingChartNode extends Node {
 
     // Stroke on front panel is on top, so that when the curves go to the edges they do not overlap the border stroke,
     // and so the GridNode appears below the panel stroke as well.
-    graphPanel.addChild( new Rectangle( 0, 0, this.chartWidth, this.chartHeight, options.cornerRadius, options.cornerRadius, {
-      stroke: graphPanel.stroke,
-      lineWidth: graphPanel.lineWidth,
+    chartPanel.addChild( new Rectangle( 0, 0, this.chartWidth, this.chartHeight, options.cornerRadius, options.cornerRadius, {
+      stroke: chartPanel.stroke,
+      lineWidth: chartPanel.lineWidth,
       pickable: false
     } ) );
 
@@ -220,9 +220,9 @@ class ScrollingChartNode extends Node {
     // Position the vertical axis title node
     if ( options.verticalAxisLabelNode ) {
       options.verticalAxisLabelNode.mutate( {
-        maxHeight: graphPanel.height,
+        maxHeight: chartPanel.height,
         right: this.bounds.minX - VERTICAL_AXIS_LABEL_MARGIN, // whether or not there are vertical axis labels, position to the left
-        centerY: graphPanel.centerY
+        centerY: chartPanel.centerY
       } );
       this.addChild( options.verticalAxisLabelNode );
     }
@@ -233,13 +233,13 @@ class ScrollingChartNode extends Node {
 
       // For i18n, “Time” will expand symmetrically L/R until it gets too close to the scale bar. Then, the string will
       // expand to the R only, until it reaches the point it must be scaled down in size.
-      options.horizontalAxisLabelNode.maxWidth = graphPanel.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
+      options.horizontalAxisLabelNode.maxWidth = chartPanel.right - 2 * HORIZONTAL_AXIS_LABEL_MARGIN;
 
       // Position the horizontal axis title node after its maxWidth is specified
-      const labelTop = this.showHorizontalGridLabels ? this.horizontalGridLabelLayer.bottom + LABEL_GRAPH_MARGIN : graphPanel.bottom + LABEL_GRAPH_MARGIN;
+      const labelTop = this.showHorizontalGridLabels ? this.horizontalGridLabelLayer.bottom + LABEL_GRAPH_MARGIN : chartPanel.bottom + LABEL_GRAPH_MARGIN;
       options.horizontalAxisLabelNode.mutate( {
         top: labelTop,
-        centerX: chartWidthWithMargin / 2 + graphPanel.bounds.minX
+        centerX: chartWidthWithMargin / 2 + chartPanel.bounds.minX
       } );
       if ( options.horizontalAxisLabelNode.left < HORIZONTAL_AXIS_LABEL_MARGIN ) {
         options.horizontalAxisLabelNode.left = HORIZONTAL_AXIS_LABEL_MARGIN;
@@ -288,7 +288,7 @@ class ScrollingChartNode extends Node {
       this.modelViewTransformProperty
     );
     this.dynamicSeriesMap.set( dynamicSeries, dynamicSeriesNode );
-    this.graphPanel.addChild( dynamicSeriesNode );
+    this.chartPanel.addChild( dynamicSeriesNode );
     this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeriesNode.dispose() );
   }
 
@@ -310,7 +310,7 @@ class ScrollingChartNode extends Node {
    */
   removeDynamicSeries( dynamicSeries ) {
     assert && assert( this.dynamicSeriesMap.has( dynamicSeries ), 'trying to remove DynamicSeriesNode when one does not exist.' );
-    this.graphPanel.removeChild( this.dynamicSeriesMap.get( dynamicSeries ) );
+    this.chartPanel.removeChild( this.dynamicSeriesMap.get( dynamicSeries ) );
     this.dynamicSeriesMap.delete( dynamicSeries );
   }
 
@@ -361,7 +361,7 @@ class ScrollingChartNode extends Node {
       const yPositions = this.gridNode.getLinePositionsInGrid( this.majorHorizontalLineSpacing, GridNode.LineType.MAJOR_HORIZONTAL );
       yPositions.forEach( yPosition => {
         const viewY = this.modelViewTransformProperty.get().modelToViewY( yPosition );
-        const labelPoint = this.graphPanel.localToParentPoint( new Vector2( this.gridNode.bounds.left, viewY ) );
+        const labelPoint = this.chartPanel.localToParentPoint( new Vector2( this.gridNode.bounds.left, viewY ) );
 
         const labelText = new Text( Utils.toFixed( yPosition, this.verticalGridLabelNumberOfDecimalPlaces ), merge( {
           rightCenter: labelPoint.plusXY( -3, 0 )
@@ -385,7 +385,7 @@ class ScrollingChartNode extends Node {
       const xPositions = this.gridNode.getLinePositionsInGrid( this.majorVerticalLineSpacing, GridNode.LineType.MAJOR_VERTICAL );
       xPositions.forEach( xPosition => {
         const viewX = this.modelViewTransformProperty.get().modelToViewX( xPosition );
-        const labelPoint = this.graphPanel.localToParentPoint( new Vector2( viewX, this.gridNode.bounds.bottom ) );
+        const labelPoint = this.chartPanel.localToParentPoint( new Vector2( viewX, this.gridNode.bounds.bottom ) );
 
         const labelText = new Text( Utils.toFixed( xPosition, this.horizontalGridLabelNumberOfDecimalPlaces ), merge( {
           centerTop: labelPoint.plusXY( 0, 3 )

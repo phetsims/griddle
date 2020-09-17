@@ -144,7 +144,7 @@ class SeismographNode extends ScrollingChartNode {
 
     if ( options.verticalRanges.length > 1 ) {
       const zoomButtonOptions = {
-        left: this.graphPanel.right + 5,
+        left: this.chartPanel.right + 5,
         baseColor: '#97c7fa',
         radius: 6,
         xMargin: 5,
@@ -153,7 +153,7 @@ class SeismographNode extends ScrollingChartNode {
 
       const zoomInButton = new ZoomButton( merge( {
         in: true,
-        top: this.graphPanel.top,
+        top: this.chartPanel.top,
         listener: () => zoomLevelIndexProperty.value--,
         tandem: options.tandem.createTandem( 'zoomInButton' )
       }, zoomButtonOptions ) );
@@ -175,8 +175,8 @@ class SeismographNode extends ScrollingChartNode {
 
     const viewSpanWidth = gridTransformProperty.get().modelToViewDeltaX( this.majorVerticalLineSpacing );
     const spanNode = new SpanNode( spanLabelNode, viewSpanWidth, {
-      left: this.graphPanel.left,
-      top: this.graphPanel.bottom + 2
+      left: this.chartPanel.left,
+      top: this.chartPanel.bottom + 2
     } );
 
     // make sure the horizontal label doesn't overlap with the spanNode
@@ -223,7 +223,7 @@ class SeismographNode extends ScrollingChartNode {
       new Bounds2( 0, 0, this.chartWidth, this.chartHeight ),
       this.modelViewTransformProperty
     );
-    this.graphPanel.addChild( dynamicSeriesNode );
+    this.chartPanel.addChild( dynamicSeriesNode );
     this.scrollingChartNodeDisposeEmitter.addListener( () => dynamicSeriesNode.dispose() );
   }
 

@@ -25,7 +25,7 @@ const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 const ARROW_CUE_FILL_COLOR = new Color( 180, 180, 230 );
 const ARROW_CUE_STROKE_COLOR = Color.DARK_GRAY;
 
-class XYCursorPlot extends XYPlotNode {
+class XYCursorPlotNode extends XYPlotNode {
 
   /**
    * @param {Object} [options]
@@ -74,7 +74,7 @@ class XYCursorPlot extends XYPlotNode {
   }
 
   /**
-   * Adds a DynamicSeries to the XYCursorPlot.
+   * Adds a DynamicSeries to the XYCursorPlotNode.
    * @override
    * @public
    *
@@ -265,7 +265,7 @@ class XYCursorPlot extends XYPlotNode {
 class ChartCursor extends Rectangle {
 
   /**
-   * @param {XYCursorPlot} plot
+   * @param {XYCursorPlotNode} plot
    * @param {Property.<ModelViewTransform2>} modelViewTransformProperty
    * @param {Object} [options]
    */
@@ -416,5 +416,5 @@ class GrippyIndentNode extends Circle {
   }
 }
 
-griddle.register( 'XYCursorPlot', XYCursorPlot );
-export default XYCursorPlot;
+griddle.register( 'XYCursorPlotNode', XYCursorPlotNode );
+export default XYCursorPlotNode;

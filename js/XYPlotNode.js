@@ -34,7 +34,7 @@ const LABEL_GRAPH_MARGIN = 3;
 const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
 const VERTICAL_AXIS_LABEL_MARGIN = 8;
 
-class ScrollingChartNode extends Node {
+class XYPlotNode extends Node {
 
   /**
    * @param {Object} [options]
@@ -275,7 +275,7 @@ class ScrollingChartNode extends Node {
   }
 
   /**
-   * Adds a DynamicSeriesNode to this ScrollingChartNode.
+   * Adds a DynamicSeriesNode to this XYPlotNode.
    * @public
    *
    * @param {DynamicSeries} dynamicSeries
@@ -424,7 +424,7 @@ class ScrollingChartNode extends Node {
 
   /**
    * Create a typical ModelViewTransform2 for the plot that spans the widthRange and heightRange in model coordinates
-   * so that those ranges are contained within and fill the ScrollingChartNode view bounds. Also inverts y so that
+   * so that those ranges are contained within and fill the XYPlotNode view bounds. Also inverts y so that
    * +y points up on the chart. Other transformms may be used, but this is the most common.
    * @public
    *
@@ -449,5 +449,5 @@ class ScrollingChartNode extends Node {
   }
 }
 
-griddle.register( 'ScrollingChartNode', ScrollingChartNode );
-export default ScrollingChartNode;
+griddle.register( 'XYPlotNode', XYPlotNode );
+export default XYPlotNode;

@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
 /**
- * A ScrollingChartNode which is set up to behave like a Seismograph. The modelViewTransform for this chart
+ * A XYPlotNode which is set up to behave like a Seismograph. The modelViewTransform for this chart
  * is set such that data streams onto the plot from the right side. The default size is currently small so that
  * it can fit into a small draggable sensor, like the ones in Wave Interference, Bending Light, Circuit Construction
  * Kit: AC. IT is typicall embedded in a Panel.
@@ -9,7 +9,7 @@
  * Please see the demo in http://localhost/griddle/griddle_en.html
  *
  * Moved from wave-interference repo to griddle repo on Wed, Aug 29, 2018. Seismograph specific components
- * moved out of ScrollingChartNode on 6/2/20.
+ * moved out of XYPlotNode on 6/2/20.
  *
  * @author Jesse Greenberg
  */
@@ -22,14 +22,14 @@ import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js
 import ZoomButton from '../../scenery-phet/js/buttons/ZoomButton.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import griddle from './griddle.js';
-import ScrollingChartNode from './ScrollingChartNode.js';
+import XYPlotNode from './XYPlotNode.js';
 import SeismographDynamicSeriesNode from './SeismographDynamicSeriesNode.js';
 import SpanNode from './SpanNode.js';
 
 // constants
 const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
 
-class SeismographNode extends ScrollingChartNode {
+class SeismographNode extends XYPlotNode {
 
   /**
    * @param {NumberProperty} valueProperty - value along the horizontal axis, in model units
@@ -71,7 +71,7 @@ class SeismographNode extends ScrollingChartNode {
         fill: 'white'
       },
 
-      // passed along to the GridNode of ScrollingChartNode
+      // passed along to the GridNode of XYPlotNode
       gridNodeOptions: {
         majorLineOptions: {
           stroke: 'lightGray',

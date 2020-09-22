@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * An ScrollingChartNode that includes a draggable cursor that allows the user to scrub or play back through the data.
+ * An XYPlotNode that includes a draggable cursor that allows the user to scrub or play back through the data.
  *
  * @author Jesse Greenberg
  */
@@ -16,7 +16,7 @@ import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import Color from '../../scenery/js/util/Color.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import griddle from './griddle.js';
-import ScrollingChartNode from './ScrollingChartNode.js';
+import XYPlotNode from './XYPlotNode.js';
 
 // constants
 const WIDTH_PROPORTION = 0.013; // empirically determined
@@ -25,7 +25,7 @@ const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 const ARROW_CUE_FILL_COLOR = new Color( 180, 180, 230 );
 const ARROW_CUE_STROKE_COLOR = Color.DARK_GRAY;
 
-class XYCursorPlot extends ScrollingChartNode {
+class XYCursorPlot extends XYPlotNode {
 
   /**
    * @param {Object} [options]

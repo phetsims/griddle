@@ -37,7 +37,7 @@ import DynamicSeries from '../DynamicSeries.js';
 import DynamicSeriesNode from '../DynamicSeriesNode.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
-import ScrollingChartNode from '../ScrollingChartNode.js';
+import XYPlotNode from '../XYPlotNode.js';
 import SeismographNode from '../SeismographNode.js';
 import XYCursorPlot from '../XYCursorPlot.js';
 
@@ -57,7 +57,7 @@ class GriddleDemoScreenView extends DemosScreenView {
        */
       { label: 'BarChart', createNode: demoBarChart },
       { label: 'GridNode', createNode: demoGridNode },
-      { label: 'ScrollingChartNode', createNode: demoScrollingChartNode },
+      { label: 'XYPlotNode', createNode: demoScrollingChartNode },
       { label: 'SeismographNode', createNode: demoSeismographNode },
       { label: 'XYCursorPlot', createNode: demoXYCursorPlot }
     ], {
@@ -276,7 +276,7 @@ const demoGridNode = layoutBounds => {
 };
 
 /**
- * Creates an example ScrollingChartNode
+ * Creates an example XYPlotNode
  * @param layoutBounds
  */
 const demoScrollingChartNode = function( layoutBounds ) {
@@ -341,7 +341,7 @@ const demoScrollingChartNode = function( layoutBounds ) {
     }
   };
   emitter.addListener( listener );
-  const scrollingChartNode = new ScrollingChartNode( {
+  const scrollingChartNode = new XYPlotNode( {
     width: plotWidth,
     height: plotHeight,
     verticalAxisLabelNode: new Text( 'Height (m)', { fill: 'white', rotation: 3 * Math.PI / 2 } ),

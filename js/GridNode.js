@@ -52,7 +52,7 @@ class GridNode extends Node {
 
       // {null|number} - Precision for the placement of grid lines, in model coordinates. null value
       // will not use any precision. GridNode will calculate line positions based on spacings and the model view
-      // transform. But this is susceptible to IEEE precision errors, ocassionally resulting in missed lines.
+      // transform. But this is susceptible to IEEE precision errors, occasionally resulting in missed lines.
       gridLinePrecision: null,
 
       // {Object} - passed to the Path for minor lines

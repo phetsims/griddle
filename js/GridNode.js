@@ -119,7 +119,7 @@ class GridNode extends Node {
   }
 
   /**
-   * Sets the precisin for calculating locations of the grid lines, in model coordinates.
+   * Sets the precision for calculating locations of the grid lines, in model coordinates.
    * null value will calculate positions with IEEE floating point values. This usually works
    * but sometimes results in floating point errors that mean some grid lines are lost. Set
    * precision to keep grid lines exact.

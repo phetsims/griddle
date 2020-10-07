@@ -189,11 +189,11 @@ class SeismographNode extends XYPlotNode {
     this.addChild( spanNode );
 
     this.verticalRangeProperty.link( verticalRange => {
-      const majorHorizontalSpacing = ( verticalRange.getLength() ) / ( options.numberHorizontalLines - 1 );
+      const majorHorizontalLineSpacing = ( verticalRange.getLength() ) / ( options.numberHorizontalLines - 1 );
       const majorVerticalLineSpacing = this.horizontalRangeProperty.get().getLength() / ( options.numberVerticalLines - 1 );
       this.setLineSpacings( {
         majorVerticalLineSpacing: majorVerticalLineSpacing,
-        majorHorizontalSpacing: majorHorizontalSpacing
+        majorHorizontalLineSpacing: majorHorizontalLineSpacing
       } );
     } );
 

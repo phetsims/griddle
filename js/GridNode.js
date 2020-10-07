@@ -140,7 +140,7 @@ class GridNode extends Node {
    */
   setLineSpacings( config ) {
 
-    config = merge( {
+    const defaults = {
 
       // {number|null} - at least one of these is required, major spacings must be a multiple
       // of minor spacings
@@ -148,8 +148,11 @@ class GridNode extends Node {
       minorVerticalLineSpacing: null,
       majorHorizontalLineSpacing: null,
       minorHorizontalLineSpacing: null
-    }, config );
-
+    };
+    config = merge( defaults, config );
+    assert && Object.keys( config ).forEach( key => {
+      assert && assert( defaults.hasOwnProperty( key ), 'illegal key: ' + key );
+    } );
     assert && assert( !_.every( config, spacing => spacing === null ), 'at least one spacing must be used' );
     this.validateMajorMinorPair( config.majorVerticalLineSpacing, config.minorVerticalLineSpacing );
     this.validateMajorMinorPair( config.majorHorizontalLineSpacing, config.minorHorizontalLineSpacing );

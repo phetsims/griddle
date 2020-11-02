@@ -20,12 +20,12 @@ class DynamicSeriesNode extends CanvasNode {
 
   /**
    * @param {DynamicSeries} dynamicSeries - the series of data to render
-   * @param {number} plotWidth - the horizontal size of the plot, up to the center of the pen
+   * @param {number} chartWidth - the horizontal size of the chart, up to the center of the pen
    * @param {Bounds2} bounds - bounds for rendering, includes area to the right of the pens
    * @param {Property.<ModelViewTransform2>} modelViewTransformProperty
    * @param {Object} [options]
    */
-  constructor( dynamicSeries, plotWidth, bounds, modelViewTransformProperty, options ) {
+  constructor( dynamicSeries, chartWidth, bounds, modelViewTransformProperty, options ) {
 
     options = merge( {
 

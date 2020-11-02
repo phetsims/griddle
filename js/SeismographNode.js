@@ -2,7 +2,7 @@
 
 /**
  * A XYChartNode which is set up to behave like a Seismograph. The modelViewTransform for this chart
- * is set such that data streams onto the plot from the right side. The default size is currently small so that
+ * is set such that data streams onto the chart from the right side. The default size is currently small so that
  * it can fit into a small draggable sensor, like the ones in Wave Interference, Bending Light, Circuit Construction
  * Kit: AC. IT is typicall embedded in a Panel.
  *
@@ -53,7 +53,7 @@ class SeismographNode extends XYChartNode {
       verticalRangeProperty: new Property( new Range( -1, 1 ) ),
       horizontalRangeProperty: new Property( new Range( 0, 4 ) ),
 
-      // number of grid lines in the seismograph, including lines along the min and max (edges of plot)
+      // number of grid lines in the seismograph, including lines along the min and max (edges of the chart)
       numberHorizontalLines: 5,
       numberVerticalLines: 5,
 

@@ -286,8 +286,8 @@ const demoScrollingChartNode = function( layoutBounds ) {
   const horizontalRange = new Range( 0, 10 );
   const verticalRange = new Range( -5, 5 );
   const maxTime = horizontalRange.max;
-  const plotWidth = 500;
-  const plotHeight = 500;
+  const chartWidth = 500;
+  const chartHeight = 500;
 
   const styleProperty = new Property( DynamicSeriesNode.PlotStyle.LINE );
 
@@ -302,7 +302,7 @@ const demoScrollingChartNode = function( layoutBounds ) {
 
   const modelViewTransformProperty = new Property( ModelViewTransform2.createRectangleInvertedYMapping(
     new Bounds2( horizontalRange.min, verticalRange.min, horizontalRange.max, verticalRange.max ),
-    new Bounds2( 0, 0, plotWidth, plotHeight )
+    new Bounds2( 0, 0, chartWidth, chartHeight )
   ) );
 
   const listener = dt => {
@@ -318,7 +318,7 @@ const demoScrollingChartNode = function( layoutBounds ) {
       const maxY = verticalRange.max + timeProperty.value - maxTime;
       modelViewTransformProperty.set( ModelViewTransform2.createRectangleInvertedYMapping(
         new Bounds2( timeProperty.get() - maxTime, minY, timeProperty.get(), maxY ),
-        new Bounds2( 0, 0, plotWidth, plotHeight )
+        new Bounds2( 0, 0, chartWidth, chartHeight )
       ) );
     }
 
@@ -342,8 +342,8 @@ const demoScrollingChartNode = function( layoutBounds ) {
   };
   emitter.addListener( listener );
   const scrollingChartNode = new XYChartNode( {
-    width: plotWidth,
-    height: plotHeight,
+    width: chartWidth,
+    height: chartHeight,
     verticalAxisLabelNode: new Text( 'Height (m)', { fill: 'white', rotation: 3 * Math.PI / 2 } ),
     horizontalAxisLabelNode: new Text( 'time (s)', { fill: 'white' } ),
     modelViewTransformProperty: modelViewTransformProperty
@@ -425,16 +425,16 @@ const demoSeismographNode = layoutBounds => {
  * @returns {XYCursorChartNode}
  */
 const demoXYCursorPlot = layoutBounds => {
-  const plotWidth = 800;
-  const plotHeight = 200;
+  const chartWidth = 800;
+  const chartHeight = 200;
   const maxTime = 10;
-  const plotRange = new Range( -1, 1 );
+  const chartRange = new Range( -1, 1 );
 
   const timeProperty = new NumberProperty( 0 );
 
   const modelViewTransformProperty = new Property( ModelViewTransform2.createRectangleInvertedYMapping(
-    new Bounds2( 0, plotRange.min, maxTime, plotRange.max ),
-    new Bounds2( 0, 0, plotWidth, plotHeight )
+    new Bounds2( 0, chartRange.min, maxTime, chartRange.max ),
+    new Bounds2( 0, 0, chartWidth, chartHeight )
   ) );
 
   const dataSeries = new DynamicSeries();
@@ -442,14 +442,14 @@ const demoXYCursorPlot = layoutBounds => {
   // while dragging,
   let dragging = false;
 
-  const plotNode = new XYCursorChartNode( {
-    width: plotWidth,
-    height: plotHeight,
+  const chartNode = new XYCursorChartNode( {
+    width: chartWidth,
+    height: chartHeight,
     modelViewTransformProperty: modelViewTransformProperty,
     maxX: maxTime,
     showAxis: false,
-    minY: plotRange.min,
-    maxY: plotRange.max,
+    minY: chartRange.min,
+    maxY: chartRange.max,
     lineDash: [ 4, 4 ],
 
     verticalAxisLabelNode: new Text( 'Value', { rotation: 3 * Math.PI / 2, fill: 'white' } ),
@@ -464,9 +464,9 @@ const demoXYCursorPlot = layoutBounds => {
       }
     }
   } );
-  plotNode.addDynamicSeries( dataSeries );
+  chartNode.addDynamicSeries( dataSeries );
 
-  const plotPanel = new Panel( plotNode, {
+  const chartPanel = new Panel( chartNode, {
     fill: 'grey',
     center: layoutBounds.center,
     resize: false
@@ -487,8 +487,8 @@ const demoXYCursorPlot = layoutBounds => {
       // are in view
       if ( timeProperty.get() > maxTime ) {
         modelViewTransformProperty.set( ModelViewTransform2.createRectangleInvertedYMapping(
-          new Bounds2( timeProperty.get() - maxTime, plotRange.min, timeProperty.get(), plotRange.max ),
-          new Bounds2( 0, 0, plotWidth, plotHeight )
+          new Bounds2( timeProperty.get() - maxTime, chartRange.min, timeProperty.get(), chartRange.max ),
+          new Bounds2( 0, 0, chartWidth, chartHeight )
         ) );
       }
 
@@ -497,12 +497,12 @@ const demoXYCursorPlot = layoutBounds => {
         dataSeries.shiftData();
       }
 
-      plotNode.setCursorValue( timeProperty.get() );
+      chartNode.setCursorValue( timeProperty.get() );
     }
   };
   emitter.addListener( listener );
 
-  return plotPanel;
+  return chartPanel;
 };
 
 griddle.register( 'GriddleDemoScreenView', GriddleDemoScreenView );

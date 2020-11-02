@@ -25,7 +25,7 @@ const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 const ARROW_CUE_FILL_COLOR = new Color( 180, 180, 230 );
 const ARROW_CUE_STROKE_COLOR = Color.DARK_GRAY;
 
-class XYCursorPlotNode extends XYChartNode {
+class XYCursorChartNode extends XYChartNode {
 
   /**
    * @param {Object} [options]
@@ -74,7 +74,7 @@ class XYCursorPlotNode extends XYChartNode {
   }
 
   /**
-   * Adds a DynamicSeries to the XYCursorPlotNode.
+   * Adds a DynamicSeries to the XYCursorChartNode.
    * @override
    * @public
    *
@@ -91,7 +91,7 @@ class XYCursorPlotNode extends XYChartNode {
       // update the
       this.updateMinMaxRecordedValues();
 
-      // if all data has been removed from the plot, update cursor visibility
+      // if all data has been removed from the chart, update cursor visibility
       this.updateCursor();
     };
 
@@ -101,7 +101,7 @@ class XYCursorPlotNode extends XYChartNode {
   }
 
   /**
-   * Removes a DynamicSeries from the plot and disposes of its listener.
+   * Removes a DynamicSeries from the chart and disposes of its listener.
    * @override
    * @public
    *
@@ -118,7 +118,7 @@ class XYCursorPlotNode extends XYChartNode {
   }
 
   /**
-   * Sets the cursor value. The value of the cursor is constrained to be within plot bounds.
+   * Sets the cursor value. The value of the cursor is constrained to be within chart bounds.
    * @public
    *
    * @param {number} value
@@ -233,7 +233,7 @@ class XYCursorPlotNode extends XYChartNode {
   }
 
   /**
-   * From the existing data, update the min and max recorded X values from all of the dynamicSeries of this plot,
+   * From the existing data, update the min and max recorded X values from all of the dynamicSeries of this chart,
    * so that the cursor can be limited to the recorded data.
    * @private
    */
@@ -265,11 +265,11 @@ class XYCursorPlotNode extends XYChartNode {
 class ChartCursor extends Rectangle {
 
   /**
-   * @param {XYCursorPlotNode} plot
+   * @param {XYCursorChartNode} chart
    * @param {Property.<ModelViewTransform2>} modelViewTransformProperty
    * @param {Object} [options]
    */
-  constructor( plot, modelViewTransformProperty, options ) {
+  constructor( chart, modelViewTransformProperty, options ) {
 
     options = merge( {
       startDrag: () => {},
@@ -285,8 +285,8 @@ class ChartCursor extends Rectangle {
       tandem: Tandem.OPTIONAL
     }, options );
 
-    const width = plot.chartWidth * WIDTH_PROPORTION;
-    const height = plot.chartHeight;
+    const width = chart.chartWidth * WIDTH_PROPORTION;
+    const height = chart.chartHeight;
 
     // Set the shape. Origin is at the center top of the rectangle.
     super( 0, -height, width, height, 0, 0, {
@@ -297,7 +297,7 @@ class ChartCursor extends Rectangle {
       lineDash: [ 4, 4 ]
     } );
 
-    this.plot = plot;
+    this.chart = chart;
     this.modelViewTransformProperty = modelViewTransformProperty;
 
     // Make it easier to grab this cursor by giving it expanded mouse and touch areas.
@@ -336,7 +336,7 @@ class ChartCursor extends Rectangle {
     // @private - so that we can interrupt the DragListener if necessary
     this.dragListener = new DragListener( {
       start: ( event, listener ) => {
-        assert && assert( this.plot.hasData(), 'plot should have data for the cursor to be draggable' );
+        assert && assert( this.chart.hasData(), 'chart should have data for the cursor to be draggable' );
         options.startDrag();
       },
       drag: ( event, listener ) => {
@@ -344,8 +344,8 @@ class ChartCursor extends Rectangle {
         let newValue = this.modelViewTransformProperty.get().viewToModelX( parentX );
 
         // limit cursor to the domain of recorded values
-        newValue = Utils.clamp( newValue, this.plot.minRecordedXValue, this.plot.maxRecordedXValue );
-        this.plot.setCursorValue( newValue );
+        newValue = Utils.clamp( newValue, this.chart.minRecordedXValue, this.chart.maxRecordedXValue );
+        this.chart.setCursorValue( newValue );
 
         options.drag();
       },
@@ -416,5 +416,5 @@ class GrippyIndentNode extends Circle {
   }
 }
 
-griddle.register( 'XYCursorPlotNode', XYCursorPlotNode );
-export default XYCursorPlotNode;
+griddle.register( 'XYCursorChartNode', XYCursorChartNode );
+export default XYCursorChartNode;

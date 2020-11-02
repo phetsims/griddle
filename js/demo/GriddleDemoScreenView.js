@@ -39,7 +39,7 @@ import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
 import XYChartNode from '../XYChartNode.js';
 import SeismographNode from '../SeismographNode.js';
-import XYCursorPlotNode from '../XYCursorPlotNode.js';
+import XYCursorChartNode from '../XYCursorChartNode.js';
 
 // constants - this is a hack to enable components to animate from the animation loop
 const emitter = new Emitter( { parameters: [ { valueType: 'number' } ] } );
@@ -59,7 +59,7 @@ class GriddleDemoScreenView extends DemosScreenView {
       { label: 'GridNode', createNode: demoGridNode },
       { label: 'XYChartNode', createNode: demoScrollingChartNode },
       { label: 'SeismographNode', createNode: demoSeismographNode },
-      { label: 'XYCursorPlotNode', createNode: demoXYCursorPlot }
+      { label: 'XYCursorChartNode', createNode: demoXYCursorPlot }
     ], {
       selectedDemoLabel: sceneryPhetQueryParameters.component
     } );
@@ -420,9 +420,9 @@ const demoSeismographNode = layoutBounds => {
 };
 
 /**
- * Creates an example XYCursorPlotNode
+ * Creates an example XYCursorChartNode
  * @param layoutBounds
- * @returns {XYCursorPlotNode}
+ * @returns {XYCursorChartNode}
  */
 const demoXYCursorPlot = layoutBounds => {
   const plotWidth = 800;
@@ -442,7 +442,7 @@ const demoXYCursorPlot = layoutBounds => {
   // while dragging,
   let dragging = false;
 
-  const plotNode = new XYCursorPlotNode( {
+  const plotNode = new XYCursorChartNode( {
     width: plotWidth,
     height: plotHeight,
     modelViewTransformProperty: modelViewTransformProperty,

@@ -1,7 +1,7 @@
 // Copyright 2019-2020, University of Colorado Boulder
 
 /**
- * This class renders DynamicSeries data in a XYPlotNode and is tightly coupled with XYPlotNode
+ * This class renders DynamicSeries data in a XYChartNode and is tightly coupled with XYChartNode.
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Jesse Greenberg

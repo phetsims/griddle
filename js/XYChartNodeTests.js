@@ -1,20 +1,20 @@
 // Copyright 2018-2020, University of Colorado Boulder
 
 /**
- * QUnit tests for XYPlotNode
+ * QUnit tests for XYChartNode
  *
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
 import Text from '../../scenery/js/nodes/Text.js';
 import DynamicSeries from './DynamicSeries.js';
-import XYPlotNode from './XYPlotNode.js';
+import XYChartNode from './XYChartNode.js';
 
-QUnit.module( 'XYPlotNode' );
+QUnit.module( 'XYChartNode' );
 
 QUnit.test( 'Test dispose', assert => {
   const series1 = new DynamicSeries( { color: 'blue' } );
-  const scrollingChartNode = new XYPlotNode( {
+  const scrollingChartNode = new XYChartNode( {
       horizontalAxisLabelNode: new Text( 'horizontal' ),
       verticalAxisLabelNode: new Text( 'vertical' )
     }

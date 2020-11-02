@@ -1,7 +1,7 @@
 // Copyright 2018-2020, University of Colorado Boulder
 
 /**
- * A graph that supports "scrolling" of model data with a ModelViewTransform2 so you can display
+ * XYChartNode is a chart that supports "scrolling" of model data with a ModelViewTransform2 so you can display
  * different ranges of data.
  *
  * Please see the demo in http://localhost/griddle/griddle_en.html
@@ -34,7 +34,7 @@ const LABEL_GRAPH_MARGIN = 3;
 const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
 const VERTICAL_AXIS_LABEL_MARGIN = 8;
 
-class XYPlotNode extends Node {
+class XYChartNode extends Node {
 
   /**
    * @param {Object} [options]
@@ -44,23 +44,23 @@ class XYPlotNode extends Node {
 
     options = merge( {
 
-      // dimensions for the plot, in view coordinates
+      // dimensions for the chart, in view coordinates
       width: 500,
       height: 300,
 
       // {Property.<ModelViewTransform> - model-view transform for the data, null because default transform
       // is determined by default optional ranges defaultModelXRange and defaultModelYRange. Plot data is
-      // in model coordinates and you can scale or translate the plot by modifying this Property. See
+      // in model coordinates and you can scale or translate the chart by modifying this Property. See
       // createRectangularModelViewTransform for typical and default chart transform.
       modelViewTransformProperty: null,
 
-      // Default ranges in model coordinates for the model-view transform - the plot will display
+      // Default ranges in model coordinates for the model-view transform - the chart will display
       // these ranges of data within the view dimensions of width and height specified above.
       // These have no impact if you provide your own modelViewTransformProperty.
       defaultModelXRange: new Range( 0, 4 ),
       defaultModelYRange: new Range( -1, 1 ),
 
-      // corner radius for the panel containing the plot
+      // corner radius for the panel containing the chart
       cornerRadius: 5,
 
       // {Node} - label for the vertical axis, should already be rotated if necessary
@@ -130,7 +130,7 @@ class XYPlotNode extends Node {
     // White panel with gridlines that shows the data
     options.chartPanelOptions = merge( {
 
-      // Prevent data from being plotted outside the graph
+      // Prevent data from being plotted outside the chart
       clipArea: Shape.roundedRectangleWithRadii( 0, 0, this.chartWidth, this.chartHeight, {
         topLeft: options.cornerRadius,
         topRight: options.cornerRadius,
@@ -143,7 +143,7 @@ class XYPlotNode extends Node {
     );
 
     // @public {Property.<ModelViewTransform2} - Observable model-view transformation for the data, set to
-    // transform the plot (zoom or pan data). Default transform puts origin at bottom left of the plot with
+    // transform the chart (zoom or pan data). Default transform puts origin at bottom left of the chart with
     // x ranging from 0-4 and y ranging from -1 to 1
     this.modelViewTransformProperty = options.modelViewTransformProperty || new Property( this.createRectangularModelViewTransform( options.defaultModelXRange, options.defaultModelYRange ) );
 
@@ -275,7 +275,7 @@ class XYPlotNode extends Node {
   }
 
   /**
-   * Adds a DynamicSeriesNode to this XYPlotNode.
+   * Adds a DynamicSeriesNode to this XYChartNode.
    * @public
    *
    * @param {DynamicSeries} dynamicSeries
@@ -303,7 +303,7 @@ class XYPlotNode extends Node {
   }
 
   /**
-   * Remove a DynamicSeries (and its DynamicSeriesNode)_from this plot.
+   * Remove a DynamicSeries (and its DynamicSeriesNode)_from this chart.
    * @public
    *
    * @param {DynamicSeries} dynamicSeries
@@ -409,7 +409,7 @@ class XYPlotNode extends Node {
   }
 
   /**
-   * Set the plot style for the graph, to be drawn as a line graph or a scatter plot.
+   * Sets the plot style for the chart.
    *
    * @param {DynamicSeriesNode.PlotStyle} plotStyle - one of plotStyle
    * @public
@@ -423,8 +423,8 @@ class XYPlotNode extends Node {
   }
 
   /**
-   * Create a typical ModelViewTransform2 for the plot that spans the widthRange and heightRange in model coordinates
-   * so that those ranges are contained within and fill the XYPlotNode view bounds. Also inverts y so that
+   * Create a typical ModelViewTransform2 for the chart that spans the widthRange and heightRange in model coordinates
+   * so that those ranges are contained within and fill the XYChartNode view bounds. Also inverts y so that
    * +y points up on the chart. Other transformms may be used, but this is the most common.
    * @public
    *
@@ -449,5 +449,5 @@ class XYPlotNode extends Node {
   }
 }
 
-griddle.register( 'XYPlotNode', XYPlotNode );
-export default XYPlotNode;
+griddle.register( 'XYChartNode', XYChartNode );
+export default XYChartNode;

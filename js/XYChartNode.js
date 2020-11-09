@@ -340,18 +340,6 @@ class XYChartNode extends Node {
   }
 
   /**
-   * Set the precision for determining location of lines for GridNode. Precision is not limited if value is null.
-   * GridNode calculates placement of lines based on spacings and model view transform, but this is susceptible
-   * to IEEE floating point precision errors, ocassionally resulting in lost lines.
-   * @public
-   *
-   * @param {null|number} precision
-   */
-  setGridLinePrecision( precision ) {
-    this.gridNode.setGridLinePrecision( precision );
-  }
-
-  /**
    * Redraw labels along the vertical lines.
    * @protected
    */

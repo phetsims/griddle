@@ -322,7 +322,7 @@ class GridNode extends Node {
     const epsilon = Math.abs( modelMax - modelMin ) * 1e-7;
     for ( let y = minPosition; y <= maxPosition + epsilon; y += spacing ) {
 
-      // Don't allow the selected point to exceed the max
+      // Don't allow the selected point to exceed the max, if we are in the epsilon range
       if ( y > maxPosition ) {
         y = maxPosition;
       }

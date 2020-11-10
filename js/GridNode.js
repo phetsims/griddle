@@ -308,18 +308,25 @@ class GridNode extends Node {
       modelMax = modelViewTransform.viewToModelY( this.gridHeight );
     }
 
-    // distance from top edge of the gridNode to the first horizontal line, rounded to account for precision
-    // errors with IEEE floating point values
+    // Guarantee min < max
+    if ( modelMin > modelMax ) {
+      const temp = modelMin;
+      modelMin = modelMax;
+      modelMax = temp;
+    }
+
+    // distance from top edge of the gridNode to the first line, assuming that one line is at 0 (even if not pictured)
     const remainderToGridLine = Utils.toFixedNumber( modelMin % spacing, 10 );
     const distanceToGridLine = ( spacing - remainderToGridLine ) % spacing;
 
     // the model-view transform may have flipped relative bottom and top with an inverse vertical transformation,
     // make sure we start the array with lower values
-    const minPosition = Math.min( modelMin, modelMax ) + distanceToGridLine;
-    const maxPosition = Math.min( modelMin, modelMax ) + modelSpan;
+    const minPosition = modelMin + distanceToGridLine;
+    const maxPosition = modelMin + modelSpan;
 
     // Accommodate round-off error
-    const epsilon = Math.abs( modelMax - modelMin ) * 1e-7;
+    const epsilon = ( modelMax - modelMin ) * 1e-7;
+
     for ( let y = minPosition; y <= maxPosition + epsilon; y += spacing ) {
 
       // Don't allow the selected point to exceed the max, if we are in the epsilon range

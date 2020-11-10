@@ -153,6 +153,7 @@ class XYChartNode extends Node {
       modelViewTransformProperty: this.modelViewTransformProperty
     }, options.gridNodeOptions );
 
+    //TODO https://github.com/phetsims/griddle/issues/79 missing visibility annotation
     this.gridNode = new GridNode( this.chartWidth, this.chartHeight, gridNodeOptions );
 
     chartPanel.addChild( this.gridNode );
@@ -430,6 +431,7 @@ class XYChartNode extends Node {
   /**
    * Releases resources when no longer used.
    * @public
+   * @override
    */
   dispose() {
     this.disposeScrollingChartNode();

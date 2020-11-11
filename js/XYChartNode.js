@@ -91,7 +91,7 @@ class XYChartNode extends Node {
       majorVerticalLineSpacing: 1,
       majorHorizontalLineSpacing: 1,
 
-      // options passed to gridNode
+      // options passed to GridNode
       gridNodeOptions: {
         majorLineOptions: {
           stroke: 'lightGray',

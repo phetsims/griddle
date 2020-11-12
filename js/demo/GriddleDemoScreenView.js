@@ -33,10 +33,14 @@ import NumberSpinner from '../../../sun/js/NumberSpinner.js';
 import Panel from '../../../sun/js/Panel.js';
 import VSlider from '../../../sun/js/VSlider.js';
 import BarChartNode from '../BarChartNode.js';
+import ChartLineNode from '../ChartLineNode.js';
+import ChartModel from '../ChartModel.js';
+import ChartRectangle from '../ChartRectangle.js';
 import DynamicSeries from '../DynamicSeries.js';
 import DynamicSeriesNode from '../DynamicSeriesNode.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
+import ScatterPlot from '../ScatterPlot.js';
 import XYChartNode from '../XYChartNode.js';
 import SeismographNode from '../SeismographNode.js';
 import XYCursorChartNode from '../XYCursorChartNode.js';
@@ -55,6 +59,7 @@ class GriddleDemoScreenView extends DemosScreenView {
        * {string} label - label in the combo box
        * {function(Bounds2): Node} createNode - creates the scene graph for the demo
        */
+      { label: 'ChartNode', createNode: demoChartNode },
       { label: 'BarChart', createNode: demoBarChart },
       { label: 'GridNode', createNode: demoGridNode },
       { label: 'XYChartNode', createNode: demoScrollingChartNode },
@@ -74,6 +79,49 @@ class GriddleDemoScreenView extends DemosScreenView {
     emitter.emit( dt );
   }
 }
+
+const demoChartNode = function( layoutBounds ) {
+
+  const container = new Node();
+  const chartModel = new ChartModel();
+
+  const data = [];
+  for ( let i = 0; i < 400; i++ ) {
+    phet.joist.random.nextDouble() < 0.3 && data.push( new Vector2( i, 200 + 50 * Math.sin( i / 20 ) ) );
+  }
+  const chartRectangle = new ChartRectangle( chartModel, {
+    fill: 'yellow',
+    stroke: 'black',
+    cornerXRadius: 6,
+    cornerYRadius: 6
+  } );
+  container.addChild( chartRectangle );
+
+  // Anything you want clipped goes in here
+  const clipNode = new Node( { clipArea: chartRectangle.getShape() } );
+  container.addChild( clipNode );
+
+  clipNode.addChild( new ScatterPlot( chartModel, data ) );
+  for ( let i = 0; i < 400; i += 40 ) {
+
+    // TODO: clip to ChartRectangle?
+    clipNode.addChild( new ChartLineNode( chartModel, 0, i, 400, i, {
+      lineWidth: 1,
+      stroke: 'black'
+    } ) );
+  }
+
+  for ( let i = 0; i < 400; i += 40 ) {
+
+    // TODO: clip to ChartRectangle?
+    clipNode.addChild( new ChartLineNode( chartModel, i, 0, i, 400, {
+      lineWidth: 1,
+      stroke: 'black'
+    } ) );
+  }
+  container.center = layoutBounds.center;
+  return container;
+};
 
 // Creates a demo for the BarChartNode
 const demoBarChart = function( layoutBounds ) {

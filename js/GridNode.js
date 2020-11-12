@@ -5,7 +5,7 @@
  * and "minor" lines which break the major lines into further subdivisions. Origin is at the top left of the grid,
  * and lines are drawn with desired spacing between the origin and grid width/height.
  *
- * Line spacings are in model coordinates. My providing an optional Property.<ModelViewTransform2> you can
+ * Line spacings are in model coordinates. By providing an optional Property.<ModelViewTransform2> you can
  * manipulate the line spacings for scale/translation in view coordinates. Arbitrary rotation is not supported.
  *
  * @author Jesse Greenberg

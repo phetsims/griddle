@@ -32,6 +32,7 @@ import DemosScreenView from '../../../sun/js/demo/DemosScreenView.js';
 import NumberSpinner from '../../../sun/js/NumberSpinner.js';
 import Panel from '../../../sun/js/Panel.js';
 import VSlider from '../../../sun/js/VSlider.js';
+import AxisNode from '../AxisNode.js';
 import BarChartNode from '../BarChartNode.js';
 import ChartLineNode from '../ChartLineNode.js';
 import ChartModel from '../ChartModel.js';
@@ -83,11 +84,17 @@ class GriddleDemoScreenView extends DemosScreenView {
 const demoChartNode = function( layoutBounds ) {
 
   const container = new Node();
-  const chartModel = new ChartModel();
+  const width = 400;
+  const height = 400;
+  const chartModel = new ChartModel( {
+    width: width,
+    height: height,
+    modelViewTransform: ModelViewTransform2.createRectangleMapping( new Bounds2( -1, -1, 1, 1 ), new Bounds2( 0, 0, width, height ) )
+  } );
 
   const data = [];
-  for ( let i = 0; i < 400; i++ ) {
-    phet.joist.random.nextDouble() < 0.3 && data.push( new Vector2( i, 200 + 50 * Math.sin( i / 20 ) ) );
+  for ( let i = -1; i < 1; i += 0.01 ) {
+    phet.joist.random.nextDouble() < 0.3 && data.push( new Vector2( i, Math.sin( i * 2 ) ) );
   }
   const chartRectangle = new ChartRectangle( chartModel, {
     fill: 'yellow',
@@ -97,24 +104,20 @@ const demoChartNode = function( layoutBounds ) {
   } );
   container.addChild( chartRectangle );
 
+  const overlap = 0.15;
+  container.addChild( new AxisNode( chartModel, -1 - overlap, 0, 1 + overlap, 0, {} ) );
+  container.addChild( new AxisNode( chartModel, 0, -1 - overlap, 0, 1 + overlap, {} ) );
+
   // Anything you want clipped goes in here
   const clipNode = new Node( { clipArea: chartRectangle.getShape() } );
   container.addChild( clipNode );
-
   clipNode.addChild( new ScatterPlot( chartModel, data ) );
-  for ( let i = 0; i < 400; i += 40 ) {
-
-    // TODO: clip to ChartRectangle?
-    clipNode.addChild( new ChartLineNode( chartModel, 0, i, 400, i, {
+  for ( let i = -1; i <= 1; i += 0.1 ) {
+    clipNode.addChild( new ChartLineNode( chartModel, -1, i, 1, i, {
       lineWidth: 1,
       stroke: 'black'
     } ) );
-  }
-
-  for ( let i = 0; i < 400; i += 40 ) {
-
-    // TODO: clip to ChartRectangle?
-    clipNode.addChild( new ChartLineNode( chartModel, i, 0, i, 400, {
+    clipNode.addChild( new ChartLineNode( chartModel, i, -1, i, 1, {
       lineWidth: 1,
       stroke: 'black'
     } ) );

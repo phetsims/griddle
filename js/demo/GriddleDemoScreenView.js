@@ -158,7 +158,7 @@ const demoChartNode = function( layoutBounds ) {
   } );
   const controls = new HSlider( centerXProperty, new Range( -1, 1 ) );
   return new VBox( {
-    resize:false,
+    resize: false,
     children: [ container, controls ],
     center: layoutBounds.center
   } );

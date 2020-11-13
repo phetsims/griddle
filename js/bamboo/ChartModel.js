@@ -1,8 +1,8 @@
 // Copyright 2020, University of Colorado Boulder
 
-import merge from '../../phet-core/js/merge.js';
-import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
-import griddle from './griddle.js';
+import merge from '../../../phet-core/js/merge.js';
+import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
+import griddle from '../griddle.js';
 
 /**
  *

@@ -1,8 +1,8 @@
 // Copyright 2020, University of Colorado Boulder
 
-import Circle from '../../scenery/js/nodes/Circle.js';
-import griddle from './griddle.js';
-import Node from '../../scenery/js/nodes/Node.js';
+import Circle from '../../../scenery/js/nodes/Circle.js';
+import griddle from '../griddle.js';
+import Node from '../../../scenery/js/nodes/Node.js';
 
 /**
  *

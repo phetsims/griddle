@@ -1,7 +1,7 @@
 // Copyright 2020, University of Colorado Boulder
 
-import Rectangle from '../../scenery/js/nodes/Rectangle.js';
-import griddle from './griddle.js';
+import Rectangle from '../../../scenery/js/nodes/Rectangle.js';
+import griddle from '../griddle.js';
 
 /**
  *

@@ -1,9 +1,9 @@
 // Copyright 2020, University of Colorado Boulder
 
-import merge from '../../phet-core/js/merge.js';
-import Orientation from '../../phet-core/js/Orientation.js';
-import Line from '../../scenery/js/nodes/Line.js';
-import griddle from './griddle.js';
+import merge from '../../../phet-core/js/merge.js';
+import Orientation from '../../../phet-core/js/Orientation.js';
+import Line from '../../../scenery/js/nodes/Line.js';
+import griddle from '../griddle.js';
 
 /**
  *

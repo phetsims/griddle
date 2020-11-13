@@ -30,6 +30,7 @@ import ABSwitch from '../../../sun/js/ABSwitch.js';
 import BooleanRectangularStickyToggleButton from '../../../sun/js/buttons/BooleanRectangularStickyToggleButton.js';
 import BooleanRectangularToggleButton from '../../../sun/js/buttons/BooleanRectangularToggleButton.js';
 import DemosScreenView from '../../../sun/js/demo/DemosScreenView.js';
+import HSlider from '../../../sun/js/HSlider.js';
 import NumberSpinner from '../../../sun/js/NumberSpinner.js';
 import Panel from '../../../sun/js/Panel.js';
 import VSlider from '../../../sun/js/VSlider.js';
@@ -131,9 +132,9 @@ const demoChartNode = function( layoutBounds ) {
     } );
     container.addChild( tickMarkNode );
     const label = new Text( i.toFixed( 1 ), {
-      centerTop: tickMarkNode.centerBottom,
       fontSize: 14
     } );
+    chartModel.modelViewTransformProperty.link( m => label.setCenterTop( tickMarkNode.centerBottom ) );
     container.addChild( label );
   }
   container.addChild( new AxisNode( chartModel, 0, -1 - overlap, 0, 1 + overlap, {} ) );
@@ -143,14 +144,24 @@ const demoChartNode = function( layoutBounds ) {
     } );
     container.addChild( tickMarkNode );
     const label = new Text( i.toFixed( 1 ), {
-      rightCenter: tickMarkNode.leftCenter,
       fontSize: 14
     } );
+
+    // TODO: observe the tick mark node itself?
+    chartModel.modelViewTransformProperty.link( m => label.setRightCenter( tickMarkNode.leftCenter ) );
     container.addChild( label );
   }
 
-  container.center = layoutBounds.center;
-  return container;
+  const centerXProperty = new NumberProperty( 0 );
+  centerXProperty.link( centerX => {
+    chartModel.modelViewTransformProperty.value = ModelViewTransform2.createRectangleMapping( new Bounds2( -1, -1, 1, 1 ).shiftedX( -centerX / 5 ), new Bounds2( 0, 0, width, height ) );
+  } );
+  const controls = new HSlider( centerXProperty, new Range( -1, 1 ) );
+  return new VBox( {
+    resize:false,
+    children: [ container, controls ],
+    center: layoutBounds.center
+  } );
 };
 
 // Creates a demo for the BarChartNode

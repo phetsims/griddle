@@ -86,7 +86,7 @@ class GriddleDemoScreenView extends DemosScreenView {
 
 const demoChartNode = function( layoutBounds ) {
 
-  const container = new Node();
+  const chartNode = new Node();
   const width = 400;
   const height = 400;
   const chartModel = new ChartModel( {
@@ -105,50 +105,48 @@ const demoChartNode = function( layoutBounds ) {
     cornerXRadius: 6,
     cornerYRadius: 6
   } );
-  container.addChild( chartRectangle );
-
-  const overlap = 0.15;
+  chartNode.addChild( chartRectangle );
 
   // Anything you want clipped goes in here
-  const clipNode = new Node( { clipArea: chartRectangle.getShape() } );
-  container.addChild( clipNode );
-  clipNode.addChild( new ScatterPlot( chartModel, data ) );
+  const chartClip = new Node( { clipArea: chartRectangle.getShape() } );
+  chartNode.addChild( chartClip );
+  chartClip.addChild( new ScatterPlot( chartModel, data ) );
 
   // Minor grid lines
-  clipNode.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ) );
-  clipNode.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.1, { stroke: 'lightGray' } ) );
+  chartClip.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ) );
+  chartClip.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.1, { stroke: 'lightGray' } ) );
 
   // Major grid lines
-  clipNode.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray' } ) );
-  clipNode.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray' } ) );
+  chartClip.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray' } ) );
+  chartClip.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray' } ) );
 
-  container.addChild( new AxisNode( chartModel, -1 - overlap, 0, 1 + overlap, 0, {} ) );
+  chartNode.addChild( new AxisNode( chartModel, Orientation.VERTICAL, {} ) );
 
   // Tick marks on the axis
   for ( let i = -1; i <= 1; i += 0.3 ) {
     const tickMarkNode = new TickMarkNode( chartModel, i, 0, Orientation.VERTICAL, {
       extent: 8
     } );
-    container.addChild( tickMarkNode );
+    chartNode.addChild( tickMarkNode );
     const label = new Text( i.toFixed( 1 ), {
       fontSize: 14
     } );
     chartModel.modelViewTransformProperty.link( m => label.setCenterTop( tickMarkNode.centerBottom ) );
-    container.addChild( label );
+    chartNode.addChild( label );
   }
-  container.addChild( new AxisNode( chartModel, 0, -1 - overlap, 0, 1 + overlap, {} ) );
+  chartNode.addChild( new AxisNode( chartModel, Orientation.HORIZONTAL, {} ) );
   for ( let i = -1; i <= 1; i += 0.3 ) {
     const tickMarkNode = new TickMarkNode( chartModel, 0, i, Orientation.HORIZONTAL, {
       extent: 8
     } );
-    container.addChild( tickMarkNode );
+    chartNode.addChild( tickMarkNode );
     const label = new Text( i.toFixed( 1 ), {
       fontSize: 14
     } );
 
     // TODO: observe the tick mark node itself?
     chartModel.modelViewTransformProperty.link( m => label.setRightCenter( tickMarkNode.leftCenter ) );
-    container.addChild( label );
+    chartNode.addChild( label );
   }
 
   const centerXProperty = new NumberProperty( 0 );
@@ -158,7 +156,7 @@ const demoChartNode = function( layoutBounds ) {
   const controls = new HSlider( centerXProperty, new Range( -1, 1 ) );
   return new VBox( {
     resize: false,
-    children: [ container, controls ],
+    children: [ chartNode, controls ],
     center: layoutBounds.center
   } );
 };

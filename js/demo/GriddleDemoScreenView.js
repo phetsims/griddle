@@ -36,6 +36,7 @@ import Panel from '../../../sun/js/Panel.js';
 import VSlider from '../../../sun/js/VSlider.js';
 import AxisNode from '../bamboo/AxisNode.js';
 import GridLineSet from '../bamboo/GridLineSet.js';
+import TickMarkSet from '../bamboo/TickMarkSet.js';
 import BarChartNode from '../BarChartNode.js';
 import ChartModel from '../bamboo/ChartModel.js';
 import ChartRectangle from '../bamboo/ChartRectangle.js';
@@ -44,7 +45,6 @@ import DynamicSeriesNode from '../DynamicSeriesNode.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
 import ScatterPlot from '../bamboo/ScatterPlot.js';
-import TickMarkNode from '../bamboo/TickMarkNode.js';
 import XYChartNode from '../XYChartNode.js';
 import SeismographNode from '../SeismographNode.js';
 import XYCursorChartNode from '../XYCursorChartNode.js';
@@ -86,8 +86,12 @@ class GriddleDemoScreenView extends DemosScreenView {
 
 const demoChartNode = function( layoutBounds ) {
 
-  const chartNode = new Node();
-  const width = 400;
+  const data = [];
+  for ( let i = -1; i < 1; i += 0.01 ) {
+    phet.joist.random.nextDouble() < 0.3 && data.push( new Vector2( i, Math.sin( i * 2 ) ) );
+  }
+
+  const width = 600;
   const height = 400;
   const chartModel = new ChartModel( {
     width: width,
@@ -95,62 +99,50 @@ const demoChartNode = function( layoutBounds ) {
     modelViewTransform: ModelViewTransform2.createRectangleMapping( new Bounds2( -1, -1, 1, 1 ), new Bounds2( 0, 0, width, height ) )
   } );
 
-  const data = [];
-  for ( let i = -1; i < 1; i += 0.01 ) {
-    phet.joist.random.nextDouble() < 0.3 && data.push( new Vector2( i, Math.sin( i * 2 ) ) );
-  }
   const chartRectangle = new ChartRectangle( chartModel, {
     fill: 'yellow',
     stroke: 'black',
     cornerXRadius: 6,
     cornerYRadius: 6
   } );
-  chartNode.addChild( chartRectangle );
 
   // Anything you want clipped goes in here
-  const chartClip = new Node( { clipArea: chartRectangle.getShape() } );
-  chartNode.addChild( chartClip );
+  const chartClip = new Node( {
+    clipArea: chartRectangle.getShape(),
+    children: [
+      // Minor grid lines
+      new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ),
+      new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.1, { stroke: 'lightGray' } ),
 
-  // Minor grid lines
-  chartClip.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ) );
-  chartClip.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.1, { stroke: 'lightGray' } ) );
+      // Major grid lines
+      new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray' } ),
+      new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray' } ),
 
-  // Major grid lines
-  chartClip.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray' } ) );
-  chartClip.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray' } ) );
+      // Tick labels along the axes
+      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.2 ),
+      new TickMarkSet( chartModel, Orientation.HORIZONTAL, 0.2 ),
 
-  chartNode.addChild( new AxisNode( chartModel, Orientation.VERTICAL, {} ) );
-  chartNode.addChild( new AxisNode( chartModel, Orientation.HORIZONTAL, {} ) );
+      // Some data
+      new ScatterPlot( chartModel, data )
+    ]
+  } );
 
-  // Tick marks on the axis
-  for ( let i = -1; i <= 1; i += 0.3 ) {
-    const tickMarkNode = new TickMarkNode( chartModel, i, 0, Orientation.VERTICAL, {
-      extent: 8
-    } );
-    chartNode.addChild( tickMarkNode );
-    const label = new Text( i.toFixed( 1 ), {
-      fontSize: 14
-    } );
-    chartModel.modelViewTransformProperty.link( m => label.setCenterTop( tickMarkNode.centerBottom ) );
-    chartNode.addChild( label );
-  }
+  const chartNode = new Node( {
+    children: [
 
-  for ( let i = -1; i <= 1; i += 0.3 ) {
-    const tickMarkNode = new TickMarkNode( chartModel, 0, i, Orientation.HORIZONTAL, {
-      extent: 8
-    } );
-    chartNode.addChild( tickMarkNode );
-    const label = new Text( i.toFixed( 1 ), {
-      fontSize: 14
-    } );
+      // Background
+      chartRectangle,
 
-    // TODO: observe the tick mark node itself?
-    chartModel.modelViewTransformProperty.link( m => label.setRightCenter( tickMarkNode.leftCenter ) );
-    chartNode.addChild( label );
-  }
+      // Clipped contents
+      chartClip,
 
-  chartClip.addChild( new ScatterPlot( chartModel, data ) );
+      // axes nodes not clipped
+      new AxisNode( chartModel, Orientation.VERTICAL ),
+      new AxisNode( chartModel, Orientation.HORIZONTAL )
+    ]
+  } );
 
+  // Controls
   const centerXProperty = new NumberProperty( 0 );
   centerXProperty.link( centerX => {
     chartModel.modelViewTransformProperty.value = ModelViewTransform2.createRectangleMapping( new Bounds2( -1, -1, 1, 1 ).shiftedX( -centerX ), new Bounds2( 0, 0, width, height ) );

@@ -120,6 +120,7 @@ const demoChartNode = function( layoutBounds ) {
   chartClip.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray' } ) );
 
   chartNode.addChild( new AxisNode( chartModel, Orientation.VERTICAL, {} ) );
+  chartNode.addChild( new AxisNode( chartModel, Orientation.HORIZONTAL, {} ) );
 
   // Tick marks on the axis
   for ( let i = -1; i <= 1; i += 0.3 ) {
@@ -133,7 +134,7 @@ const demoChartNode = function( layoutBounds ) {
     chartModel.modelViewTransformProperty.link( m => label.setCenterTop( tickMarkNode.centerBottom ) );
     chartNode.addChild( label );
   }
-  chartNode.addChild( new AxisNode( chartModel, Orientation.HORIZONTAL, {} ) );
+
   for ( let i = -1; i <= 1; i += 0.3 ) {
     const tickMarkNode = new TickMarkNode( chartModel, 0, i, Orientation.HORIZONTAL, {
       extent: 8
@@ -152,9 +153,11 @@ const demoChartNode = function( layoutBounds ) {
 
   const centerXProperty = new NumberProperty( 0 );
   centerXProperty.link( centerX => {
-    chartModel.modelViewTransformProperty.value = ModelViewTransform2.createRectangleMapping( new Bounds2( -1, -1, 1, 1 ).shiftedX( -centerX / 5 ), new Bounds2( 0, 0, width, height ) );
+    chartModel.modelViewTransformProperty.value = ModelViewTransform2.createRectangleMapping( new Bounds2( -1, -1, 1, 1 ).shiftedX( -centerX ), new Bounds2( 0, 0, width, height ) );
   } );
-  const controls = new HSlider( centerXProperty, new Range( -1, 1 ) );
+  const controls = new HSlider( centerXProperty, new Range( -1.25, 1.25 ), {
+    trackSize: new Dimension2( 500, 5 )
+  } );
   return new VBox( {
     resize: false,
     children: [ chartNode, controls ],

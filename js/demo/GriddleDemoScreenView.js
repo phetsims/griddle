@@ -101,7 +101,7 @@ const demoChartNode = function( layoutBounds ) {
   } );
 
   const chartRectangle = new ChartRectangle( chartModel, {
-    fill: 'yellow',
+    fill: 'white',
     stroke: 'black',
     cornerXRadius: 6,
     cornerYRadius: 6

@@ -35,6 +35,7 @@ import NumberSpinner from '../../../sun/js/NumberSpinner.js';
 import Panel from '../../../sun/js/Panel.js';
 import VSlider from '../../../sun/js/VSlider.js';
 import AxisNode from '../bamboo/AxisNode.js';
+import BarPlot from '../bamboo/BarPlot.js';
 import GridLineSet from '../bamboo/GridLineSet.js';
 import TickMarkSet from '../bamboo/TickMarkSet.js';
 import BarChartNode from '../BarChartNode.js';
@@ -123,6 +124,7 @@ const demoChartNode = function( layoutBounds ) {
       new TickMarkSet( chartModel, Orientation.HORIZONTAL, 0.2 ),
 
       // Some data
+      new BarPlot( chartModel, data ),
       new ScatterPlot( chartModel, data )
     ]
   } );

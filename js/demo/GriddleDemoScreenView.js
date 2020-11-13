@@ -18,6 +18,7 @@ import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import merge from '../../../phet-core/js/merge.js';
+import Orientation from '../../../phet-core/js/Orientation.js';
 import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import sceneryPhetQueryParameters from '../../../scenery-phet/js/sceneryPhetQueryParameters.js';
@@ -42,6 +43,7 @@ import DynamicSeriesNode from '../DynamicSeriesNode.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
 import ScatterPlot from '../ScatterPlot.js';
+import TickMarkNode from '../TickMarkNode.js';
 import XYChartNode from '../XYChartNode.js';
 import SeismographNode from '../SeismographNode.js';
 import XYCursorChartNode from '../XYCursorChartNode.js';
@@ -105,8 +107,6 @@ const demoChartNode = function( layoutBounds ) {
   container.addChild( chartRectangle );
 
   const overlap = 0.15;
-  container.addChild( new AxisNode( chartModel, -1 - overlap, 0, 1 + overlap, 0, {} ) );
-  container.addChild( new AxisNode( chartModel, 0, -1 - overlap, 0, 1 + overlap, {} ) );
 
   // Anything you want clipped goes in here
   const clipNode = new Node( { clipArea: chartRectangle.getShape() } );
@@ -115,13 +115,40 @@ const demoChartNode = function( layoutBounds ) {
   for ( let i = -1; i <= 1; i += 0.1 ) {
     clipNode.addChild( new ChartLineNode( chartModel, -1, i, 1, i, {
       lineWidth: 1,
-      stroke: 'black'
+      stroke: 'gray'
     } ) );
     clipNode.addChild( new ChartLineNode( chartModel, i, -1, i, 1, {
       lineWidth: 1,
-      stroke: 'black'
+      stroke: 'gray'
     } ) );
   }
+
+  container.addChild( new AxisNode( chartModel, -1 - overlap, 0, 1 + overlap, 0, {} ) );
+
+  for ( let i = -1; i <= 1; i += 0.3 ) {
+    const tickMarkNode = new TickMarkNode( chartModel, i, 0, Orientation.VERTICAL, {
+      extent: 8
+    } );
+    container.addChild( tickMarkNode );
+    const label = new Text( i.toFixed( 1 ), {
+      centerTop: tickMarkNode.centerBottom,
+      fontSize: 14
+    } );
+    container.addChild( label );
+  }
+  container.addChild( new AxisNode( chartModel, 0, -1 - overlap, 0, 1 + overlap, {} ) );
+  for ( let i = -1; i <= 1; i += 0.3 ) {
+    const tickMarkNode = new TickMarkNode( chartModel, 0, i, Orientation.HORIZONTAL, {
+      extent: 8
+    } );
+    container.addChild( tickMarkNode );
+    const label = new Text( i.toFixed( 1 ), {
+      rightCenter: tickMarkNode.leftCenter,
+      fontSize: 14
+    } );
+    container.addChild( label );
+  }
+
   container.center = layoutBounds.center;
   return container;
 };

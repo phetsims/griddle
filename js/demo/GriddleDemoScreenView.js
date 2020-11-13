@@ -110,7 +110,6 @@ const demoChartNode = function( layoutBounds ) {
   // Anything you want clipped goes in here
   const chartClip = new Node( { clipArea: chartRectangle.getShape() } );
   chartNode.addChild( chartClip );
-  chartClip.addChild( new ScatterPlot( chartModel, data ) );
 
   // Minor grid lines
   chartClip.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ) );
@@ -148,6 +147,8 @@ const demoChartNode = function( layoutBounds ) {
     chartModel.modelViewTransformProperty.link( m => label.setRightCenter( tickMarkNode.leftCenter ) );
     chartNode.addChild( label );
   }
+
+  chartClip.addChild( new ScatterPlot( chartModel, data ) );
 
   const centerXProperty = new NumberProperty( 0 );
   centerXProperty.link( centerX => {

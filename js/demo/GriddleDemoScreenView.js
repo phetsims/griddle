@@ -35,8 +35,8 @@ import NumberSpinner from '../../../sun/js/NumberSpinner.js';
 import Panel from '../../../sun/js/Panel.js';
 import VSlider from '../../../sun/js/VSlider.js';
 import AxisNode from '../bamboo/AxisNode.js';
+import GridLineSet from '../bamboo/GridLineSet.js';
 import BarChartNode from '../BarChartNode.js';
-import ChartLineNode from '../bamboo/ChartLineNode.js';
 import ChartModel from '../bamboo/ChartModel.js';
 import ChartRectangle from '../bamboo/ChartRectangle.js';
 import DynamicSeries from '../DynamicSeries.js';
@@ -113,19 +113,18 @@ const demoChartNode = function( layoutBounds ) {
   const clipNode = new Node( { clipArea: chartRectangle.getShape() } );
   container.addChild( clipNode );
   clipNode.addChild( new ScatterPlot( chartModel, data ) );
-  for ( let i = -1; i <= 1; i += 0.1 ) {
-    clipNode.addChild( new ChartLineNode( chartModel, -1, i, 1, i, {
-      lineWidth: 1,
-      stroke: 'gray'
-    } ) );
-    clipNode.addChild( new ChartLineNode( chartModel, i, -1, i, 1, {
-      lineWidth: 1,
-      stroke: 'gray'
-    } ) );
-  }
+
+  // Minor grid lines
+  clipNode.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ) );
+  clipNode.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.1, { stroke: 'lightGray' } ) );
+
+  // Major grid lines
+  clipNode.addChild( new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray' } ) );
+  clipNode.addChild( new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray' } ) );
 
   container.addChild( new AxisNode( chartModel, -1 - overlap, 0, 1 + overlap, 0, {} ) );
 
+  // Tick marks on the axis
   for ( let i = -1; i <= 1; i += 0.3 ) {
     const tickMarkNode = new TickMarkNode( chartModel, i, 0, Orientation.VERTICAL, {
       extent: 8

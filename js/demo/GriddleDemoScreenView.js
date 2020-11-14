@@ -37,6 +37,7 @@ import VSlider from '../../../sun/js/VSlider.js';
 import AxisNode from '../bamboo/AxisNode.js';
 import BarPlot from '../bamboo/BarPlot.js';
 import GridLineSet from '../bamboo/GridLineSet.js';
+import LinePlot from '../bamboo/LinePlot.js';
 import TickMarkSet from '../bamboo/TickMarkSet.js';
 import BarChartNode from '../BarChartNode.js';
 import ChartModel from '../bamboo/ChartModel.js';
@@ -124,6 +125,10 @@ const demoChartNode = function( layoutBounds ) {
 
       // Some data
       new BarPlot( chartModel, data ),
+      new LinePlot( chartModel, data,{
+        stroke:'red',
+        lineWidth:2
+      } ),
       new ScatterPlot( chartModel, data )
     ]
   } );

@@ -142,19 +142,21 @@ const demoAmplitudesChart = function( layoutBounds ) {
       // Clipped contents
       chartClip,
 
-      // Tick marks outside the chart
+      // Minor ticks on the y-axis
       new TickMarkSet( chartModel, Orientation.VERTICAL, 0.01, {
         stroke: 'darkGray',
         edge: 'min',
         createLabel: null // no labels
       } ),
+
+      // Major ticks on the y-axis
       new TickMarkSet( chartModel, Orientation.VERTICAL, 0.05, {
         edge: 'min',
         createLabel: value => new Text( value.toFixed( 2 ), { fontSize: 12 } )
       } ),
 
       new TickMarkSet( chartModel, Orientation.HORIZONTAL, Math.PI * 2, {
-        edge: 'max',
+        edge: 'max', // TODO: should be min
         createLabel: value => new Text( ( value / Math.PI ).toFixed( 0 ) + MathSymbols.PI, { fontSize: 12 } )
       } )
     ]

@@ -115,12 +115,12 @@ const demoChartNode = function( layoutBounds ) {
       new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.1, { stroke: 'lightGray' } ),
 
       // Major grid lines
-      new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray' } ),
-      new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray' } ),
+      new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray', clipped: true } ),
+      new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray', clipped: true } ),
 
       // Tick labels along the axes
-      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.2 ),
-      new TickMarkSet( chartModel, Orientation.HORIZONTAL, 0.2 ),
+      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.2, { clipped: true } ),
+      new TickMarkSet( chartModel, Orientation.HORIZONTAL, 0.2, { clipped: true } ),
 
       // Some data
       new BarPlot( chartModel, data ),
@@ -139,7 +139,11 @@ const demoChartNode = function( layoutBounds ) {
 
       // axes nodes not clipped
       new AxisNode( chartModel, Orientation.VERTICAL ),
-      new AxisNode( chartModel, Orientation.HORIZONTAL )
+      new AxisNode( chartModel, Orientation.HORIZONTAL ),
+
+      // Tick marks outside the chart
+      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.2, { edge: 'min' } ),
+      new TickMarkSet( chartModel, Orientation.HORIZONTAL, 0.2, { edge: 'min' } )
     ]
   } );
 

@@ -53,6 +53,7 @@ import ScatterPlot from '../bamboo/ScatterPlot.js';
 import XYChartNode from '../XYChartNode.js';
 import SeismographNode from '../SeismographNode.js';
 import XYCursorChartNode from '../XYCursorChartNode.js';
+import DemoComponentsChart from './DemoComponentsChart.js';
 import DemoHarmonicsChart from './DemoHarmonicsChart.js';
 
 // constants - this is a hack to enable components to animate from the animation loop
@@ -71,6 +72,7 @@ class GriddleDemoScreenView extends DemosScreenView {
        */
       { label: 'ChartNode', createNode: demoChartNode },
       { label: 'HarmonicsChart', createNode: demoHarmonicsChart },
+      { label: 'ComponentsChart', createNode: demoComponentsChart },
       { label: 'AmplitudesChart', createNode: demoAmplitudesChart },
       { label: 'BarChart', createNode: demoBarChart },
       { label: 'GridNode', createNode: demoGridNode },
@@ -173,6 +175,12 @@ const demoAmplitudesChart = function( layoutBounds ) {
 
 const demoHarmonicsChart = function( layoutBounds ) {
   return new DemoHarmonicsChart( {
+    center: layoutBounds.center
+  } );
+};
+
+const demoComponentsChart = function( layoutBounds ) {
+  return new DemoComponentsChart( {
     center: layoutBounds.center
   } );
 };

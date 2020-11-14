@@ -8,14 +8,15 @@ import ZoomButtonGroup from '../../../scenery-phet/js/ZoomButtonGroup.js';
 import Node from '../../../scenery/js/nodes/Node.js';
 import Text from '../../../scenery/js/nodes/Text.js';
 import AxisNode from '../bamboo/AxisNode.js';
+import CanvasLinePlot from '../bamboo/CanvasLinePlot.js';
 import ChartModel from '../bamboo/ChartModel.js';
 import ChartRectangle from '../bamboo/ChartRectangle.js';
 import GridLineSet from '../bamboo/GridLineSet.js';
-import LinePlot from '../bamboo/LinePlot.js';
 import TickMarkSet from '../bamboo/TickMarkSet.js';
 import griddle from '../griddle.js';
 
 /**
+ *
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
@@ -25,10 +26,10 @@ class DemoHarmonicsChart extends Node {
 
     super();
 
-    const createDataSet = ( min, max, frequency, delta = 0.005 ) => {
+    const createDataSet = ( min, max, frequency, offset, delta = 0.005 ) => {
       const data = [];
       for ( let x = min; x <= max; x += delta ) {
-        data.push( new Vector2( x, Math.sin( x * frequency ) ) );
+        data.push( new Vector2( x, Math.sin( x * frequency + offset ) ) );
       }
       return data;
     };
@@ -62,6 +63,14 @@ class DemoHarmonicsChart extends Node {
                                  zoomLevel === 4 ? new Range( -Math.PI / 2, Math.PI / 2 ) : null );
     } );
 
+    const dataSets = [];
+
+    for ( let i = 0; i < 500; i++ ) {
+      // plots.push( new LinePlot( chartModel, createDataSet( -2, 2, 5 + i / 10 + phet.joist.random.nextDouble() / 10, phet.joist.random.nextDouble() * 2 ), { stroke: 'red', lineWidth: 2 } ) )
+      const d = createDataSet( -2, 2, 5 + i / 10 + phet.joist.random.nextDouble() / 10, phet.joist.random.nextDouble() * 2 );
+      dataSets.push( d );
+    }
+
     // Anything you want clipped goes in here
     // TODO: Or we could clip each child instead of having one clipped node?
     this.children = [
@@ -83,10 +92,7 @@ class DemoHarmonicsChart extends Node {
           new AxisNode( chartModel, Orientation.HORIZONTAL ),
 
           // Some data
-          new LinePlot( chartModel, createDataSet( -2, 2, 5 ), { stroke: 'red', lineWidth: 2 } ),
-          new LinePlot( chartModel, createDataSet( -2, 2, 10 ), { stroke: 'green', lineWidth: 2 } ),
-          new LinePlot( chartModel, createDataSet( -2, 2, 20 ), { stroke: 'blue', lineWidth: 2 } ),
-          new LinePlot( chartModel, createDataSet( -2, 2, 30 ), { stroke: 'orange', lineWidth: 2 } )
+          new CanvasLinePlot( chartModel, dataSets )
         ]
       } ),
 

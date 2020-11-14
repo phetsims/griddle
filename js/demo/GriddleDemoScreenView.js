@@ -92,12 +92,11 @@ const demoChartNode = function( layoutBounds ) {
     phet.joist.random.nextDouble() < 0.3 && data.push( new Vector2( i, Math.sin( i * 2 ) ) );
   }
 
-  const width = 600;
-  const height = 400;
   const chartModel = new ChartModel( {
-    width: width,
-    height: height,
-    modelViewTransform: ModelViewTransform2.createRectangleMapping( new Bounds2( -1, -1, 1, 1 ), new Bounds2( 0, 0, width, height ) )
+    width: 600,
+    height: 400,
+    modelXRange: new Range( -1, 1 ),
+    modelYRange: new Range( -1, 1 )
   } );
 
   const chartRectangle = new ChartRectangle( chartModel, {
@@ -146,9 +145,7 @@ const demoChartNode = function( layoutBounds ) {
 
   // Controls
   const centerXProperty = new NumberProperty( 0 );
-  centerXProperty.link( centerX => {
-    chartModel.modelViewTransformProperty.value = ModelViewTransform2.createRectangleMapping( new Bounds2( -1, -1, 1, 1 ).shiftedX( -centerX ), new Bounds2( 0, 0, width, height ) );
-  } );
+  centerXProperty.link( centerX => chartModel.setModelXRange( new Range( -1 - centerX, 1 - centerX ) ) );
   const controls = new HSlider( centerXProperty, new Range( -1.25, 1.25 ), {
     trackSize: new Dimension2( 500, 5 )
   } );

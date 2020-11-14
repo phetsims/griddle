@@ -20,12 +20,14 @@ import Vector2 from '../../../dot/js/Vector2.js';
 import merge from '../../../phet-core/js/merge.js';
 import Orientation from '../../../phet-core/js/Orientation.js';
 import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
+import MathSymbols from '../../../scenery-phet/js/MathSymbols.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import sceneryPhetQueryParameters from '../../../scenery-phet/js/sceneryPhetQueryParameters.js';
 import HBox from '../../../scenery/js/nodes/HBox.js';
 import Node from '../../../scenery/js/nodes/Node.js';
 import Text from '../../../scenery/js/nodes/Text.js';
 import VBox from '../../../scenery/js/nodes/VBox.js';
+import Color from '../../../scenery/js/util/Color.js';
 import ABSwitch from '../../../sun/js/ABSwitch.js';
 import BooleanRectangularStickyToggleButton from '../../../sun/js/buttons/BooleanRectangularStickyToggleButton.js';
 import BooleanRectangularToggleButton from '../../../sun/js/buttons/BooleanRectangularToggleButton.js';
@@ -33,6 +35,7 @@ import DemosScreenView from '../../../sun/js/demo/DemosScreenView.js';
 import HSlider from '../../../sun/js/HSlider.js';
 import NumberSpinner from '../../../sun/js/NumberSpinner.js';
 import Panel from '../../../sun/js/Panel.js';
+import Utils from '../../../dot/js/Utils.js';
 import VSlider from '../../../sun/js/VSlider.js';
 import AxisNode from '../bamboo/AxisNode.js';
 import BarPlot from '../bamboo/BarPlot.js';
@@ -66,6 +69,7 @@ class GriddleDemoScreenView extends DemosScreenView {
        * {function(Bounds2): Node} createNode - creates the scene graph for the demo
        */
       { label: 'ChartNode', createNode: demoChartNode },
+      { label: 'AmplitudesChart', createNode: demoAmplitudesChart },
       { label: 'BarChart', createNode: demoBarChart },
       { label: 'GridNode', createNode: demoGridNode },
       { label: 'XYChartNode', createNode: demoScrollingChartNode },
@@ -85,6 +89,83 @@ class GriddleDemoScreenView extends DemosScreenView {
     emitter.emit( dt );
   }
 }
+
+const demoAmplitudesChart = function( layoutBounds ) {
+
+  const data = [];
+  for ( let i = 0; i <= 24; i++ ) {
+    const x = Math.PI * i;
+    const arg = x - Math.PI * 12;
+    const c = 10;
+    const y = 0.13 * Math.exp( -arg * arg / 2 / c / c );
+    console.log( x, y );
+    data.push( new Vector2( x, y ) );
+  }
+
+  const chartModel = new ChartModel( {
+    width: 700,
+    height: 300,
+    modelXRange: new Range( 0, Math.PI * 24 ),
+    modelYRange: new Range( 0, 0.14 )
+  } );
+
+  const chartRectangle = new ChartRectangle( chartModel, {
+    fill: 'white',
+    stroke: 'black',
+    cornerXRadius: 6,
+    cornerYRadius: 6
+  } );
+
+  // Anything you want clipped goes in here
+  const chartClip = new Node( {
+    clipArea: chartRectangle.getShape(),
+    children: [
+      // Minor grid lines
+      new GridLineSet( chartModel, Orientation.VERTICAL, 0.05, { stroke: 'lightGray' } ),
+
+      // Some data
+      new BarPlot( chartModel, data, {
+        valueToColor: ( x, y ) => {
+          const c = Utils.linear( 0, 24 * Math.PI, 0, 240, x );
+          return new Color( c, c, c );
+        }
+      } )
+    ]
+  } );
+
+  const chartNode = new Node( {
+    children: [
+
+      // Background
+      chartRectangle,
+
+      // Clipped contents
+      chartClip,
+
+      // Tick marks outside the chart
+      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.01, {
+        stroke: 'darkGray',
+        edge: 'min',
+        createLabel: null // no labels
+      } ),
+      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.05, {
+        edge: 'min',
+        createLabel: value => new Text( value.toFixed( 2 ), { fontSize: 12 } )
+      } ),
+
+      new TickMarkSet( chartModel, Orientation.HORIZONTAL, Math.PI * 2, {
+        edge: 'max',
+        createLabel: value => new Text( ( value / Math.PI ).toFixed( 0 ) + MathSymbols.PI, { fontSize: 12 } )
+      } )
+    ]
+  } );
+
+  return new VBox( {
+    resize: false,
+    children: [ chartNode ],
+    center: layoutBounds.center
+  } );
+};
 
 const demoChartNode = function( layoutBounds ) {
 
@@ -125,9 +206,9 @@ const demoChartNode = function( layoutBounds ) {
 
       // Some data
       new BarPlot( chartModel, data ),
-      new LinePlot( chartModel, data,{
-        stroke:'red',
-        lineWidth:2
+      new LinePlot( chartModel, data, {
+        stroke: 'red',
+        lineWidth: 2
       } ),
       new ScatterPlot( chartModel, data )
     ]

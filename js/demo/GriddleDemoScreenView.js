@@ -117,9 +117,7 @@ const demoChartNode = function( layoutBounds ) {
     phet.joist.random.nextDouble() < 0.3 && data.push( new Vector2( i, Math.sin( i * 2 ) ) );
   }
 
-  const chartModel = new ChartModel( {
-    width: 600,
-    height: 400,
+  const chartModel = new ChartModel( 600,400,{
     modelXRange: new Range( -1, 1 ),
     modelYRange: new Range( -1, 1 )
   } );

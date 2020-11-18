@@ -134,16 +134,16 @@ const demoChartNode = function( layoutBounds ) {
     clipArea: chartRectangle.getShape(),
     children: [
       // Minor grid lines
-      new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ),
       new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.1, { stroke: 'lightGray' } ),
+      new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ),
 
       // Major grid lines
-      new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray', clipped: true } ),
       new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray', clipped: true } ),
+      new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray', clipped: true } ),
 
       // Tick labels along the axes
-      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.2, { clipped: true } ),
       new TickMarkSet( chartModel, Orientation.HORIZONTAL, 0.2, { clipped: true } ),
+      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.2, { clipped: true } ),
 
       // Some data
       new BarPlot( chartModel, data ),

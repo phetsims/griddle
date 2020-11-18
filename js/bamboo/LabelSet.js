@@ -1,15 +1,19 @@
 // Copyright 2020, University of Colorado Boulder
 
+/**
+ * TODO documentation
+ *
+ * @author Sam Reid (PhET Interactive Simulations)
+ */
+
 import Bounds2 from '../../../dot/js/Bounds2.js';
+import Utils from '../../../dot/js/Utils.js';
 import merge from '../../../phet-core/js/merge.js';
 import Orientation from '../../../phet-core/js/Orientation.js';
 import Path from '../../../scenery/js/nodes/Path.js';
 import Text from '../../../scenery/js/nodes/Text.js';
 import griddle from '../griddle.js';
 
-/**
- * @author Sam Reid (PhET Interactive Simulations)
- */
 class LabelSet extends Path {
 
   /**
@@ -33,7 +37,7 @@ class LabelSet extends Path {
       clipped: false,
 
       // or return null if no label for that value
-      createLabel: value => new Text( value.toFixed( 1 ), { fontSize: 12 } ),
+      createLabel: value => new Text( Utils.toFixed( value, 1 ), { fontSize: 12 } ),
       positionLabel: ( label, tickBounds, axisOrientation ) => {
         if ( axisOrientation === Orientation.HORIZONTAL ) {
 

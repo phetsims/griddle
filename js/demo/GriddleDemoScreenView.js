@@ -18,7 +18,6 @@ import Dimension2 from '../../../dot/js/Dimension2.js';
 import Range from '../../../dot/js/Range.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import merge from '../../../phet-core/js/merge.js';
-import Orientation from '../../../phet-core/js/Orientation.js';
 import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import sceneryPhetQueryParameters from '../../../scenery-phet/js/sceneryPhetQueryParameters.js';
@@ -30,29 +29,17 @@ import ABSwitch from '../../../sun/js/ABSwitch.js';
 import BooleanRectangularStickyToggleButton from '../../../sun/js/buttons/BooleanRectangularStickyToggleButton.js';
 import BooleanRectangularToggleButton from '../../../sun/js/buttons/BooleanRectangularToggleButton.js';
 import DemosScreenView from '../../../sun/js/demo/DemosScreenView.js';
-import HSlider from '../../../sun/js/HSlider.js';
 import NumberSpinner from '../../../sun/js/NumberSpinner.js';
 import Panel from '../../../sun/js/Panel.js';
 import VSlider from '../../../sun/js/VSlider.js';
-import AxisNode from '../bamboo/AxisNode.js';
-import BarPlot from '../bamboo/BarPlot.js';
-import GridLineSet from '../bamboo/GridLineSet.js';
-import LinePlot from '../bamboo/LinePlot.js';
-import TickMarkSet from '../bamboo/TickMarkSet.js';
 import BarChartNode from '../BarChartNode.js';
-import ChartModel from '../bamboo/ChartModel.js';
-import ChartRectangle from '../bamboo/ChartRectangle.js';
 import DynamicSeries from '../DynamicSeries.js';
 import DynamicSeriesNode from '../DynamicSeriesNode.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
-import ScatterPlot from '../bamboo/ScatterPlot.js';
 import XYChartNode from '../XYChartNode.js';
 import SeismographNode from '../SeismographNode.js';
 import XYCursorChartNode from '../XYCursorChartNode.js';
-import DemoAmplitudesChart from './DemoAmplitudesChart.js';
-import DemoComponentsChart from './DemoComponentsChart.js';
-import DemoHarmonicsChart from './DemoHarmonicsChart.js';
 
 // constants - this is a hack to enable components to animate from the animation loop
 const emitter = new Emitter( { parameters: [ { valueType: 'number' } ] } );
@@ -68,10 +55,6 @@ class GriddleDemoScreenView extends DemosScreenView {
        * {string} label - label in the combo box
        * {function(Bounds2): Node} createNode - creates the scene graph for the demo
        */
-      { label: 'ChartNode', createNode: demoChartNode },
-      { label: 'HarmonicsChart', createNode: demoHarmonicsChart },
-      { label: 'ComponentsChart', createNode: demoComponentsChart },
-      { label: 'AmplitudesChart', createNode: demoAmplitudesChart },
       { label: 'BarChart', createNode: demoBarChart },
       { label: 'GridNode', createNode: demoGridNode },
       { label: 'XYChartNode', createNode: demoScrollingChartNode },
@@ -91,101 +74,6 @@ class GriddleDemoScreenView extends DemosScreenView {
     emitter.emit( dt );
   }
 }
-
-const demoAmplitudesChart = function( layoutBounds ) {
-  return new DemoAmplitudesChart( {
-    center: layoutBounds.center
-  } );
-};
-
-const demoHarmonicsChart = function( layoutBounds ) {
-  return new DemoHarmonicsChart( {
-    center: layoutBounds.center
-  } );
-};
-
-const demoComponentsChart = function( layoutBounds ) {
-  return new DemoComponentsChart( {
-    center: layoutBounds.center
-  } );
-};
-
-const demoChartNode = function( layoutBounds ) {
-
-  const data = [];
-  for ( let i = -1; i < 1; i += 0.01 ) {
-    phet.joist.random.nextDouble() < 0.3 && data.push( new Vector2( i, Math.sin( i * 2 ) ) );
-  }
-
-  const chartModel = new ChartModel( 600,400,{
-    modelXRange: new Range( -1, 1 ),
-    modelYRange: new Range( -1, 1 )
-  } );
-
-  const chartRectangle = new ChartRectangle( chartModel, {
-    fill: 'white',
-    stroke: 'black',
-    cornerXRadius: 6,
-    cornerYRadius: 6
-  } );
-
-  // Anything you want clipped goes in here
-  const chartClip = new Node( {
-    clipArea: chartRectangle.getShape(),
-    children: [
-      // Minor grid lines
-      new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.1, { stroke: 'lightGray' } ),
-      new GridLineSet( chartModel, Orientation.VERTICAL, 0.1, { stroke: 'lightGray' } ),
-
-      // Major grid lines
-      new GridLineSet( chartModel, Orientation.HORIZONTAL, 0.2, { stroke: 'darkGray', clipped: true } ),
-      new GridLineSet( chartModel, Orientation.VERTICAL, 0.2, { stroke: 'darkGray', clipped: true } ),
-
-      // Tick labels along the axes
-      new TickMarkSet( chartModel, Orientation.HORIZONTAL, 0.2, { clipped: true } ),
-      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.2, { clipped: true } ),
-
-      // Some data
-      new BarPlot( chartModel, data ),
-      new LinePlot( chartModel, data, {
-        stroke: 'red',
-        lineWidth: 2
-      } ),
-      new ScatterPlot( chartModel, data )
-    ]
-  } );
-
-  const chartNode = new Node( {
-    children: [
-
-      // Background
-      chartRectangle,
-
-      // Clipped contents
-      chartClip,
-
-      // axes nodes not clipped
-      new AxisNode( chartModel, Orientation.VERTICAL ),
-      new AxisNode( chartModel, Orientation.HORIZONTAL ),
-
-      // Tick marks outside the chart
-      new TickMarkSet( chartModel, Orientation.VERTICAL, 0.2, { edge: 'min' } ),
-      new TickMarkSet( chartModel, Orientation.HORIZONTAL, 0.2, { edge: 'min' } )
-    ]
-  } );
-
-  // Controls
-  const centerXProperty = new NumberProperty( 0 );
-  centerXProperty.link( centerX => chartModel.setModelXRange( new Range( -1 - centerX, 1 - centerX ) ) );
-  const controls = new HSlider( centerXProperty, new Range( -1.25, 1.25 ), {
-    trackSize: new Dimension2( 500, 5 )
-  } );
-  return new VBox( {
-    resize: false,
-    children: [ chartNode, controls ],
-    center: layoutBounds.center
-  } );
-};
 
 // Creates a demo for the BarChartNode
 const demoBarChart = function( layoutBounds ) {

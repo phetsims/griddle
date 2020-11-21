@@ -21,7 +21,7 @@ class PointStyledVector2 extends Vector2 {
     assert && assert( pointStyle instanceof PointStyle, 'wrong type for pointStyle' );
     super( x, y );
 
-    // @public {PointStyle}
+    // @public (read-only) {PointStyle}
     this.pointStyle = pointStyle;
   }
 }

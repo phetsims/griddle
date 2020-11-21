@@ -297,13 +297,17 @@ class ChartCursor extends Rectangle {
       lineDash: [ 4, 4 ]
     } );
 
+    // @private
     this.chart = chart;
+
+    // @public
     this.modelViewTransformProperty = modelViewTransformProperty;
 
     // Make it easier to grab this cursor by giving it expanded mouse and touch areas.
     this.mouseArea = this.localBounds.dilatedX( 12 );
     this.touchArea = this.localBounds.dilatedX( 12 );
 
+    // @private
     this.includeDragCue = options.includeDragCue;
 
     if ( this.includeDragCue ) {

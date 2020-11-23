@@ -2,8 +2,11 @@
 
 /**
  * @author Jesse Greenberg
+ *
+ * @deprecated - please use bamboo
  */
 
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import griddle from './griddle.js';
 import DynamicSeriesNode from './DynamicSeriesNode.js';
 import Circle from '../../scenery/js/nodes/Circle.js';
@@ -17,6 +20,8 @@ class SeismographDynamicSeriesNode extends DynamicSeriesNode {
    * @param {Property.<ModelViewTransform2>}modelViewTransformProperty
    */
   constructor( dynamicSeries, chartWidth, bounds, modelViewTransformProperty ) {
+    assert && deprecationWarning( 'Please use bamboo' );
+
     super( dynamicSeries, chartWidth, bounds, modelViewTransformProperty );
 
     // Create the pen which draws the data at the right side of the graph

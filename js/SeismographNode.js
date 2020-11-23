@@ -8,15 +8,15 @@
  *
  * Please see the demo in http://localhost/griddle/griddle_en.html
  *
- * Moved from wave-interference repo to griddle repo on Wed, Aug 29, 2018. Seismograph specific components
- * moved out of XYChartNode on 6/2/20.
- *
  * @author Jesse Greenberg
+ *
+ * @deprecated - please use bamboo
  */
 
 import Property from '../../axon/js/Property.js';
 import Bounds2 from '../../dot/js/Bounds2.js';
 import Range from '../../dot/js/Range.js';
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import ZoomButton from '../../scenery-phet/js/buttons/ZoomButton.js';
@@ -38,6 +38,7 @@ class SeismographNode extends XYChartNode {
    * @param options
    */
   constructor( valueProperty, dynamicSeriesArray, spanLabelNode, options ) {
+    assert && deprecationWarning( 'Please use bamboo' );
 
     // the grid for a seismograph does not scroll with the data, so it will get its own transform (set below)
     const gridTransformProperty = new Property( ModelViewTransform2.createIdentity() );

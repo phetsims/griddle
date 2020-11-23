@@ -4,8 +4,11 @@
  * Utilities used by griddle.
  *
  * @author Sam Reid (PhET Interactive Simulations)
+ *
+ * @deprecated - please use bamboo
  */
 
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import griddle from './griddle.js';
 
 const GriddleUtils = {
@@ -20,6 +23,8 @@ const GriddleUtils = {
    * @public
    */
   getValuesInRangeWithAnchor( min, max, delta = 1, anchor = 0 ) {
+
+    assert && deprecationWarning( 'Please use bamboo' );
 
     const nMin = Math.floor( ( min - anchor ) / delta );
     const nMax = Math.ceil( ( max - anchor ) / delta );

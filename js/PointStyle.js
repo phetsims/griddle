@@ -5,8 +5,11 @@
  * point visibility, stroke, size, and opacity for an individual point.
  *
  * @author Jesse Greenberg
+ *
+ * @deprecated - please use bamboo
  */
 
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import griddle from './griddle.js';
 
@@ -16,6 +19,7 @@ class PointStyle {
    * @param {object} [options]
    */
   constructor( options ) {
+    assert && deprecationWarning( 'Please use bamboo' );
 
     options = merge( {
 

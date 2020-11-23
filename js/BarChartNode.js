@@ -6,8 +6,11 @@
  *
  * @author Jonathan Olson <jonathan.olson@colorado.edu>
  * @author Denzell Barnett (PhET Interactive Simulations)
+ *
+ * @deprecated - please use BAMBOO/BarPlot
  */
 
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../scenery-phet/js/PhetFont.js';
@@ -39,6 +42,7 @@ class BarChartNode extends Node {
    * @param {Object} [options]
    */
   constructor( bars, yRangeProperty, options ) {
+    assert && deprecationWarning( 'Please use BAMBOO/BarPlot' );
 
     options = merge( {
 

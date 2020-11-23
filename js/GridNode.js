@@ -9,8 +9,11 @@
  * manipulate the line spacings for scale/translation in view coordinates. Arbitrary rotation is not supported.
  *
  * @author Jesse Greenberg
+ *
+ * @deprecated - please use BAMBOO/GridLineSet
  */
 
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import Enumeration from '../../phet-core/js/Enumeration.js';
 import merge from '../../phet-core/js/merge.js';
 import Path from '../../scenery/js/nodes/Path.js';
@@ -32,6 +35,8 @@ class GridNode extends Node {
    * @param {Object} [options]
    */
   constructor( gridWidth, gridHeight, options ) {
+    assert && deprecationWarning( 'Please use BAMBOO/GridLineSet' );
+
     options = merge( {
 
       // {number|null} spacing between major horizontal lines, in model coordinates - no major horizontal lines if null

@@ -4,8 +4,11 @@
  * QUnit tests for XYChartNode
  *
  * @author Sam Reid (PhET Interactive Simulations)
+ *
+ * @deprecated - please use bamboo
  */
 
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import Text from '../../scenery/js/nodes/Text.js';
 import DynamicSeries from './DynamicSeries.js';
 import XYChartNode from './XYChartNode.js';
@@ -13,6 +16,7 @@ import XYChartNode from './XYChartNode.js';
 QUnit.module( 'XYChartNode' );
 
 QUnit.test( 'Test dispose', assert => {
+  assert && deprecationWarning( 'Please use bamboo' );
   const series1 = new DynamicSeries( { color: 'blue' } );
   const scrollingChartNode = new XYChartNode( {
       horizontalAxisLabelNode: new Text( 'horizontal' ),

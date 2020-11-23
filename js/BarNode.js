@@ -5,6 +5,8 @@
  *
  * @author Jonathan Olson <jonathan.olson@colorado.edu>
  * @author Denzell Barnett (PhET Interactive Simulations)
+ *
+ * @deprecated - please use BAMBOO/BarPlot
  */
 
 import NumberProperty from '../../axon/js/NumberProperty.js';

@@ -5,8 +5,11 @@
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Jesse Greenberg
+ *
+ * @deprecated - please use bamboo
  */
 
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import Enumeration from '../../phet-core/js/Enumeration.js';
 import merge from '../../phet-core/js/merge.js';
 import CanvasNode from '../../scenery/js/nodes/CanvasNode.js';
@@ -26,6 +29,7 @@ class DynamicSeriesNode extends CanvasNode {
    * @param {Object} [options]
    */
   constructor( dynamicSeries, chartWidth, bounds, modelViewTransformProperty, options ) {
+    assert && deprecationWarning( 'Please use bamboo' );
 
     options = merge( {
 

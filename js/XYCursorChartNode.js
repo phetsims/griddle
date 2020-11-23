@@ -4,9 +4,12 @@
  * An XYChartNode that includes a draggable cursor that allows the user to scrub or play back through the data.
  *
  * @author Jesse Greenberg
+ *
+ * @deprecated - please use bamboo
  */
 
 import Utils from '../../dot/js/Utils.js';
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import DragListener from '../../scenery/js/listeners/DragListener.js';
@@ -31,6 +34,8 @@ class XYCursorChartNode extends XYChartNode {
    * @param {Object} [options]
    */
   constructor( options ) {
+    assert && deprecationWarning( 'Please use bamboo' );
+
     options = merge( {
 
       // options passed on to the cursor, see ChartCursor

@@ -5,11 +5,14 @@
  * an Emitter.
  *
  * @author Sam Reid (PhET Interactive Simulations)
+ *
+ * @deprecated - please use bamboo
  */
 
 import BooleanProperty from '../../axon/js/BooleanProperty.js';
 import Emitter from '../../axon/js/Emitter.js';
 import Vector2 from '../../dot/js/Vector2.js';
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import Color from '../../scenery/js/util/Color.js';
 import ColorDef from '../../scenery/js/util/ColorDef.js';
@@ -21,6 +24,7 @@ class DynamicSeries {
    * @param {Object} [options]
    */
   constructor( options ) {
+    assert && deprecationWarning( 'Please use bamboo' );
 
     // @private {Vector2[]} - the data points in the series.  A NaN "y" value indicates there is no sample at that
     // point in time

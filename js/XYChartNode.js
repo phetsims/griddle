@@ -10,6 +10,8 @@
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Jesse Greenberg (PhET Interactive Simulations)
+ *
+ * @deprecated - please use bamboo
  */
 
 import Emitter from '../../axon/js/Emitter.js';
@@ -19,6 +21,7 @@ import Range from '../../dot/js/Range.js';
 import Utils from '../../dot/js/Utils.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import Shape from '../../kite/js/Shape.js';
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../scenery/js/nodes/Node.js';
@@ -40,6 +43,8 @@ class XYChartNode extends Node {
    * @param {Object} [options]
    */
   constructor( options ) {
+    assert && deprecationWarning( 'Please use bamboo' );
+
     super();
 
     options = merge( {

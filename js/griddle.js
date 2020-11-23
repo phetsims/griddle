@@ -4,6 +4,8 @@
  * Creates the namespace for this simulation.
  *
  * @author Chris Malley (PixelZoom, Inc.)
+ *
+ * @deprecated - please use bamboo
  */
 
 import Namespace from '../../phet-core/js/Namespace.js';

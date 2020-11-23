@@ -147,7 +147,7 @@ class SeismographNode extends XYChartNode {
       const zoomButtonOptions = {
         left: this.chartPanel.right + 5,
         baseColor: '#97c7fa',
-        radius: 6,
+        magnifyingGlassRadius: 6,
         xMargin: 5,
         yMargin: 3
       };

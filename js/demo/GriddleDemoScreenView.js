@@ -456,7 +456,7 @@ const demoXYCursorPlot = layoutBounds => {
     horizontalAxisLabelNode: new Text( 'Time (s)', { fill: 'white' } ),
 
     cursorOptions: {
-      drag: () => {
+      startDrag: () => {
         dragging = true;
       },
       endDrag: () => {

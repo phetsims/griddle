@@ -7,22 +7,27 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
+import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import Line from '../../scenery/js/nodes/Line.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import VBox from '../../scenery/js/nodes/VBox.js';
-import bamboo from './bamboo.js';
+import griddle from './griddle.js';
 
-class SpanNode extends Node {
+class SpanNode extends VBox {
 
   /**
-   * @param {Node} scaleIndicatorTextNode
+   * @param {Node} labelNode
    * @param {number} viewWidth
    * @param {Object} [options]
    */
-  constructor( scaleIndicatorTextNode, viewWidth, options ) {
+  constructor( labelNode, viewWidth, options ) {
 
-    // Create double-headed arrow with bars to show the time between gridlines
+    options = merge( {
+      spacing: -2
+    }, options );
+
+    // Create double-headed arrow with bars to show the distance specified by viewWidth
     const createBar = centerX => new Line( 0, 0, 0, 6, { stroke: 'white', centerX: centerX } );
     const leftBar = createBar( 0 );
     const rightBar = createBar( viewWidth );
@@ -38,20 +43,15 @@ class SpanNode extends Node {
       children: [ leftBar, rightBar, arrowNode ]
     } );
 
-    // Prevent the scale indicator text from being wider than the corresponding arrow
-    scaleIndicatorTextNode.maxWidth = arrowWithBars.width;
-
-    const lengthScaleIndicatorNode = new VBox( {
-      spacing: -2,
-      children: [ arrowWithBars, scaleIndicatorTextNode ]
-    } );
+    // Prevent labelNode from being wider than arrowWithBars
+    labelNode.maxWidth = arrowWithBars.width;
 
     assert && assert( !options.children, 'SpanNode sets children' );
-    options.children = [ arrowNode, lengthScaleIndicatorNode ];
+    options.children = [ arrowWithBars, labelNode ];
 
     super( options );
   }
 }
 
-bamboo.register( 'SpanNode', SpanNode );
+griddle.register( 'SpanNode', SpanNode );
 export default SpanNode;

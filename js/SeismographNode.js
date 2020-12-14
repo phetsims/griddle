@@ -24,7 +24,7 @@ import Tandem from '../../tandem/js/Tandem.js';
 import griddle from './griddle.js';
 import XYChartNode from './XYChartNode.js';
 import SeismographDynamicSeriesNode from './SeismographDynamicSeriesNode.js';
-import SpanNode from '../../bamboo/js/SpanNode.js';
+import SpanNode from './SpanNode.js';
 
 // constants
 const HORIZONTAL_AXIS_LABEL_MARGIN = 4;

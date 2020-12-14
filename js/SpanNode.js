@@ -5,6 +5,8 @@
  * indicate the distance between gridlines.
  *
  * @author Sam Reid (PhET Interactive Simulations)
+ *
+ * @deprecated - please use bamboo
  */
 
 import merge from '../../phet-core/js/merge.js';

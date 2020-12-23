@@ -171,7 +171,7 @@ class DynamicSeries {
 
   /**
    * Remove a set of data points, removing one at each provided x value. You may have access
-   * to the indepentent variable but not to the y value in the series, this lets you
+   * to the independent variable but not to the y value in the series, this lets you
    * remove many points at once without getting the y values.
    * @public
    *

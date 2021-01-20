@@ -58,7 +58,7 @@ class SeismographNode extends XYChartNode {
       numberHorizontalLines: 5,
       numberVerticalLines: 5,
 
-      // {Node} - label for the horizontal axis, layout adjusted to accomodate the span Node of the Seismograph,
+      // {Node} - label for the horizontal axis, layout adjusted to accommodate the span Node of the Seismograph,
       // otherwise passed to supertype
       horizontalAxisLabelNode: null,
 
@@ -186,6 +186,7 @@ class SeismographNode extends XYChartNode {
     if ( options.horizontalAxisLabelNode ) {
       if ( options.horizontalAxisLabelNode.left < spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN ) {
         options.horizontalAxisLabelNode.left = spanNode.right + HORIZONTAL_AXIS_LABEL_MARGIN;
+        options.horizontalAxisLabelNode.maxWidth = this.chartWidth - spanNode.width - HORIZONTAL_AXIS_LABEL_MARGIN;
       }
     }
 

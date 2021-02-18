@@ -19,7 +19,6 @@ import Range from '../../dot/js/Range.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
-import ZoomButton from '../../scenery-phet/js/buttons/ZoomButton.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import griddle from './griddle.js';
 import XYChartNode from './XYChartNode.js';
@@ -89,7 +88,7 @@ class SeismographNode extends XYChartNode {
     }, options );
 
     assert && assert( options.modelViewTransformProperty === undefined, 'SeismographNode sets ModelViewTransform' );
-
+    assert && assert(options.verticalRanges.length===1,'SeismographNode is deprecated and no longer supports multiple vertical ranges, please use bamboo');
     assert && assert( options.gridNodeOptions.modelViewTransformProperty === undefined, 'SeismographNode sets transform for GridNode' );
     options.gridNodeOptions.modelViewTransformProperty = gridTransformProperty;
 
@@ -142,39 +141,6 @@ class SeismographNode extends XYChartNode {
         }
       }
     } );
-
-    if ( options.verticalRanges.length > 1 ) {
-      const zoomButtonOptions = {
-        left: this.chartPanel.right + 5,
-        baseColor: '#97c7fa',
-        magnifyingGlassOptions: {
-          glassRadius: 6
-        },
-        xMargin: 5,
-        yMargin: 3
-      };
-
-      const zoomInButton = new ZoomButton( merge( {
-        in: true,
-        top: this.chartPanel.top,
-        listener: () => zoomLevelIndexProperty.value--,
-        tandem: options.tandem.createTandem( 'zoomInButton' )
-      }, zoomButtonOptions ) );
-      this.addChild( zoomInButton );
-
-      const zoomOutButton = new ZoomButton( merge( {
-        in: false,
-        top: zoomInButton.bottom + 5,
-        listener: () => zoomLevelIndexProperty.value++,
-        tandem: options.tandem.createTandem( 'zoomOutButton' )
-      }, zoomButtonOptions ) );
-      this.addChild( zoomOutButton );
-
-      zoomLevelIndexProperty.link( zoomLevelIndex => {
-        zoomOutButton.enabled = zoomLevelIndex < options.verticalRanges.length - 1;
-        zoomInButton.enabled = zoomLevelIndex > 0;
-      } );
-    }
 
     const viewSpanWidth = gridTransformProperty.get().modelToViewDeltaX( this.majorVerticalLineSpacing );
     const spanNode = new SpanNode( spanLabelNode, viewSpanWidth, {

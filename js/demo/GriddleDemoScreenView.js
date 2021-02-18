@@ -407,7 +407,7 @@ const demoSeismographNode = layoutBounds => {
       fill: 'white'
     } ),
     horizontalAxisLabelNode: new Text( 'time (s)', { fill: 'white' } ),
-    verticalRanges: [ new Range( -1, 1 ), new Range( -2, 2 ), new Range( -3, 3 ) ]
+    verticalRanges: [ new Range( -1, 1 ) ]
   } );
   const panel = new Panel( seismographNode, {
     fill: 'gray',

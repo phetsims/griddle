@@ -88,7 +88,7 @@ class SeismographNode extends XYChartNode {
     }, options );
 
     assert && assert( options.modelViewTransformProperty === undefined, 'SeismographNode sets ModelViewTransform' );
-    assert && assert(options.verticalRanges.length===1,'SeismographNode is deprecated and no longer supports multiple vertical ranges, please use bamboo');
+    assert && assert( options.verticalRanges.length === 1, 'SeismographNode is deprecated and no longer supports multiple vertical ranges, please use bamboo' );
     assert && assert( options.gridNodeOptions.modelViewTransformProperty === undefined, 'SeismographNode sets transform for GridNode' );
     options.gridNodeOptions.modelViewTransformProperty = gridTransformProperty;
 

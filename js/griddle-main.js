@@ -20,12 +20,14 @@ const simOptions = {
   }
 };
 
-simLauncher.launch( function() {
+simLauncher.launch( () => {
   assert && deprecationWarning( 'Please use bamboo' );
   new Sim( griddleStrings.griddle.title, [
     new Screen(
-      function() { return {}; },
-      function() { return new GriddleDemoScreenView(); },
+      ( () => {
+        return {};
+      } ),
+      ( () => new GriddleDemoScreenView() ),
       {
         name: 'Griddle Demo',
         backgroundColorProperty: new Property( '#e4fcf4' )

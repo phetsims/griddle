@@ -136,7 +136,7 @@ class GridNode extends Node {
     };
     config = merge( defaults, config );
     assert && Object.keys( config ).forEach( key => {
-      assert && assert( defaults.hasOwnProperty( key ), 'illegal key: ' + key );
+      assert && assert( defaults.hasOwnProperty( key ), `illegal key: ${key}` );
     } );
     assert && assert( !_.every( config, spacing => spacing === null ), 'at least one spacing must be used' );
     this.validateMajorMinorPair( config.majorVerticalLineSpacing, config.minorVerticalLineSpacing );

@@ -32,6 +32,9 @@
         "grunt": "~1.1.0"
       },
       "phet": {
+        "phetLibs": [
+          "bamboo"
+        ],
         "requirejsNamespace": "GRIDDLE",
         "runnable": true,
         "generatedUnitTests": true,
@@ -46,6 +49,10 @@
     };
   window.phet.chipper.stringRepos =
     [
+      {
+        "repo": "bamboo",
+        "requirejsNamespace": "BAMBOO"
+      },
       {
         "repo": "griddle",
         "requirejsNamespace": "GRIDDLE"
@@ -96,6 +103,7 @@
 
   if ( brand === 'phet-io' ) {
     preloads = preloads.concat( [
+      '../chipper/js/phet-io/phetioCompareAPIs.js',
       '../phet-io/js/phet-io-initialize-globals.js',
       '../griddle/js/griddle-phet-io-overrides.js'
     ] );

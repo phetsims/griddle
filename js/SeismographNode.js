@@ -1,4 +1,4 @@
-// Copyright 2020, University of Colorado Boulder
+// Copyright 2020-2021, University of Colorado Boulder
 
 /**
  * A XYChartNode which is set up to behave like a Seismograph. The modelViewTransform for this chart

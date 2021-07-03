@@ -202,8 +202,6 @@ class SeismographNode extends XYChartNode {
    */
   reset() {
     this.resetSeismographNode();
-
-    // TODO: who is responsible for clearing the dynamicSeriesArray?  See https://github.com/phetsims/griddle/issues/48
   }
 
   /**

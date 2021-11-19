@@ -3,11 +3,17 @@
 /**
  * Auto-generated from modulify, DO NOT manually modify.
  */
-
+/* eslint-disable */
 import getStringModule from '../../chipper/js/getStringModule.js';
 import griddle from './griddle.js';
 
-const griddleStrings = getStringModule( 'GRIDDLE' );
+type StringsType = {
+  'griddle': {
+    'title': string
+  }
+};
+
+const griddleStrings = getStringModule( 'GRIDDLE' ) as StringsType;
 
 griddle.register( 'griddleStrings', griddleStrings );
 

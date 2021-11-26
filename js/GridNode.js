@@ -16,11 +16,11 @@
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import Enumeration from '../../phet-core/js/Enumeration.js';
 import merge from '../../phet-core/js/merge.js';
-import Path from '../../scenery/js/nodes/Path.js';
+import { Path } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import Property from '../../axon/js/Property.js';
-import Node from '../../scenery/js/nodes/Node.js';
+import { Node } from '../../scenery/js/imports.js';
 import Shape from '../../kite/js/Shape.js';
 import Utils from '../../dot/js/Utils.js';
 

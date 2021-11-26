@@ -13,8 +13,8 @@ import NumberProperty from '../../axon/js/NumberProperty.js';
 import Range from '../../dot/js/Range.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
-import Node from '../../scenery/js/nodes/Node.js';
-import Rectangle from '../../scenery/js/nodes/Rectangle.js';
+import { Node } from '../../scenery/js/imports.js';
+import { Rectangle } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
 
 class BarNode extends Node {

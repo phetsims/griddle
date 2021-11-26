@@ -9,7 +9,7 @@
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
-import Text from '../../scenery/js/nodes/Text.js';
+import { Text } from '../../scenery/js/imports.js';
 import DynamicSeries from './DynamicSeries.js';
 import XYChartNode from './XYChartNode.js';
 

@@ -9,7 +9,7 @@
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import griddle from './griddle.js';
 import DynamicSeriesNode from './DynamicSeriesNode.js';
-import Circle from '../../scenery/js/nodes/Circle.js';
+import { Circle } from '../../scenery/js/imports.js';
 
 class SeismographDynamicSeriesNode extends DynamicSeriesNode {
 

@@ -14,8 +14,8 @@ import Emitter from '../../axon/js/Emitter.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
-import Color from '../../scenery/js/util/Color.js';
-import ColorDef from '../../scenery/js/util/ColorDef.js';
+import { Color } from '../../scenery/js/imports.js';
+import { ColorDef } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
 
 class DynamicSeries {

@@ -1,4 +1,4 @@
-// Copyright 2018-2020, University of Colorado Boulder
+// Copyright 2018-2021, University of Colorado Boulder
 
 /**
  * XYChartNode is a chart that supports "scrolling" of model data with a ModelViewTransform2 so you can display

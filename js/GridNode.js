@@ -1,4 +1,4 @@
-// Copyright 2020-2021, University of Colorado Boulder
+// Copyright 2020-2022, University of Colorado Boulder
 
 /**
  * A reusable Node that draws a 2D grid. The grid can have "major" lines which are generally more visually prominent,

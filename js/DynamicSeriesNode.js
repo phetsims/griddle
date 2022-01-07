@@ -10,14 +10,14 @@
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
-import Enumeration from '../../phet-core/js/Enumeration.js';
+import EnumerationDeprecated from '../../phet-core/js/EnumerationDeprecated.js';
 import merge from '../../phet-core/js/merge.js';
 import { CanvasNode } from '../../scenery/js/imports.js';
 import { Color } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
 
 // constants
-const PlotStyle = Enumeration.byKeys( [ 'SCATTER', 'LINE' ] );
+const PlotStyle = EnumerationDeprecated.byKeys( [ 'SCATTER', 'LINE' ] );
 
 class DynamicSeriesNode extends CanvasNode {
 

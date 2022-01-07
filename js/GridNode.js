@@ -14,7 +14,7 @@
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
-import Enumeration from '../../phet-core/js/Enumeration.js';
+import EnumerationDeprecated from '../../phet-core/js/EnumerationDeprecated.js';
 import merge from '../../phet-core/js/merge.js';
 import { Path } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
@@ -25,7 +25,7 @@ import Shape from '../../kite/js/Shape.js';
 import Utils from '../../dot/js/Utils.js';
 
 // Contains the types of lines that can be drawn on this grid
-const LineType = Enumeration.byKeys( [ 'MINOR_VERTICAL', 'MAJOR_VERTICAL', 'MINOR_HORIZONTAL', 'MAJOR_HORIZONTAL' ] );
+const LineType = EnumerationDeprecated.byKeys( [ 'MINOR_VERTICAL', 'MAJOR_VERTICAL', 'MINOR_HORIZONTAL', 'MAJOR_HORIZONTAL' ] );
 
 class GridNode extends Node {
 

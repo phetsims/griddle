@@ -21,7 +21,7 @@ import griddle from './griddle.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import Property from '../../axon/js/Property.js';
 import { Node } from '../../scenery/js/imports.js';
-import Shape from '../../kite/js/Shape.js';
+import { Shape } from '../../kite/js/imports.js';
 import Utils from '../../dot/js/Utils.js';
 
 // Contains the types of lines that can be drawn on this grid

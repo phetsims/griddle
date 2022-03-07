@@ -358,7 +358,7 @@ class ChartCursor extends Rectangle {
 
         options.drag();
       },
-      end: ( event, listener ) => {
+      end: () => {
         options.endDrag();
 
         // no need to show arrow after user successfully drags the cursor

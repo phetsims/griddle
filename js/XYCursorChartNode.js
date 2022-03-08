@@ -1,4 +1,4 @@
-// Copyright 2019-2021, University of Colorado Boulder
+// Copyright 2019-2022, University of Colorado Boulder
 
 /**
  * An XYChartNode that includes a draggable cursor that allows the user to scrub or play back through the data.

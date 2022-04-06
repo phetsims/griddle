@@ -5,8 +5,6 @@
  * an Emitter.
  *
  * @author Sam Reid (PhET Interactive Simulations)
- *
- * @deprecated - please use bamboo
  */
 
 import BooleanProperty from '../../axon/js/BooleanProperty.js';
@@ -18,6 +16,9 @@ import { Color } from '../../scenery/js/imports.js';
 import { ColorDef } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
 
+/**
+ * @deprecated - please use bamboo
+ */
 class DynamicSeries {
 
   /**

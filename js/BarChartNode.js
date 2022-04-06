@@ -6,8 +6,6 @@
  *
  * @author Jonathan Olson <jonathan.olson@colorado.edu>
  * @author Denzell Barnett (PhET Interactive Simulations)
- *
- * @deprecated - please use BAMBOO/BarPlot
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
@@ -24,6 +22,9 @@ import Panel from '../../sun/js/Panel.js';
 import BarNode from './BarNode.js';
 import griddle from './griddle.js';
 
+/**
+ * @deprecated - please use BAMBOO/BarPlot
+ */
 class BarChartNode extends Node {
 
   /**

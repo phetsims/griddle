@@ -5,8 +5,6 @@
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Jesse Greenberg
- *
- * @deprecated - please use bamboo
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
@@ -19,6 +17,9 @@ import griddle from './griddle.js';
 // constants
 const PlotStyle = EnumerationDeprecated.byKeys( [ 'SCATTER', 'LINE' ] );
 
+/**
+ * @deprecated - please use bamboo
+ */
 class DynamicSeriesNode extends CanvasNode {
 
   /**

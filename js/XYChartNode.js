@@ -10,8 +10,6 @@
  *
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Jesse Greenberg (PhET Interactive Simulations)
- *
- * @deprecated - please use bamboo
  */
 
 import Emitter from '../../axon/js/Emitter.js';
@@ -37,6 +35,9 @@ const LABEL_GRAPH_MARGIN = 3;
 const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
 const VERTICAL_AXIS_LABEL_MARGIN = 8;
 
+/**
+ * @deprecated - please use BAMBOO/GridLineSet
+ */
 class XYChartNode extends Node {
 
   /**

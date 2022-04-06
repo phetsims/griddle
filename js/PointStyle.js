@@ -5,14 +5,15 @@
  * point visibility, stroke, size, and opacity for an individual point.
  *
  * @author Jesse Greenberg
- *
- * @deprecated - please use bamboo
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import griddle from './griddle.js';
 
+/**
+ * @deprecated - please use BAMBOO/GridLineSet
+ */
 class PointStyle {
 
   /**

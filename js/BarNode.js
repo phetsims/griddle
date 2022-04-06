@@ -5,8 +5,6 @@
  *
  * @author Jonathan Olson <jonathan.olson@colorado.edu>
  * @author Denzell Barnett (PhET Interactive Simulations)
- *
- * @deprecated - please use BAMBOO/BarPlot
  */
 
 import NumberProperty from '../../axon/js/NumberProperty.js';
@@ -16,7 +14,11 @@ import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import { Node } from '../../scenery/js/imports.js';
 import { Rectangle } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 
+/**
+ * @deprecated - please use BAMBOO/BarPlot
+ */
 class BarNode extends Node {
 
   /**
@@ -36,6 +38,7 @@ class BarNode extends Node {
    */
   constructor( barEntries, totalRangeProperty, options ) {
     assert && assert( barEntries.length > 0 );
+    assert && deprecationWarning( 'Please use BAMBOO/BarPlot' );
 
     options = merge( {
       // {paint} - The color of the border (along the sides and top of the bar)

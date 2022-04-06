@@ -9,8 +9,6 @@
  * manipulate the line spacings for scale/translation in view coordinates. Arbitrary rotation is not supported.
  *
  * @author Jesse Greenberg
- *
- * @deprecated - please use BAMBOO/GridLineSet
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
@@ -27,6 +25,9 @@ import Utils from '../../dot/js/Utils.js';
 // Contains the types of lines that can be drawn on this grid
 const LineType = EnumerationDeprecated.byKeys( [ 'MINOR_VERTICAL', 'MAJOR_VERTICAL', 'MINOR_HORIZONTAL', 'MAJOR_HORIZONTAL' ] );
 
+/**
+ * @deprecated - please use BAMBOO/GridLineSet
+ */
 class GridNode extends Node {
 
   /**

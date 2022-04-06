@@ -2,8 +2,6 @@
 
 /**
  * @author Jesse Greenberg
- *
- * @deprecated - please use bamboo
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
@@ -11,6 +9,9 @@ import griddle from './griddle.js';
 import DynamicSeriesNode from './DynamicSeriesNode.js';
 import { Circle } from '../../scenery/js/imports.js';
 
+/**
+ * @deprecated - please use BAMBOO/GridLineSet
+ */
 class SeismographDynamicSeriesNode extends DynamicSeriesNode {
 
   /**

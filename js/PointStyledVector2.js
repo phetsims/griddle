@@ -4,8 +4,6 @@
  * Extends Vector2 and adds PointStyle, so that individual points in a data series can be drawn with different styles.
  *
  * @author Sam Reid (PhET Interactive Simulations)
- *
- * @deprecated - please use bamboo
  */
 
 import Vector2 from '../../dot/js/Vector2.js';
@@ -13,6 +11,9 @@ import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import griddle from './griddle.js';
 import PointStyle from './PointStyle.js';
 
+/**
+ * @deprecated - please use BAMBOO/GridLineSet
+ */
 class PointStyledVector2 extends Vector2 {
 
   /**

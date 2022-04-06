@@ -9,8 +9,6 @@
  * Please see the demo in http://localhost/griddle/griddle_en.html
  *
  * @author Jesse Greenberg
- *
- * @deprecated - please use bamboo
  */
 
 import Property from '../../axon/js/Property.js';
@@ -28,6 +26,9 @@ import SpanNode from './SpanNode.js';
 // constants
 const HORIZONTAL_AXIS_LABEL_MARGIN = 4;
 
+/**
+ * @deprecated - please use BAMBOO/GridLineSet
+ */
 class SeismographNode extends XYChartNode {
 
   /**

@@ -4,8 +4,6 @@
  * An XYChartNode that includes a draggable cursor that allows the user to scrub or play back through the data.
  *
  * @author Jesse Greenberg
- *
- * @deprecated - please use bamboo
  */
 
 import Utils from '../../dot/js/Utils.js';
@@ -28,6 +26,9 @@ const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 const ARROW_CUE_FILL_COLOR = new Color( 180, 180, 230 );
 const ARROW_CUE_STROKE_COLOR = Color.DARK_GRAY;
 
+/**
+ * @deprecated - please use BAMBOO/GridLineSet
+ */
 class XYCursorChartNode extends XYChartNode {
 
   /**

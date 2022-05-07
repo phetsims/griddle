@@ -9,7 +9,7 @@ import griddle from './griddle.js';
 
 type StringsType = {
   'griddle': {
-    'title': string
+    'title': string;
   }
 };
 

@@ -12,6 +12,7 @@
  */
 
 import Property from '../../axon/js/Property.js';
+import Multilink from '../../axon/js/Multilink.js';
 import Bounds2 from '../../dot/js/Bounds2.js';
 import Range from '../../dot/js/Range.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
@@ -116,7 +117,7 @@ class SeismographNode extends XYChartNode {
     const widthWithMargin = this.chartWidth - options.rightMargin;
 
     // update the transform if vertical ranges change
-    const dataMappingLink = Property.multilink( [ valueProperty, this.verticalRangeProperty ], ( value, verticalRange ) => {
+    const dataMappingLink = Multilink.multilink( [ valueProperty, this.verticalRangeProperty ], ( value, verticalRange ) => {
       const transform = ModelViewTransform2.createRectangleInvertedYMapping(
         new Bounds2( value - 4, verticalRange.min, value, verticalRange.max ),
         new Bounds2( 0, 0, widthWithMargin, this.chartHeight )
@@ -176,7 +177,7 @@ class SeismographNode extends XYChartNode {
     // @private - called by dispose
     this.disposeSeismographNode = () => {
       zoomLevelIndexProperty.unlink( zoomListener );
-      Property.unmultilink( dataMappingLink );
+      Multilink.unmultilink( dataMappingLink );
     };
   }
 

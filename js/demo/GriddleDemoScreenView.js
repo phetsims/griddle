@@ -14,6 +14,7 @@
 import BooleanProperty from '../../../axon/js/BooleanProperty.js';
 import Emitter from '../../../axon/js/Emitter.js';
 import NumberProperty from '../../../axon/js/NumberProperty.js';
+import Multilink from '../../../axon/js/Multilink.js';
 import Property from '../../../axon/js/Property.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
@@ -234,7 +235,7 @@ const demoGridNode = layoutBounds => {
     resize: false
   } );
 
-  Property.multilink( [ verticalLinesVisibleProperty, horizontalLinesVisibleProperty ], ( verticalVisible, horizontalVisible ) => {
+  Multilink.multilink( [ verticalLinesVisibleProperty, horizontalLinesVisibleProperty ], ( verticalVisible, horizontalVisible ) => {
     const majorVerticalLineSpacing = verticalVisible ? majorVerticalLineSpacingProperty.get() : null;
     const minorVerticalLineSpacing = verticalVisible ? minorVerticalLineSpacingProperty.get() : null;
     const majorHorizontalLineSpacing = horizontalVisible ? majorHorizontalLineSpacingProperty.get() : null;
@@ -252,7 +253,7 @@ const demoGridNode = layoutBounds => {
     hideVerticalLinesButton.enabled = horizontalVisible;
   } );
 
-  Property.multilink( [ majorVerticalLineSpacingProperty, majorHorizontalLineSpacingProperty, minorHorizontalLineSpacingProperty, minorVerticalLineSpacingProperty ],
+  Multilink.multilink( [ majorVerticalLineSpacingProperty, majorHorizontalLineSpacingProperty, minorHorizontalLineSpacingProperty, minorVerticalLineSpacingProperty ],
     ( majorVerticalLineSpacing, majorHorizontalLineSpacing, minorVerticalLineSpacing, minorHorizontalLineSpacing ) => {
       gridNode.setLineSpacings( {
         majorVerticalLineSpacing: majorVerticalLineSpacing,

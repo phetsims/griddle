@@ -49,6 +49,12 @@ class SpanNode extends VBox {
     // Prevent labelNode from being wider than arrowWithBars
     labelNode.maxWidth = arrowWithBars.width;
 
+    // In xss fuzzing in particular, the labelNode can be less than 2 units tall, causing it to overlap in an
+    // unfortunate way
+    if ( -options.spacing > labelNode.height ) {
+      options.spacing = -labelNode.height;
+    }
+
     assert && assert( !options.children, 'SpanNode sets children' );
     options.children = [ arrowWithBars, labelNode ];
 

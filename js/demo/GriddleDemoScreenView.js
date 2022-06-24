@@ -191,7 +191,7 @@ const demoGridNode = layoutBounds => {
 
   // creates a BooleanRectangularToggleButton that toggles visibility of grid lines
   const createToggleLinesButton = ( visibleProperty, visibleText, hiddenText ) => {
-    return new BooleanRectangularToggleButton( new Text( visibleText ), new Text( hiddenText ), visibleProperty );
+    return new BooleanRectangularToggleButton( visibleProperty, new Text( visibleText ), new Text( hiddenText ) );
   };
 
   // Properties for controls to change the GridNode

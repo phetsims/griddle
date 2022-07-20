@@ -10,8 +10,7 @@
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import EnumerationDeprecated from '../../phet-core/js/EnumerationDeprecated.js';
 import merge from '../../phet-core/js/merge.js';
-import { CanvasNode } from '../../scenery/js/imports.js';
-import { Color } from '../../scenery/js/imports.js';
+import { CanvasNode, Color } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
 
 // constants

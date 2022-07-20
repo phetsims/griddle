@@ -5,9 +5,9 @@
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
-import griddle from './griddle.js';
-import DynamicSeriesNode from './DynamicSeriesNode.js';
 import { Circle } from '../../scenery/js/imports.js';
+import DynamicSeriesNode from './DynamicSeriesNode.js';
+import griddle from './griddle.js';
 
 /**
  * @deprecated - please use BAMBOO/GridLineSet

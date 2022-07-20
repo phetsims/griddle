@@ -11,16 +11,15 @@
  * @author Jesse Greenberg
  */
 
+import Property from '../../axon/js/Property.js';
+import Utils from '../../dot/js/Utils.js';
+import { Shape } from '../../kite/js/imports.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import EnumerationDeprecated from '../../phet-core/js/EnumerationDeprecated.js';
 import merge from '../../phet-core/js/merge.js';
-import { Path } from '../../scenery/js/imports.js';
-import griddle from './griddle.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
-import Property from '../../axon/js/Property.js';
-import { Node } from '../../scenery/js/imports.js';
-import { Shape } from '../../kite/js/imports.js';
-import Utils from '../../dot/js/Utils.js';
+import { Node, Path } from '../../scenery/js/imports.js';
+import griddle from './griddle.js';
 
 // Contains the types of lines that can be drawn on this grid
 const LineType = EnumerationDeprecated.byKeys( [ 'MINOR_VERTICAL', 'MAJOR_VERTICAL', 'MINOR_HORIZONTAL', 'MAJOR_HORIZONTAL' ] );

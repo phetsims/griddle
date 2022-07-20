@@ -9,12 +9,11 @@
 
 import NumberProperty from '../../axon/js/NumberProperty.js';
 import Range from '../../dot/js/Range.js';
+import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
-import { Node } from '../../scenery/js/imports.js';
-import { Rectangle } from '../../scenery/js/imports.js';
+import { Node, Rectangle } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
-import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 
 /**
  * @deprecated - please use BAMBOO/BarPlot

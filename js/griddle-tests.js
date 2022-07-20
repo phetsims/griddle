@@ -8,10 +8,10 @@
  * @deprecated - please use bamboo
  */
 
-import './GriddleUtilsTests.js';
-import './XYChartNodeTests.js';
 import qunitStart from '../../chipper/js/sim-tests/qunitStart.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
+import './GriddleUtilsTests.js';
+import './XYChartNodeTests.js';
 
 assert && deprecationWarning( 'Please use bamboo' );
 

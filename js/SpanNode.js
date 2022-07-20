@@ -9,9 +9,7 @@
 
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
-import { Line } from '../../scenery/js/imports.js';
-import { Node } from '../../scenery/js/imports.js';
-import { VBox } from '../../scenery/js/imports.js';
+import { Line, Node, VBox } from '../../scenery/js/imports.js';
 import griddle from './griddle.js';
 
 /**

@@ -13,8 +13,8 @@
 
 import BooleanProperty from '../../../axon/js/BooleanProperty.js';
 import Emitter from '../../../axon/js/Emitter.js';
-import NumberProperty from '../../../axon/js/NumberProperty.js';
 import Multilink from '../../../axon/js/Multilink.js';
+import NumberProperty from '../../../axon/js/NumberProperty.js';
 import Property from '../../../axon/js/Property.js';
 import Bounds2 from '../../../dot/js/Bounds2.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
@@ -25,10 +25,7 @@ import merge from '../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import sceneryPhetQueryParameters from '../../../scenery-phet/js/sceneryPhetQueryParameters.js';
-import { HBox } from '../../../scenery/js/imports.js';
-import { Node } from '../../../scenery/js/imports.js';
-import { Text } from '../../../scenery/js/imports.js';
-import { VBox } from '../../../scenery/js/imports.js';
+import { HBox, Node, Text, VBox } from '../../../scenery/js/imports.js';
 import ABSwitch from '../../../sun/js/ABSwitch.js';
 import BooleanRectangularStickyToggleButton from '../../../sun/js/buttons/BooleanRectangularStickyToggleButton.js';
 import BooleanRectangularToggleButton from '../../../sun/js/buttons/BooleanRectangularToggleButton.js';
@@ -41,8 +38,8 @@ import DynamicSeries from '../DynamicSeries.js';
 import DynamicSeriesNode from '../DynamicSeriesNode.js';
 import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
-import XYChartNode from '../XYChartNode.js';
 import SeismographNode from '../SeismographNode.js';
+import XYChartNode from '../XYChartNode.js';
 import XYCursorChartNode from '../XYCursorChartNode.js';
 
 // constants - this is a hack to enable components to animate from the animation loop

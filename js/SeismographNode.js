@@ -11,8 +11,8 @@
  * @author Jesse Greenberg
  */
 
-import Property from '../../axon/js/Property.js';
 import Multilink from '../../axon/js/Multilink.js';
+import Property from '../../axon/js/Property.js';
 import Bounds2 from '../../dot/js/Bounds2.js';
 import Range from '../../dot/js/Range.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
@@ -20,9 +20,9 @@ import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import griddle from './griddle.js';
-import XYChartNode from './XYChartNode.js';
 import SeismographDynamicSeriesNode from './SeismographDynamicSeriesNode.js';
 import SpanNode from './SpanNode.js';
+import XYChartNode from './XYChartNode.js';
 
 // constants
 const HORIZONTAL_AXIS_LABEL_MARGIN = 4;

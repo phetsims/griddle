@@ -49,7 +49,8 @@ class DynamicSeriesNode extends CanvasNode {
     this.dynamicSeries = dynamicSeries;
 
     // set visible with Property, handle saved for disposal
-    const visibilityListener = dynamicSeries.visibleProperty.linkAttribute( this, 'visible' );
+    const visibilityListener = visible => {this.visible = visible;};
+    dynamicSeries.visibleProperty.link( visibilityListener );
 
     // redraw data
     const dynamicSeriesListener = () => {

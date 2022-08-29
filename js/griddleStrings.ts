@@ -11,7 +11,7 @@ import griddle from './griddle.js';
 type StringsType = {
   'griddle': {
     'title': string;
-    'titleProperty': TReadOnlyProperty<string>;
+    'titleStringProperty': TReadOnlyProperty<string>;
   }
 };
 

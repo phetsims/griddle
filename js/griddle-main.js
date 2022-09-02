@@ -22,7 +22,7 @@ const simOptions = {
 
 simLauncher.launch( () => {
   assert && deprecationWarning( 'Please use bamboo' );
-  new Sim( griddleStrings.griddle.title, [
+  new Sim( griddleStrings.griddle.titleStringProperty, [
     new Screen(
       ( () => {
         return {};

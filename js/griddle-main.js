@@ -12,7 +12,7 @@ import Sim from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import GriddleDemoScreenView from './demo/GriddleDemoScreenView.js';
-import griddleStrings from './griddleStrings.js';
+import GriddleStrings from './GriddleStrings.js';
 
 const simOptions = {
   credits: {
@@ -22,7 +22,7 @@ const simOptions = {
 
 simLauncher.launch( () => {
   assert && deprecationWarning( 'Please use bamboo' );
-  new Sim( griddleStrings.griddle.titleStringProperty, [
+  new Sim( GriddleStrings.griddle.titleStringProperty, [
     new Screen(
       ( () => {
         return {};

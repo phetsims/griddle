@@ -15,8 +15,8 @@ type StringsType = {
   }
 };
 
-const griddleStrings = getStringModule( 'GRIDDLE' ) as StringsType;
+const GriddleStrings = getStringModule( 'GRIDDLE' ) as StringsType;
 
-griddle.register( 'griddleStrings', griddleStrings );
+griddle.register( 'GriddleStrings', GriddleStrings );
 
-export default griddleStrings;
+export default GriddleStrings;

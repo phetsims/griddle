@@ -29,7 +29,7 @@ simLauncher.launch( () => {
       } ),
       ( () => new GriddleDemoScreenView() ),
       {
-        name: 'Griddle Demo',
+        name: new Property( 'Griddle Demo' ),
         backgroundColorProperty: new Property( '#e4fcf4' )
       }
     )

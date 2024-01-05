@@ -3,6 +3,7 @@
 /**
  * Main file for the Griddle library demo.
  *
+ * @author Sam Reid (PhET Interactive Simulations)
  * @deprecated - please use bamboo
  */
 

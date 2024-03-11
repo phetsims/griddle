@@ -24,7 +24,6 @@ import deprecationWarning from '../../../phet-core/js/deprecationWarning.js';
 import merge from '../../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
-import sceneryPhetQueryParameters from '../../../scenery-phet/js/sceneryPhetQueryParameters.js';
 import { HBox, Node, Text, VBox } from '../../../scenery/js/imports.js';
 import ABSwitch from '../../../sun/js/ABSwitch.js';
 import BooleanRectangularStickyToggleButton from '../../../sun/js/buttons/BooleanRectangularStickyToggleButton.js';
@@ -62,9 +61,7 @@ class GriddleDemoScreenView extends DemosScreenView {
       { label: 'XYChartNode', createNode: demoScrollingChartNode },
       { label: 'SeismographNode', createNode: demoSeismographNode },
       { label: 'XYCursorChartNode', createNode: demoXYCursorPlot }
-    ], {
-      selectedDemoLabel: sceneryPhetQueryParameters.component
-    } );
+    ] );
   }
 
   /**

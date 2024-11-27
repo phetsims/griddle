@@ -8,7 +8,7 @@
  * @deprecated - please use bamboo
  */
 
-import qunitStart from '../../chipper/js/sim-tests/qunitStart.js';
+import qunitStart from '../../chipper/js/browser/sim-tests/qunitStart.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import './GriddleUtilsTests.js';
 import './XYChartNodeTests.js';

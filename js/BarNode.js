@@ -13,6 +13,7 @@ import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import { Node, Rectangle } from '../../scenery/js/imports.js';
+import phetioStateSetEmitter from '../../tandem/js/phetioStateSetEmitter.js';
 import griddle from './griddle.js';
 
 /**
@@ -113,6 +114,9 @@ class BarNode extends Node {
     this.mutate( options );
 
     this.update();
+
+    // Update the values when the PhET-iO state is set, see https://github.com/phetsims/energy-skate-park/issues/385
+    phetioStateSetEmitter.addListener( () => this.update() );
   }
 
   /**

@@ -12,7 +12,8 @@ import Range from '../../dot/js/Range.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
-import { Node, Rectangle } from '../../scenery/js/imports.js';
+import Node from '../../scenery/js/nodes/Node.js';
+import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import phetioStateSetEmitter from '../../tandem/js/phetioStateSetEmitter.js';
 import griddle from './griddle.js';
 

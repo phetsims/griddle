@@ -13,12 +13,13 @@
 
 import Property from '../../axon/js/Property.js';
 import Utils from '../../dot/js/Utils.js';
-import { Shape } from '../../kite/js/imports.js';
+import Shape from '../../kite/js/Shape.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import EnumerationDeprecated from '../../phet-core/js/EnumerationDeprecated.js';
 import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
-import { Node, Path } from '../../scenery/js/imports.js';
+import Node from '../../scenery/js/nodes/Node.js';
+import Path from '../../scenery/js/nodes/Path.js';
 import griddle from './griddle.js';
 
 // Contains the types of lines that can be drawn on this grid

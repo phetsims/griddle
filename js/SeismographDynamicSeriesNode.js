@@ -5,7 +5,7 @@
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
-import { Circle } from '../../scenery/js/imports.js';
+import Circle from '../../scenery/js/nodes/Circle.js';
 import DynamicSeriesNode from './DynamicSeriesNode.js';
 import griddle from './griddle.js';
 

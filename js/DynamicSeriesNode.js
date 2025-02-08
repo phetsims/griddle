@@ -1,4 +1,4 @@
-// Copyright 2019-2022, University of Colorado Boulder
+// Copyright 2019-2025, University of Colorado Boulder
 
 /**
  * This class renders DynamicSeries data in a XYChartNode and is tightly coupled with XYChartNode.

@@ -77,7 +77,7 @@ class GriddleDemoScreenView extends DemosScreenView {
   }
 }
 
-// Creates a demo for the BarChartNode
+// Creates a demo for the HBarChartNode
 const demoBarChart = function( layoutBounds ) {
   const model = {
     aProperty: new Property( 0 ),

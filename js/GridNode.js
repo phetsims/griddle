@@ -31,6 +31,12 @@ const LineType = EnumerationDeprecated.byKeys( [ 'MINOR_VERTICAL', 'MAJOR_VERTIC
 class GridNode extends Node {
 
   /**
+   * @protected
+   * @type {number}
+   */
+  gridHeight;
+
+  /**
    * @param {number} gridWidth - width of the grid in view coordinates
    * @param {number} gridHeight - height of the grid in view coordinates
    * @param {Object} [options]

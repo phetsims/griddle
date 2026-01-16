@@ -17,6 +17,12 @@ import griddle from './griddle.js';
 class PointStyle {
 
   /**
+   * @public
+   * @type {number|null}
+   */
+  opacity;
+
+  /**
    * @param {object} [options]
    */
   constructor( options ) {

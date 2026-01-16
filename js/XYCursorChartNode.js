@@ -32,6 +32,12 @@ const ARROW_CUE_STROKE_COLOR = Color.DARK_GRAY;
 class XYCursorChartNode extends XYChartNode {
 
   /**
+   * @protected
+   * @type {DynamicSeries[]}
+   */
+  dynamicSeriesArray;
+
+  /**
    * @param {Object} [options]
    */
   constructor( options ) {

@@ -41,6 +41,12 @@ const VERTICAL_AXIS_LABEL_MARGIN = 8;
 class XYChartNode extends Node {
 
   /**
+   * @public
+   * @type {Rectangle}
+   */
+  chartPanel;
+
+  /**
    * @param {Object} [options]
    */
   constructor( options ) {

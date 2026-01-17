@@ -1,4 +1,4 @@
-// Copyright 2019-2022, University of Colorado Boulder
+// Copyright 2019-2026, University of Colorado Boulder
 
 /**
  * A collection of styles that can be applied to a single point of a scatter styled plot. Can control things like

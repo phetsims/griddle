@@ -12,6 +12,7 @@ import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import PhetFont from '../../scenery-phet/js/PhetFont.js';
+import ManualConstraint from '../../scenery/js/layout/constraints/ManualConstraint.js';
 import HBox from '../../scenery/js/layout/nodes/HBox.js';
 import VBox from '../../scenery/js/layout/nodes/VBox.js';
 import Line from '../../scenery/js/nodes/Line.js';
@@ -138,13 +139,18 @@ class BarChartNode extends Node {
       children: this.barLabelNodes
     } );
 
-    // Manual positioning of labels to match position of barNodes in HBox.
+    // Keep labels centered on their bars. ManualConstraint updates automatically when the label
+    // bounds change (e.g., when a labelNode like the trash button is hidden).
     for ( let i = 0; i < bars.length; i++ ) {
+      const barLabelNode = labelBox.children[ i ];
 
       // Checks if the labelBox's VBox has any children.
-      if ( typeof ( labelBox.children[ i ].children[ 0 ] ) !== 'undefined' ) {
-        labelBox.children[ i ].centerX = this.barNodes[ i ].centerX;
-        labelBox.children[ i ].top = 3;
+      if ( typeof ( barLabelNode.children[ 0 ] ) !== 'undefined' ) {
+        const barNode = this.barNodes[ i ];
+        ManualConstraint.create( this, [ barLabelNode, barNode ], ( labelProxy, barProxy ) => {
+          labelProxy.centerX = barProxy.centerX;
+          labelProxy.top = 3;
+        } );
       }
     }
     this.addChild( barBox );

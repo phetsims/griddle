@@ -4,7 +4,7 @@
  * Bar chart for sims that need to display separate values. This chart is vertically aligned, with bars that represent
  * values within a specified range.
  *
- * @author Jonathan Olson <jonathan.olson@colorado.edu>
+ * @author Jonathan Olson (PhET Interactive Simulations)
  * @author Denzell Barnett (PhET Interactive Simulations)
  */
 

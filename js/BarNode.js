@@ -3,7 +3,7 @@
 /**
  * Represents a bar in a bar chart for a specific set of composite values.
  *
- * @author Jonathan Olson <jonathan.olson@colorado.edu>
+ * @author Jonathan Olson (PhET Interactive Simulations)
  * @author Denzell Barnett (PhET Interactive Simulations)
  */
 

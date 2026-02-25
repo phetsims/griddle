@@ -10,6 +10,8 @@ import Utils from '../../dot/js/Utils.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
+import HighlightFromNode from '../../scenery/js/accessibility/HighlightFromNode.js';
+import InteractiveHighlighting from '../../scenery/js/accessibility/voicing/InteractiveHighlighting.js';
 import DragListener from '../../scenery/js/listeners/DragListener.js';
 import Circle from '../../scenery/js/nodes/Circle.js';
 import Node from '../../scenery/js/nodes/Node.js';
@@ -274,7 +276,7 @@ class XYCursorChartNode extends XYChartNode {
 /**
  * ChartCursor is a rectangular cursor that indicates the current or selected value on the chart.
  */
-class ChartCursor extends Rectangle {
+class ChartCursor extends InteractiveHighlighting( Rectangle ) {
 
   /**
    * @param {XYCursorChartNode} chart
@@ -376,6 +378,15 @@ class ChartCursor extends Rectangle {
       tandem: options.tandem.createTandem( 'dragListener' )
     } );
     this.addInputListener( this.dragListener );
+
+    // Interactive highlight for mouse/touch hover feedback.
+    const interactiveHighlight = new HighlightFromNode( this );
+    this.setInteractiveHighlight( interactiveHighlight );
+
+    // Use dashed highlight while dragging to indicate active interaction.
+    this.dragListener.isPressedProperty.link( pressed => {
+      interactiveHighlight.setDashed( pressed );
+    } );
   }
 
   /**

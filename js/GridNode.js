@@ -20,7 +20,6 @@ import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import Path from '../../scenery/js/nodes/Path.js';
-import griddle from './griddle.js';
 
 // Contains the types of lines that can be drawn on this grid
 const LineType = EnumerationDeprecated.byKeys( [ 'MINOR_VERTICAL', 'MAJOR_VERTICAL', 'MINOR_HORIZONTAL', 'MAJOR_HORIZONTAL' ] );
@@ -363,7 +362,5 @@ class GridNode extends Node {
 // @public
 // @static
 GridNode.LineType = LineType;
-
-griddle.register( 'GridNode', GridNode );
 
 export default GridNode;

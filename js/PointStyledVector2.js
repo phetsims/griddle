@@ -8,7 +8,6 @@
 
 import Vector2 from '../../dot/js/Vector2.js';
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
-import griddle from './griddle.js';
 import PointStyle from './PointStyle.js';
 
 /**
@@ -31,5 +30,4 @@ class PointStyledVector2 extends Vector2 {
   }
 }
 
-griddle.register( 'PointStyledVector2', PointStyledVector2 );
 export default PointStyledVector2;

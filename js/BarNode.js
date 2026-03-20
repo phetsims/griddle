@@ -15,7 +15,6 @@ import ArrowNode from '../../scenery-phet/js/ArrowNode.js';
 import Node from '../../scenery/js/nodes/Node.js';
 import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import phetioStateSetEmitter from '../../tandem/js/phetioStateSetEmitter.js';
-import griddle from './griddle.js';
 
 /**
  * @deprecated - please use BAMBOO/BarPlot
@@ -236,5 +235,4 @@ function setBarYValues( rectangle, y1, y2 ) {
   rectangle.rectHeight = Math.abs( y1 - y2 );
 }
 
-griddle.register( 'BarNode', BarNode );
 export default BarNode;

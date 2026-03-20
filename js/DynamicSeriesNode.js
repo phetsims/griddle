@@ -12,7 +12,6 @@ import EnumerationDeprecated from '../../phet-core/js/EnumerationDeprecated.js';
 import merge from '../../phet-core/js/merge.js';
 import CanvasNode from '../../scenery/js/nodes/CanvasNode.js';
 import Color from '../../scenery/js/util/Color.js';
-import griddle from './griddle.js';
 
 // constants
 const PlotStyle = EnumerationDeprecated.byKeys( [ 'SCATTER', 'LINE' ] );
@@ -175,5 +174,4 @@ class DynamicSeriesNode extends CanvasNode {
 // @public (read-only)
 DynamicSeriesNode.PlotStyle = PlotStyle;
 
-griddle.register( 'DynamicSeriesNode', DynamicSeriesNode );
 export default DynamicSeriesNode;

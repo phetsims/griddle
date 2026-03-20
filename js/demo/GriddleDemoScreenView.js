@@ -38,7 +38,6 @@ import VSlider from '../../../sun/js/VSlider.js';
 import BarChartNode from '../BarChartNode.js';
 import DynamicSeries from '../DynamicSeries.js';
 import DynamicSeriesNode from '../DynamicSeriesNode.js';
-import griddle from '../griddle.js';
 import GridNode from '../GridNode.js';
 import SeismographNode from '../SeismographNode.js';
 import XYChartNode from '../XYChartNode.js';
@@ -507,5 +506,4 @@ const demoXYCursorPlot = layoutBounds => {
   return chartPanel;
 };
 
-griddle.register( 'GriddleDemoScreenView', GriddleDemoScreenView );
 export default GriddleDemoScreenView;

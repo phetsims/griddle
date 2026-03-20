@@ -9,7 +9,6 @@
  */
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
-import griddle from './griddle.js';
 
 const GriddleUtils = {
 
@@ -40,5 +39,4 @@ const GriddleUtils = {
   }
 };
 
-griddle.register( 'GriddleUtils', GriddleUtils );
 export default GriddleUtils;

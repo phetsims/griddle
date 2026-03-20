@@ -20,6 +20,4 @@ type StringsType = {
 
 const GriddleStrings = getStringModule( 'GRIDDLE' ) as StringsType;
 
-griddle.register( 'GriddleStrings', GriddleStrings );
-
 export default GriddleStrings;

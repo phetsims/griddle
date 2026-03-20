@@ -27,7 +27,6 @@ import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import Text from '../../scenery/js/nodes/Text.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import DynamicSeriesNode from './DynamicSeriesNode.js';
-import griddle from './griddle.js';
 import GridNode from './GridNode.js';
 
 // constants
@@ -451,5 +450,4 @@ class XYChartNode extends Node {
   }
 }
 
-griddle.register( 'XYChartNode', XYChartNode );
 export default XYChartNode;

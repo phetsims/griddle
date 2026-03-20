@@ -18,7 +18,6 @@ import Node from '../../scenery/js/nodes/Node.js';
 import Rectangle from '../../scenery/js/nodes/Rectangle.js';
 import Color from '../../scenery/js/util/Color.js';
 import Tandem from '../../tandem/js/Tandem.js';
-import griddle from './griddle.js';
 import XYChartNode from './XYChartNode.js';
 
 // constants
@@ -443,5 +442,4 @@ class GrippyIndentNode extends Circle {
   }
 }
 
-griddle.register( 'XYCursorChartNode', XYCursorChartNode );
 export default XYCursorChartNode;

@@ -7,7 +7,6 @@
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import Circle from '../../scenery/js/nodes/Circle.js';
 import DynamicSeriesNode from './DynamicSeriesNode.js';
-import griddle from './griddle.js';
 
 /**
  * @deprecated - please use BAMBOO/GridLineSet
@@ -66,7 +65,5 @@ class SeismographDynamicSeriesNode extends DynamicSeriesNode {
     super.dispose();
   }
 }
-
-griddle.register( 'SeismographDynamicSeriesNode', SeismographDynamicSeriesNode );
 
 export default SeismographDynamicSeriesNode;

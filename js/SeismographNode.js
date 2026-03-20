@@ -19,7 +19,6 @@ import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import ModelViewTransform2 from '../../phetcommon/js/view/ModelViewTransform2.js';
 import Tandem from '../../tandem/js/Tandem.js';
-import griddle from './griddle.js';
 import SeismographDynamicSeriesNode from './SeismographDynamicSeriesNode.js';
 import SpanNode from './SpanNode.js';
 import XYChartNode from './XYChartNode.js';
@@ -214,7 +213,5 @@ class SeismographNode extends XYChartNode {
     super.dispose();
   }
 }
-
-griddle.register( 'SeismographNode', SeismographNode );
 
 export default SeismographNode;

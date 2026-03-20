@@ -21,7 +21,6 @@ import RichText from '../../scenery/js/nodes/RichText.js';
 import Color from '../../scenery/js/util/Color.js';
 import Panel from '../../sun/js/Panel.js';
 import BarNode from './BarNode.js';
-import griddle from './griddle.js';
 
 /**
  * @deprecated - please use BAMBOO/BarPlot
@@ -206,5 +205,4 @@ class BarChartNode extends Node {
   }
 }
 
-griddle.register( 'BarChartNode', BarChartNode );
 export default BarChartNode;

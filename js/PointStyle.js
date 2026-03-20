@@ -9,7 +9,6 @@
 
 import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
-import griddle from './griddle.js';
 
 /**
  * @deprecated - please use BAMBOO/GridLineSet
@@ -56,5 +55,4 @@ class PointStyle {
   }
 }
 
-griddle.register( 'PointStyle', PointStyle );
 export default PointStyle;

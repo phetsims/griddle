@@ -14,7 +14,6 @@ import deprecationWarning from '../../phet-core/js/deprecationWarning.js';
 import merge from '../../phet-core/js/merge.js';
 import Color from '../../scenery/js/util/Color.js';
 import ColorDef from '../../scenery/js/util/ColorDef.js';
-import griddle from './griddle.js';
 
 /**
  * @deprecated - please use bamboo
@@ -192,5 +191,4 @@ class DynamicSeries {
   }
 }
 
-griddle.register( 'DynamicSeries', DynamicSeries );
 export default DynamicSeries;
